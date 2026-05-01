@@ -1,10 +1,27 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
     "name": "dskripchenko/laravel-admin-demo",
-    "type": "project",
     "description": "Demonstration Laravel 12 host-проект с подключённым dskripchenko/laravel-admin и всеми 8 sister-pack'ами. Quick-start template + публичный showcase.",
+    "type": "project",
+    "keywords": [
+        "laravel",
+        "admin",
+        "demo",
+        "showcase",
+        "dskripchenko"
+    ],
+    "homepage": "https://github.com/dskripchenko/laravel-admin-demo",
     "license": "MIT",
-    "keywords": ["laravel", "admin", "demo", "showcase", "dskripchenko"],
+    "authors": [
+        {
+            "name": "Denis Skripchenko",
+            "email": "denskrp90@gmail.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/dskripchenko/laravel-admin-demo/issues",
+        "source": "https://github.com/dskripchenko/laravel-admin-demo"
+    },
     "require": {
         "php": "^8.5",
         "ext-json": "*",
