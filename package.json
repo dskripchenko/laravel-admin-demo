@@ -7,7 +7,7 @@
         "dev": "vite"
     },
     "dependencies": {
-        "@dskripchenko/laravel-admin": "file:../core",
+        "@dskripchenko/laravel-admin": "^1.1.0",
         "@dskripchenko/ui": "^1.0.2",
         "axios": "^1.6",
         "pinia": "^3.0",
