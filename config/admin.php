@@ -60,26 +60,15 @@ return [
     ],
 
     /**
-     * Sister-pack плагины. Каждый авторегистрирует свои Resource'ы и routes.
+     * Sister-pack плагины. Каждый авторегистрирует свои Resource'ы и routes
+     * автоматически (через Laravel auto-discovery + RegistersAdminPlugin
+     * trait в ServiceProvider'е каждого pack'а).
+     *
+     * Этот массив поддерживается совместимости ради — фактически плагины
+     * добавляются через `config['admin.plugins'][] = ...` в register()
+     * пакетных провайдеров.
      */
     'plugins' => [
-        Dskripchenko\LaravelAdminStarter\AdminStarterPlugin::class,
-        Dskripchenko\LaravelAdminHealth\AdminHealthPlugin::class,
-        Dskripchenko\LaravelAdminJobs\AdminJobsPlugin::class,
-        Dskripchenko\LaravelAdminMedia\AdminMediaPlugin::class,
-        Dskripchenko\LaravelAdminPulse\AdminPulsePlugin::class,
-        Dskripchenko\LaravelAdminSearch\AdminSearchPlugin::class,
-        Dskripchenko\LaravelAdminQuill\AdminQuillPlugin::class,
-        Dskripchenko\LaravelAdminTinymce\AdminTinymcePlugin::class,
-    ],
-
-    /**
-     * Demo-Resource'ы host-проекта. Регистрируются вручную (плагины
-     * регистрируют свои Resource'ы автоматически).
-     */
-    'resources' => [
-        App\Admin\Resources\ArticleResource::class,
-        App\Admin\Resources\ProductResource::class,
-        App\Admin\Resources\OrderResource::class,
+        // pack'и сами регистрируются — список здесь только для документации.
     ],
 ];

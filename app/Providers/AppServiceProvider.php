@@ -1,24 +1,30 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
+use App\Admin\Resources\ArticleResource;
+use App\Admin\Resources\OrderResource;
+use App\Admin\Resources\ProductResource;
+use Dskripchenko\LaravelAdmin\Facades\Admin;
 use Illuminate\Support\ServiceProvider;
 
-class AppServiceProvider extends ServiceProvider
+final class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
-        //
+        // Регистрируем demo-Resource'ы host-проекта.
+        // (Sister-pack Resource'ы регистрируются автоматически через свои plugin'ы.)
+        Admin::resources([
+            ArticleResource::class,
+            ProductResource::class,
+            OrderResource::class,
+        ]);
     }
 }
