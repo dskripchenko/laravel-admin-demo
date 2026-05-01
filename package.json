@@ -6,11 +6,20 @@
         "build": "vite build",
         "dev": "vite"
     },
+    "dependencies": {
+        "@dskripchenko/laravel-admin": "file:../core",
+        "@dskripchenko/ui": "^1.0.2",
+        "axios": "^1.6",
+        "pinia": "^3.0",
+        "vue": "^3.4",
+        "vue-router": "^5.0"
+    },
     "devDependencies": {
         "@tailwindcss/vite": "^4.0.0",
+        "@vitejs/plugin-vue": "^6.0.6",
         "concurrently": "^9.0.1",
-        "laravel-vite-plugin": "^3.0.0",
+        "laravel-vite-plugin": "^2.1.0",
         "tailwindcss": "^4.0.0",
-        "vite": "^8.0.0"
+        "vite": "^7.3.2"
     }
 }

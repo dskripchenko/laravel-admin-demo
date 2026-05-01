@@ -71,4 +71,21 @@ return [
     'plugins' => [
         // pack'и сами регистрируются — список здесь только для документации.
     ],
+
+    /**
+     * Frontend SPA assets — подгружаются через Vite manifest.
+     *
+     * Vite пишет `public/build/manifest.json` на `npm run build` (laravel-vite-plugin
+     * выкладывает manifest по стандартному пути `.vite/manifest.json`). Core ShellController
+     * парсит manifest и резолвит chunks с CSS/JS для указанного entry.
+     *
+     * Подмена через config('admin.assets.css|js') возможна для override.
+     */
+    'assets' => [
+        'vite_manifest' => public_path('build/manifest.json'),
+        'vite_entry' => 'resources/js/admin.js',
+        'vite_base_url' => '/build/',
+        'css' => [],
+        'js' => [],
+    ],
 ];
