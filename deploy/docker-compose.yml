@@ -1,0 +1,60 @@
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    image: laravel-admin-demo:latest
+    container_name: laravel-admin-demo
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_KEY: ${APP_KEY:?required}
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: laravel_admin_demo
+      DB_USERNAME: laravel
+      DB_PASSWORD: ${DB_PASSWORD:?required}
+      SESSION_DRIVER: redis
+      CACHE_STORE: redis
+      QUEUE_CONNECTION: redis
+      REDIS_HOST: redis
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    volumes:
+      - app-storage:/var/www/html/storage
+
+  mysql:
+    image: mysql:8
+    container_name: laravel-admin-demo-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: laravel_admin_demo
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: ${DB_PASSWORD:?required}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?required}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: laravel-admin-demo-redis
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+
+volumes:
+  app-storage:
+  mysql-data:
+  redis-data:
