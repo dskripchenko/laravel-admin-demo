@@ -7,9 +7,9 @@
         "dev": "vite"
     },
     "dependencies": {
-        "@dskripchenko/laravel-admin": "^1.2.3",
+        "@dskripchenko/laravel-admin": "^1.2.4",
         "@dskripchenko/ui": "^1.1.1",
-        "@dskripchenko/wysiwyg": "^0.1.0",
+        "@dskripchenko/wysiwyg": "^0.2.0",
         "@vueup/vue-quill": "^1.2.0",
         "axios": "^1.6",
         "pinia": "^3.0",
