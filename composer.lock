@@ -491,16 +491,16 @@
         },
         {
             "name": "dskripchenko/laravel-admin",
-            "version": "v1.1.0",
+            "version": "v1.1.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dskripchenko/laravel-admin.git",
-                "reference": "87a820b8a6c9e63b1f58661cddef4b4e33c98561"
+                "reference": "2ee600006d87a2588ddc9b4306dd0a80b15b60f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dskripchenko/laravel-admin/zipball/87a820b8a6c9e63b1f58661cddef4b4e33c98561",
-                "reference": "87a820b8a6c9e63b1f58661cddef4b4e33c98561",
+                "url": "https://api.github.com/repos/dskripchenko/laravel-admin/zipball/2ee600006d87a2588ddc9b4306dd0a80b15b60f6",
+                "reference": "2ee600006d87a2588ddc9b4306dd0a80b15b60f6",
                 "shasum": ""
             },
             "require": {
@@ -573,7 +573,7 @@
                 "issues": "https://github.com/dskripchenko/laravel-admin/issues",
                 "source": "https://github.com/dskripchenko/laravel-admin"
             },
-            "time": "2026-05-01T18:04:17+00:00"
+            "time": "2026-05-02T08:07:44+00:00"
         },
         {
             "name": "dskripchenko/laravel-admin-health",

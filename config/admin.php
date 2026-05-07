@@ -1,6 +1,8 @@
 <?php
 
 declare(strict_types=1);
+use App\Admin\DemoPlugin;
+use Dskripchenko\LaravelAdmin\Models\AdminUser;
 
 /**
  * Demo-конфиг dskripchenko/laravel-admin.
@@ -20,7 +22,7 @@ return [
         'strategy' => 'dedicated',
         'guard' => 'admin',
         'provider' => 'admin_users',
-        'model' => Dskripchenko\LaravelAdmin\Models\AdminUser::class,
+        'model' => AdminUser::class,
         'table' => 'admin_users',
         'password_broker' => 'admin_users',
         'login_throttle' => '5,1',
@@ -69,7 +71,9 @@ return [
      * пакетных провайдеров.
      */
     'plugins' => [
-        // pack'и сами регистрируются — список здесь только для документации.
+        // sister-pack'и сами регистрируются через RegistersAdminPlugin trait.
+        // Здесь только host-проект:
+        DemoPlugin::class,
     ],
 
     /**

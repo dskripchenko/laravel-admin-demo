@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Dskripchenko\LaravelAdmin\Audit\Concerns\Loggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 final class Order extends Model
 {
     use HasFactory;
+    use Loggable;
 
     protected $fillable = [
         'number',

@@ -8,6 +8,7 @@ use App\Models\Article;
 use App\Models\Order;
 use App\Models\Product;
 use Dskripchenko\LaravelAdmin\Models\AdminUser;
+use Dskripchenko\LaravelAdmin\Permission\Models\Role;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
@@ -33,7 +34,66 @@ final class DemoSeeder extends Seeder
 
     private function seedAdmin(): void
     {
-        AdminUser::query()->updateOrCreate(
+        // ───────────────────────────────────────────────────────────────
+        // Baseline-роли для демонстрации RBAC.
+        //
+        // super-admin — wildcard '*' (всё). Используется системой.
+        // editor      — управление контентом + media, БЕЗ настроек системы.
+        //               view+create+update без delete для articles/products/
+        //               orders + полный доступ к media.
+        // viewer      — read-only доступ ко всему. *.view permissions.
+        //
+        // permissions используют wildcard'ы (`admin.shop.*`,
+        // `admin.system.*.view`) — Role::hasPermission() поддерживает их.
+        // ───────────────────────────────────────────────────────────────
+        $superRole = Role::query()->updateOrCreate(
+            ['slug' => 'super-admin'],
+            [
+                'name' => 'Super Admin',
+                'description' => 'Полный доступ ко всем разделам admin',
+                'permissions' => ['*'],
+                'is_system' => true,
+            ],
+        );
+
+        $editorRole = Role::query()->updateOrCreate(
+            ['slug' => 'editor'],
+            [
+                'name' => 'Редактор',
+                'description' => 'Контент + media, без настроек и удалений',
+                'permissions' => [
+                    // Articles / Products / Orders — view, create, update.
+                    'admin.content.articles.view',
+                    'admin.content.articles.create',
+                    'admin.content.articles.update',
+                    'admin.shop.products.view',
+                    'admin.shop.products.create',
+                    'admin.shop.products.update',
+                    'admin.shop.orders.view',
+                    'admin.shop.orders.update',
+                    // Media — полный доступ.
+                    'admin.media.*',
+                ],
+                'is_system' => false,
+            ],
+        );
+
+        $viewerRole = Role::query()->updateOrCreate(
+            ['slug' => 'viewer'],
+            [
+                'name' => 'Зритель',
+                'description' => 'Read-only доступ ко всем разделам',
+                'permissions' => [
+                    'admin.content.*.view',
+                    'admin.shop.*.view',
+                    'admin.media.*.view',
+                    'admin.system.*.view',
+                ],
+                'is_system' => false,
+            ],
+        );
+
+        $admin = AdminUser::query()->updateOrCreate(
             ['email' => 'admin@example.com'],
             [
                 'name' => 'Demo Admin',
@@ -43,6 +103,31 @@ final class DemoSeeder extends Seeder
                 'theme' => 'light',
             ],
         );
+        $admin->assignRole($superRole);
+
+        $editor = AdminUser::query()->updateOrCreate(
+            ['email' => 'editor@example.com'],
+            [
+                'name' => 'Demo Editor',
+                'password' => bcrypt('password'),
+                'is_active' => true,
+                'locale' => 'ru',
+                'theme' => 'light',
+            ],
+        );
+        $editor->assignRole($editorRole);
+
+        $viewer = AdminUser::query()->updateOrCreate(
+            ['email' => 'viewer@example.com'],
+            [
+                'name' => 'Demo Viewer',
+                'password' => bcrypt('password'),
+                'is_active' => true,
+                'locale' => 'ru',
+                'theme' => 'light',
+            ],
+        );
+        $viewer->assignRole($viewerRole);
     }
 
     private function seedArticles(): void

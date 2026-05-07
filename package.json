@@ -7,10 +7,12 @@
         "dev": "vite"
     },
     "dependencies": {
-        "@dskripchenko/laravel-admin": "^1.1.0",
-        "@dskripchenko/ui": "^1.0.2",
+        "@dskripchenko/laravel-admin": "^1.1.24",
+        "@dskripchenko/ui": "^1.1.1",
+        "@vueup/vue-quill": "^1.2.0",
         "axios": "^1.6",
         "pinia": "^3.0",
+        "quill": "^2.0.3",
         "vue": "^3.4",
         "vue-router": "^5.0"
     },
@@ -19,6 +21,7 @@
         "@vitejs/plugin-vue": "^6.0.6",
         "concurrently": "^9.0.1",
         "laravel-vite-plugin": "^2.1.0",
+        "playwright": "^1.59.1",
         "tailwindcss": "^4.0.0",
         "vite": "^7.3.2"
     }
