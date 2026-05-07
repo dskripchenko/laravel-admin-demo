@@ -1,40 +1,36 @@
 /**
  * SPA admin entry — host-mount.
  *
- * Все building blocks (Pinia, Router, AdminClient, built-in fields/widgets)
- * собирает createAdminApp() из @dskripchenko/laravel-admin. Дальше это
- * обычный Vue-app, который можно расширить плагинами через onAppCreated.
+ * createAdminApp() из @dskripchenko/laravel-admin собирает Pinia, Router,
+ * AdminClient + регистрирует built-in fields/widgets/infolist.
+ *
+ * WYSIWYG: с v1.2.3 core использует @dskripchenko/wysiwyg как default
+ * (zero-dep, ~7 KB gz). Если хотите Quill/Tinymce — раскомментируйте
+ * блок registerField ниже.
  */
 // (1) UI-кит: tokens + themes + reset + global + Uid*-компоненты.
-// Импортируем ДО admin'а, чтобы --uid-* CSS-токены были доступны.
 import '@dskripchenko/ui/styles/all.css'
-// (2) admin-каркасные стили (impersonation, density, topbar, etc.)
+// (2) admin-каркасные стили
 import '@dskripchenko/laravel-admin/style.css'
+// (3) WYSIWYG (default) стили — сам JS подтягивается через core's WysiwygField.
+import '@dskripchenko/wysiwyg/style.css'
 
-import { defineAsyncComponent } from 'vue'
-import { createAdminApp, registerField } from '@dskripchenko/laravel-admin'
-
-// Темы Quill подключаем eagerly (CSS, ~30 KB) чтобы не было flash
-// неcтилизованного поля при первой загрузке wysiwyg.
-import '@vueup/vue-quill/dist/vue-quill.snow.css'
-import '@vueup/vue-quill/dist/vue-quill.bubble.css'
-
-// Quill сам компонент (~200 KB JS) — lazy: подтягивается только при
-// первом рендере wysiwyg-поля. Для index/login/dashboard это даёт
-// ощутимое уменьшение initial bundle'а.
-const QuillFieldLazy = defineAsyncComponent(() =>
-    import('@dskripchenko/laravel-admin/quill').then((m) => m.QuillField),
-)
+import { createAdminApp } from '@dskripchenko/laravel-admin'
 
 const { app } = createAdminApp(window.__ADMIN_BOOTSTRAP__, {
     onAppCreated: (vueApp) => {
-        // ВАЖНО: регистрируем после createAdminApp() — иначе
-        // registerBuiltinComponents() внутри фабрики перезатрёт wysiwyg
-        // обратно на TextAreaField fallback.
-        registerField('wysiwyg', QuillFieldLazy)
+        // Optional: переключить wysiwyg на Quill/Tinymce.
+        // ─────────────────────────────────────────────────
+        // import { defineAsyncComponent } from 'vue'
+        // import { registerField } from '@dskripchenko/laravel-admin'
+        // import '@vueup/vue-quill/dist/vue-quill.snow.css'
+        // const QuillField = defineAsyncComponent(() =>
+        //     import('@dskripchenko/laravel-admin/quill').then((m) => m.QuillField),
+        // )
+        // registerField('wysiwyg', QuillField)
         if (import.meta.env.DEV) {
             // eslint-disable-next-line no-console
-            console.info('[laravel-admin-demo] admin app initialized (Quill enabled)')
+            console.info('[laravel-admin-demo] admin app initialized')
         }
         void vueApp
     },
