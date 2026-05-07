@@ -12,6 +12,7 @@
         "@vueup/vue-quill": "^1.2.0",
         "axios": "^1.6",
         "pinia": "^3.0",
+        "qrcode-svg": "^1.1.0",
         "quill": "^2.0.3",
         "vue": "^3.4",
         "vue-router": "^5.0"
