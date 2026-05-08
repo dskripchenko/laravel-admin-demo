@@ -111,6 +111,7 @@ final class ContentDashboardScreen extends DashboardScreen
         })
             ->title('Публикации по дням')
             ->size(8)
+            ->rowSpan(2)
             ->chartType('bar')
             ->labels($labels)
             ->dataset('Опубликовано', $values, '#10b981');
@@ -121,6 +122,7 @@ final class ContentDashboardScreen extends DashboardScreen
         })
             ->title('Распределение статусов')
             ->size(4)
+            ->rowSpan(2)
             ->chartType('doughnut')
             ->labels(['Published', 'In review', 'Draft', 'Archived'])
             ->dataset(
@@ -134,6 +136,7 @@ final class ContentDashboardScreen extends DashboardScreen
         })
             ->title('Последние публикации')
             ->size(8)
+            ->rowSpan(3)
             ->model(Article::class)
             ->orderBy('created_at', 'desc')
             ->limit(6)
@@ -148,6 +151,7 @@ final class ContentDashboardScreen extends DashboardScreen
         })
             ->title('Активность по часам')
             ->size(4)
+            ->rowSpan(3)
             ->axes(
                 ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
                 array_map(static fn ($h) => sprintf('%02dh', $h), range(0, 23)),
@@ -160,6 +164,7 @@ final class ContentDashboardScreen extends DashboardScreen
         })
             ->title('SEO score (avg)')
             ->size(4)
+            ->rowSpan(2)
             ->value(78)
             ->range(0, 100)
             ->threshold(0, 40, '#dc2626')
@@ -172,6 +177,7 @@ final class ContentDashboardScreen extends DashboardScreen
         })
             ->title('Заметка команды')
             ->size(8)
+            ->rowSpan(2)
             ->content(<<<'MD'
 **Релиз 1 мая.** Сегодня код-фриз. Все новые статьи попадут в публикацию `v2.5.0`. Любые срочные правки — через сторим.
 
