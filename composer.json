@@ -23,19 +23,19 @@
         "source": "https://github.com/dskripchenko/laravel-admin-demo"
     },
     "require": {
-        "php": "^8.5",
+        "php": "^8.2",
         "ext-json": "*",
-        "laravel/framework": "^12.0",
+        "laravel/framework": "^12.0 || ^13.0",
         "laravel/tinker": "^3.0",
-        "dskripchenko/laravel-admin": "^1.0",
-        "dskripchenko/laravel-admin-starter": "^1.0",
-        "dskripchenko/laravel-admin-health": "^1.0",
-        "dskripchenko/laravel-admin-jobs": "^1.0",
-        "dskripchenko/laravel-admin-media": "^1.0",
-        "dskripchenko/laravel-admin-pulse": "^1.0",
-        "dskripchenko/laravel-admin-search": "^1.0",
-        "dskripchenko/laravel-admin-quill": "^1.0",
-        "dskripchenko/laravel-admin-tinymce": "^1.0"
+        "dskripchenko/laravel-admin": "^1.7",
+        "dskripchenko/laravel-admin-starter": "^1.3",
+        "dskripchenko/laravel-admin-health": "^1.3",
+        "dskripchenko/laravel-admin-jobs": "^1.3",
+        "dskripchenko/laravel-admin-media": "^1.3",
+        "dskripchenko/laravel-admin-pulse": "^1.3",
+        "dskripchenko/laravel-admin-search": "^1.3",
+        "dskripchenko/laravel-admin-quill": "^1.3",
+        "dskripchenko/laravel-admin-tinymce": "^1.3"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -43,7 +43,7 @@
         "laravel/pint": "^1.27",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
-        "phpunit/phpunit": "^11.0"
+        "phpunit/phpunit": "^11.0 || ^12.0"
     },
     "autoload": {
         "psr-4": {
