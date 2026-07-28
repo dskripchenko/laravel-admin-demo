@@ -490,20 +490,20 @@
         },
         {
             "name": "dskripchenko/laravel-admin",
-            "version": "v1.7.1",
+            "version": "v1.12.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dskripchenko/laravel-admin.git",
-                "reference": "51ad1219afde5ddcae69e86be1878bd839a2dba8"
+                "reference": "cb727754e46c7189f01f55f825de08752377364b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dskripchenko/laravel-admin/zipball/51ad1219afde5ddcae69e86be1878bd839a2dba8",
-                "reference": "51ad1219afde5ddcae69e86be1878bd839a2dba8",
+                "url": "https://api.github.com/repos/dskripchenko/laravel-admin/zipball/cb727754e46c7189f01f55f825de08752377364b",
+                "reference": "cb727754e46c7189f01f55f825de08752377364b",
                 "shasum": ""
             },
             "require": {
-                "dskripchenko/laravel-api": "^5.0",
+                "dskripchenko/laravel-api": "^5.1.1",
                 "dskripchenko/laravel-delayed-process": "^2.0",
                 "dskripchenko/laravel-translatable": "^2.0",
                 "dskripchenko/php-array-helper": "^1.1",
@@ -572,7 +572,7 @@
                 "issues": "https://github.com/dskripchenko/laravel-admin/issues",
                 "source": "https://github.com/dskripchenko/laravel-admin"
             },
-            "time": "2026-07-20T18:38:10+00:00"
+            "time": "2026-07-28T16:04:49+00:00"
         },
         {
             "name": "dskripchenko/laravel-admin-health",
@@ -1130,16 +1130,16 @@
         },
         {
             "name": "dskripchenko/laravel-api",
-            "version": "5.1.0",
+            "version": "5.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dskripchenko/laravel-api.git",
-                "reference": "e3b356e863d68328304b02dbf3d9cc13c2ce3980"
+                "reference": "c5fcfd048ad67d3ad582657f88c5d5b69b9fb01d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dskripchenko/laravel-api/zipball/e3b356e863d68328304b02dbf3d9cc13c2ce3980",
-                "reference": "e3b356e863d68328304b02dbf3d9cc13c2ce3980",
+                "url": "https://api.github.com/repos/dskripchenko/laravel-api/zipball/c5fcfd048ad67d3ad582657f88c5d5b69b9fb01d",
+                "reference": "c5fcfd048ad67d3ad582657f88c5d5b69b9fb01d",
                 "shasum": ""
             },
             "require": {
@@ -1192,22 +1192,22 @@
             ],
             "support": {
                 "issues": "https://github.com/dskripchenko/laravel-api/issues",
-                "source": "https://github.com/dskripchenko/laravel-api/tree/5.1.0"
+                "source": "https://github.com/dskripchenko/laravel-api/tree/5.1.3"
             },
-            "time": "2026-06-11T04:21:53+00:00"
+            "time": "2026-07-27T15:27:28+00:00"
         },
         {
             "name": "dskripchenko/laravel-delayed-process",
-            "version": "2.1.0",
+            "version": "2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dskripchenko/laravel-delayed-process.git",
-                "reference": "4619ff82b0fd5f013e445d5a69c36dcfbedcc1e6"
+                "reference": "bd90fdfb169d206c1c9ab521fd9350874796310e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dskripchenko/laravel-delayed-process/zipball/4619ff82b0fd5f013e445d5a69c36dcfbedcc1e6",
-                "reference": "4619ff82b0fd5f013e445d5a69c36dcfbedcc1e6",
+                "url": "https://api.github.com/repos/dskripchenko/laravel-delayed-process/zipball/bd90fdfb169d206c1c9ab521fd9350874796310e",
+                "reference": "bd90fdfb169d206c1c9ab521fd9350874796310e",
                 "shasum": ""
             },
             "require": {
@@ -1217,8 +1217,7 @@
             "require-dev": {
                 "orchestra/testbench": "^9.0 || ^10.0 || ^11.0",
                 "pestphp/pest": "^3.0 || ^4.0",
-                "pestphp/pest-plugin-laravel": "^3.0 || ^4.0",
-                "roave/security-advisories": "dev-master"
+                "pestphp/pest-plugin-laravel": "^3.0 || ^4.0"
             },
             "type": "library",
             "extra": {
@@ -1253,22 +1252,22 @@
             ],
             "support": {
                 "issues": "https://github.com/dskripchenko/laravel-delayed-process/issues",
-                "source": "https://github.com/dskripchenko/laravel-delayed-process/tree/2.1.0"
+                "source": "https://github.com/dskripchenko/laravel-delayed-process/tree/2.1.1"
             },
-            "time": "2026-07-20T15:07:04+00:00"
+            "time": "2026-07-20T19:18:17+00:00"
         },
         {
             "name": "dskripchenko/laravel-translatable",
-            "version": "2.1.0",
+            "version": "2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dskripchenko/laravel-translatable.git",
-                "reference": "bd71e383ab819050fee430a6146813b77b52a141"
+                "reference": "1a721ff3362ae4601f1bc17f4df76edadd09e399"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dskripchenko/laravel-translatable/zipball/bd71e383ab819050fee430a6146813b77b52a141",
-                "reference": "bd71e383ab819050fee430a6146813b77b52a141",
+                "url": "https://api.github.com/repos/dskripchenko/laravel-translatable/zipball/1a721ff3362ae4601f1bc17f4df76edadd09e399",
+                "reference": "1a721ff3362ae4601f1bc17f4df76edadd09e399",
                 "shasum": ""
             },
             "require": {
@@ -1279,8 +1278,7 @@
             "require-dev": {
                 "orchestra/testbench": "^9.0 || ^10.0 || ^11.0",
                 "pestphp/pest": "^3.0 || ^4.0",
-                "pestphp/pest-plugin-laravel": "^3.0 || ^4.0",
-                "roave/security-advisories": "dev-master"
+                "pestphp/pest-plugin-laravel": "^3.0 || ^4.0"
             },
             "type": "library",
             "extra": {
@@ -1316,27 +1314,30 @@
             ],
             "support": {
                 "issues": "https://github.com/dskripchenko/laravel-translatable/issues",
-                "source": "https://github.com/dskripchenko/laravel-translatable/tree/2.1.0"
+                "source": "https://github.com/dskripchenko/laravel-translatable/tree/2.1.1"
             },
-            "time": "2026-07-20T15:07:04+00:00"
+            "time": "2026-07-20T19:18:14+00:00"
         },
         {
             "name": "dskripchenko/php-array-helper",
-            "version": "1.1.3",
+            "version": "1.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dskripchenko/php-array-helper.git",
-                "reference": "6b91e0371f549fbbc1cef0cd09d203183eab7035"
+                "reference": "98deff3d68029eb0b70456fe951c35f8dbda603c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dskripchenko/php-array-helper/zipball/6b91e0371f549fbbc1cef0cd09d203183eab7035",
-                "reference": "6b91e0371f549fbbc1cef0cd09d203183eab7035",
+                "url": "https://api.github.com/repos/dskripchenko/php-array-helper/zipball/98deff3d68029eb0b70456fe951c35f8dbda603c",
+                "reference": "98deff3d68029eb0b70456fe951c35f8dbda603c",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "php": "^8.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^11.0 || ^12.0"
             },
             "type": "library",
             "autoload": {
@@ -1357,9 +1358,9 @@
             "description": "Additional array functions",
             "support": {
                 "issues": "https://github.com/dskripchenko/php-array-helper/issues",
-                "source": "https://github.com/dskripchenko/php-array-helper/tree/1.1.3"
+                "source": "https://github.com/dskripchenko/php-array-helper/tree/1.1.4"
             },
-            "time": "2026-07-20T15:07:04+00:00"
+            "time": "2026-07-21T06:46:35+00:00"
         },
         {
             "name": "egulias/email-validator",
@@ -1563,16 +1564,16 @@
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "7.15.1",
+            "version": "7.15.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "61443dfb33c62f308ee8add20f45b4d6e4bf8d2f"
+                "reference": "744101956d78b7c1384d0cbf379db13e859167bf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/61443dfb33c62f308ee8add20f45b4d6e4bf8d2f",
-                "reference": "61443dfb33c62f308ee8add20f45b4d6e4bf8d2f",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/744101956d78b7c1384d0cbf379db13e859167bf",
+                "reference": "744101956d78b7c1384d0cbf379db13e859167bf",
                 "shasum": ""
             },
             "require": {
@@ -1671,7 +1672,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/guzzle/issues",
-                "source": "https://github.com/guzzle/guzzle/tree/7.15.1"
+                "source": "https://github.com/guzzle/guzzle/tree/7.15.2"
             },
             "funding": [
                 {
@@ -1687,7 +1688,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-07-18T11:23:11+00:00"
+            "time": "2026-07-26T23:23:20+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -1980,16 +1981,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v13.20.0",
+            "version": "v13.23.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "b9d1bccad5fbc32578dca22566bb11e7c0e545d7"
+                "reference": "92a707229148e57f08a249211c8a5a194159c619"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/b9d1bccad5fbc32578dca22566bb11e7c0e545d7",
-                "reference": "b9d1bccad5fbc32578dca22566bb11e7c0e545d7",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/92a707229148e57f08a249211c8a5a194159c619",
+                "reference": "92a707229148e57f08a249211c8a5a194159c619",
                 "shasum": ""
             },
             "require": {
@@ -2015,7 +2016,7 @@
                 "league/flysystem": "^3.25.1",
                 "league/flysystem-local": "^3.25.1",
                 "league/uri": "^7.5.1",
-                "monolog/monolog": "^3.0",
+                "monolog/monolog": "^3.10",
                 "nesbot/carbon": "^3.8.4",
                 "nunomaduro/termwind": "^2.0",
                 "php": "^8.3",
@@ -2203,7 +2204,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2026-07-14T14:22:22+00:00"
+            "time": "2026-07-27T14:48:58+00:00"
         },
         {
             "name": "laravel/prompts",
@@ -2266,16 +2267,16 @@
         },
         {
             "name": "laravel/serializable-closure",
-            "version": "v2.0.13",
+            "version": "v2.0.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/serializable-closure.git",
-                "reference": "b566ee0dd251f3c4078bed003a7ce015f5ea6dce"
+                "reference": "dccd8bcb851bb03fcc005df650b708b57cc52661"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/serializable-closure/zipball/b566ee0dd251f3c4078bed003a7ce015f5ea6dce",
-                "reference": "b566ee0dd251f3c4078bed003a7ce015f5ea6dce",
+                "url": "https://api.github.com/repos/laravel/serializable-closure/zipball/dccd8bcb851bb03fcc005df650b708b57cc52661",
+                "reference": "dccd8bcb851bb03fcc005df650b708b57cc52661",
                 "shasum": ""
             },
             "require": {
@@ -2323,7 +2324,7 @@
                 "issues": "https://github.com/laravel/serializable-closure/issues",
                 "source": "https://github.com/laravel/serializable-closure"
             },
-            "time": "2026-04-16T14:03:50+00:00"
+            "time": "2026-07-21T16:49:22+00:00"
         },
         {
             "name": "laravel/tinker",
@@ -5523,16 +5524,16 @@
         },
         {
             "name": "symfony/polyfill-intl-grapheme",
-            "version": "v1.38.1",
+            "version": "v1.41.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-intl-grapheme.git",
-                "reference": "e9247d281d694a5120554d9afaf54e070e88a603"
+                "reference": "bb899c1db0aa8127dc3afe8cda4a67eb24915f8d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-intl-grapheme/zipball/e9247d281d694a5120554d9afaf54e070e88a603",
-                "reference": "e9247d281d694a5120554d9afaf54e070e88a603",
+                "url": "https://api.github.com/repos/symfony/polyfill-intl-grapheme/zipball/bb899c1db0aa8127dc3afe8cda4a67eb24915f8d",
+                "reference": "bb899c1db0aa8127dc3afe8cda4a67eb24915f8d",
                 "shasum": ""
             },
             "require": {
@@ -5581,7 +5582,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-intl-grapheme/tree/v1.38.1"
+                "source": "https://github.com/symfony/polyfill-intl-grapheme/tree/v1.41.0"
             },
             "funding": [
                 {
@@ -5601,7 +5602,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-05-26T05:58:03+00:00"
+            "time": "2026-07-28T08:25:59+00:00"
         },
         {
             "name": "symfony/polyfill-intl-idn",
@@ -6026,16 +6027,16 @@
         },
         {
             "name": "symfony/polyfill-php85",
-            "version": "v1.38.1",
+            "version": "v1.41.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php85.git",
-                "reference": "ba2ba04f3352cfa2dcbbcb90aee13ed967f505b1"
+                "reference": "255fab485aaa1006ed411040c42aecd7b5302d7a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php85/zipball/ba2ba04f3352cfa2dcbbcb90aee13ed967f505b1",
-                "reference": "ba2ba04f3352cfa2dcbbcb90aee13ed967f505b1",
+                "url": "https://api.github.com/repos/symfony/polyfill-php85/zipball/255fab485aaa1006ed411040c42aecd7b5302d7a",
+                "reference": "255fab485aaa1006ed411040c42aecd7b5302d7a",
                 "shasum": ""
             },
             "require": {
@@ -6082,7 +6083,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-php85/tree/v1.38.1"
+                "source": "https://github.com/symfony/polyfill-php85/tree/v1.41.0"
             },
             "funding": [
                 {
@@ -6102,20 +6103,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-05-26T02:25:22+00:00"
+            "time": "2026-07-01T12:47:55+00:00"
         },
         {
             "name": "symfony/polyfill-php86",
-            "version": "v1.38.0",
+            "version": "v1.41.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php86.git",
-                "reference": "fcec68d64f46dc84e1f6ffcf2c6dda40ff3143ad"
+                "reference": "6bc356ed3d8dbfeea8f0de235e34d670704e880e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php86/zipball/fcec68d64f46dc84e1f6ffcf2c6dda40ff3143ad",
-                "reference": "fcec68d64f46dc84e1f6ffcf2c6dda40ff3143ad",
+                "url": "https://api.github.com/repos/symfony/polyfill-php86/zipball/6bc356ed3d8dbfeea8f0de235e34d670704e880e",
+                "reference": "6bc356ed3d8dbfeea8f0de235e34d670704e880e",
                 "shasum": ""
             },
             "require": {
@@ -6162,7 +6163,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-php86/tree/v1.38.0"
+                "source": "https://github.com/symfony/polyfill-php86/tree/v1.41.0"
             },
             "funding": [
                 {
@@ -6182,7 +6183,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-05-25T11:52:35+00:00"
+            "time": "2026-07-02T13:42:24+00:00"
         },
         {
             "name": "symfony/polyfill-uuid",
