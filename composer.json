@@ -1,7 +1,7 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
     "name": "dskripchenko/laravel-admin-demo",
-    "description": "Demonstration Laravel 12 host-проект с подключённым dskripchenko/laravel-admin и всеми 8 sister-pack'ами. Quick-start template + публичный showcase.",
+    "description": "Demonstration Laravel 12 host project with dskripchenko/laravel-admin and all eight sister packages wired up. Quick-start template and public showcase.",
     "type": "project",
     "keywords": [
         "laravel",

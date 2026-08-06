@@ -1,28 +1,35 @@
 # laravel-admin-demo
 
-Демонстрационный стенд **dskripchenko/laravel-admin** — готовый Laravel 12-проект с подключёнными core и всеми 8 sister-pack'ами. Используется как:
+A demonstration stand for **dskripchenko/laravel-admin** — a ready Laravel 12
+project with the core and all eight sister packages wired up. It serves two
+purposes:
 
-1. **Showcase** — публично задеплоенный URL (`admin-demo.example.com`), куда можно зайти и потыкать админку без локальной установки.
-2. **Quick-start template** — `composer create-project dskripchenko/laravel-admin-demo my-admin` для онбординга разработчика за ≤ 5 минут.
+1. **Showcase** — a publicly deployed URL (`admin-demo.example.com`) where the
+   panel can be clicked through without installing anything.
+2. **Quick-start template** — `composer create-project dskripchenko/laravel-admin-demo my-admin`
+   puts a developer in a working panel in under five minutes.
 
-Один и тот же репозиторий работает в обоих режимах.
+The same repository works in both modes.
 
-## Что внутри
+> 🌐 **English** · [Deutsch](docs/de/README.md) · [Русский](docs/ru/README.md) · [中文](docs/zh/README.md)
 
-- **3 Demo-Resource'а** — Articles (WYSIWYG-блог), Products (каталог с категориями), Orders (workflow-статусы).
-- **Все 8 sister-pack'ов активированы** в `config/admin.php`:
-  - `laravel-admin-starter` — system Resource'ы (Users / Roles / AuditLog / Settings / Translations / ContentBlocks)
-  - `laravel-admin-health` — health-checks dashboard
-  - `laravel-admin-jobs` — failed jobs / batches / queue depth
-  - `laravel-admin-media` — медиа-библиотека
-  - `laravel-admin-pulse` — телеметрия (request / query / job / exception)
-  - `laravel-admin-search` — глобальный поиск (cmd+K)
-  - `laravel-admin-quill` — WYSIWYG Quill
-  - `laravel-admin-tinymce` — WYSIWYG TinyMCE
-- **Демо-данные**: 50 статей, 50 товаров, 50 заказов (DemoSeeder).
-- **Admin-аккаунт**: `admin@example.com` / `password`.
+## What's inside
 
-## Quick-start (локально)
+- **Three demo resources** — Articles (a WYSIWYG blog), Products (a catalogue
+  with categories), Orders (workflow statuses).
+- **All eight sister packages enabled** in `config/admin.php`:
+  - `laravel-admin-starter` — system resources (Users / Roles / AuditLog / Settings / Translations / ContentBlocks)
+  - `laravel-admin-health` — health-check dashboard
+  - `laravel-admin-jobs` — failed jobs, batches, queue depth
+  - `laravel-admin-media` — media library
+  - `laravel-admin-pulse` — telemetry (request / query / job / exception)
+  - `laravel-admin-search` — global search (⌘K)
+  - `laravel-admin-quill` — the Quill editor
+  - `laravel-admin-tinymce` — the TinyMCE editor
+- **Demo data**: 50 articles, 50 products, 50 orders (`DemoSeeder`).
+- **Admin account**: `admin@example.com` / `password`.
+
+## Quick start (locally)
 
 ```bash
 composer create-project dskripchenko/laravel-admin-demo my-admin
@@ -31,9 +38,10 @@ composer setup    # install + key:gen + sqlite + migrate + seed + npm build
 php artisan serve
 ```
 
-Открыть [http://localhost:8000/admin](http://localhost:8000/admin), залогиниться `admin@example.com` / `password`.
+Open [http://localhost:8000/admin](http://localhost:8000/admin) and sign in with
+`admin@example.com` / `password`.
 
-### Альтернативный вариант — клонирование
+### Alternatively, by cloning
 
 ```bash
 git clone git@github.com:dskripchenko/laravel-admin-demo.git
@@ -48,19 +56,22 @@ npm install && npm run build
 php artisan serve
 ```
 
-## Public deploy
+## Public deployment
 
-См. [`deploy/forge.md`](deploy/forge.md) для пошагового guide через Laravel Forge или [`deploy/docker-compose.yml`](deploy/docker-compose.yml) для self-hosted Docker-варианта.
+See [`deploy/forge.md`](deploy/forge.md) for a step-by-step guide through
+Laravel Forge, or [`deploy/docker-compose.yml`](deploy/docker-compose.yml) for a
+self-hosted Docker setup.
 
-После каждого `git push origin main` Forge автоматически:
+After every `git push origin main`, Forge runs:
+
 1. `composer install --no-dev --optimize-autoloader`
 2. `npm ci && npm run build`
 3. `php artisan migrate --force`
-4. `php artisan db:seed --class=DemoSeeder` (только при флаге `RESET=true` в env)
+4. `php artisan db:seed --class=DemoSeeder` (only when `RESET=true` is set in the environment)
 
-Кронтаб для periodic-reset стенда (раз в сутки) — см. `deploy/forge.md`.
+The cron entry that resets the stand once a day is in `deploy/forge.md`.
 
-## Структура
+## Layout
 
 ```
 demo/
@@ -68,20 +79,21 @@ demo/
 │   ├── Admin/Resources/        # ArticleResource, ProductResource, OrderResource
 │   └── Models/                 # Article, Product, Order
 ├── config/
-│   └── admin.php               # все 8 packs в plugins[], 3 demo-resource'а
+│   └── admin.php               # all eight packs in plugins[], three demo resources
 ├── database/
 │   ├── migrations/             # articles + products + orders
-│   └── seeders/DemoSeeder.php  # 50 + 50 + 50 фейк-записей
-├── deploy/                     # Docker / Forge / nginx конфиги
-└── resources/, public/, ...    # стандартный Laravel 12 layout
+│   └── seeders/DemoSeeder.php  # 50 + 50 + 50 fake records
+├── deploy/                     # Docker / Forge / nginx configuration
+└── resources/, public/, ...    # the standard Laravel 12 layout
 ```
 
-## Кастомизация
+## Making it yours
 
-- Заменить `App\Admin\Resources\*` на свои.
-- Удалить ненужные packs из `config/admin.php` `plugins[]`.
-- Удалить демо-миграции (`database/migrations/2026_01_01_*`) и `DemoSeeder` если стартуете на чистый.
+- Replace `App\Admin\Resources\*` with your own resources.
+- Drop the packs you don't need from `plugins[]` in `config/admin.php`.
+- Delete the demo migrations (`database/migrations/2026_01_01_*`) and
+  `DemoSeeder` if you are starting from a clean slate.
 
-## Лицензия
+## License
 
 MIT.
