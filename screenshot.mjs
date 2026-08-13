@@ -1,5 +1,5 @@
 /**
- * Screenshot + console-log demo admin страницы.
+ * A screenshot plus the console log of a demo admin page.
  *
  * Usage:
  *   node screenshot.mjs <url> <out.png>
@@ -52,7 +52,7 @@ try {
         { timeout: 8000, polling: 200 },
     )
 } catch {
-    // 404 — let it ride and reveal в screenshot.
+    // A 404 — let it ride and reveal itself in the screenshot.
 }
 await page.waitForTimeout(500)
 await page.screenshot({ path: out, fullPage: true })

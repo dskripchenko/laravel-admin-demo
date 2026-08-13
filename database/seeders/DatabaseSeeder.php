@@ -9,9 +9,9 @@ use Illuminate\Database\Seeder;
 final class DatabaseSeeder extends Seeder
 {
     /**
-     * Default seeder — делегирует в DemoSeeder.
+     * The default seeder — it delegates to DemoSeeder.
      *
-     * Запуск: `php artisan db:seed` или `php artisan migrate --seed`.
+     * Run it with `php artisan db:seed` or `php artisan migrate --seed`.
      */
     public function run(): void
     {

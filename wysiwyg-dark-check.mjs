@@ -14,7 +14,7 @@ await Promise.all([
 ])
 await page.waitForTimeout(2500)
 
-// Включаем dark-тему через data-theme
+// We switch the dark theme on through data-theme
 await page.evaluate(() => { document.documentElement.setAttribute('data-theme', 'dark') })
 await page.waitForTimeout(300)
 
@@ -39,7 +39,7 @@ await sourceBtn.click()
 await page.waitForTimeout(300)
 await page.screenshot({ path: '/tmp/wysiwyg-dark-2-source.png', fullPage: false })
 
-// Снимок цветов CSS-переменных wysiwyg
+// A snapshot of the colours of the wysiwyg CSS variables
 const colors = await page.evaluate(() => {
     const el = document.querySelector('.dsk-wysiwyg')
     if (!el) return null

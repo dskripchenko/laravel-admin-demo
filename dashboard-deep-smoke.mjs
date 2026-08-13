@@ -21,7 +21,7 @@ await page.waitForTimeout(2500)
 await page.goto('http://127.0.0.1:8000/admin/dashboard/content', { waitUntil: 'networkidle' })
 await page.waitForTimeout(2_500)
 
-// Reset persisted layout (чистое состояние)
+// Reset the persisted layout (a clean state)
 await page.evaluate(async () => {
     await fetch('/api/admin/dashboard/reset', {
         method: 'POST', credentials: 'include',
@@ -57,7 +57,7 @@ const cellsInfo = await page.evaluate(() => {
 })
 console.log('first 3 cells:', cellsInfo)
 
-// === 2. Configure click — почему не открывается dialog? ===
+// === 2. The configure click — why does the dialog not open? ===
 console.log('\n=== CONFIGURE CLICK ===')
 const configBtn = page.locator('.admin-widget-actions button[aria-label="Настройки"]').first()
 console.log('btn visible:', await configBtn.isVisible())
@@ -90,7 +90,7 @@ const handle1 = cell0.locator('[data-drag-handle="true"]')
 const before = await page.locator('.admin-dashboard__cell h3, .admin-dashboard__cell .widget-title').allTextContents()
 console.log('before:', before.slice(0, 5).map(s => s.trim().slice(0, 25)))
 
-// Native drag через playwright dragTo
+// A native drag through playwright's dragTo
 await handle1.dragTo(cell2, { force: true })
 await page.waitForTimeout(800)
 const after = await page.locator('.admin-dashboard__cell h3, .admin-dashboard__cell .widget-title').allTextContents()
@@ -103,8 +103,9 @@ const dragInfo = await page.evaluate(() => {
     const cell = document.querySelector('.admin-dashboard__cell')
     if (!cell) return null
     const events = ['dragstart', 'dragover', 'drop']
-    // У нас listener'ы на cell-level через @dragstart="onDragStart". Vue их binds.
-    // Проверим существование getEventListeners (только в DevTools API).
+    // Our listeners sit at the cell level through @dragstart="onDragStart", and
+    // Vue binds them. We check whether getEventListeners exists (it is a
+    // DevTools-only API).
     return {
         draggable: cell.getAttribute('draggable'),
         innerHTML_drag_attrs: cell.outerHTML.slice(0, 200),

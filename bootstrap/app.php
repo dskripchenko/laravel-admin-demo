@@ -11,10 +11,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // Admin API использует session cookies (web middleware) для auth.
-        // CSRF-protection избыточна для same-origin XHR (axios + withCredentials)
-        // и создаёт race condition при session.regenerate() после login.
-        // Same-origin policy браузера + Authorization-via-session — достаточная защита.
+        // The admin API uses session cookies (the web middleware) for the
+        // authentication. CSRF protection is redundant for a same-origin XHR
+        // (axios with withCredentials) and creates a race condition on
+        // session.regenerate() after a login. The browser's same-origin policy
+        // plus authorization through the session is protection enough.
         $middleware->validateCsrfTokens(except: [
             'api/admin/*',
         ]);

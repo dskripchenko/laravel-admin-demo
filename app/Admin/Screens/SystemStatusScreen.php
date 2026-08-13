@@ -17,17 +17,20 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 /**
- * SystemStatusScreen — пример read-only кастомной страницы (без формы).
+ * SystemStatusScreen — an example of a read-only custom page (without a form).
  *
- * Показывает статус demo-приложения: количество статей по статусам,
- * количество сообщений из ContactScreen, статус DB-соединения.
+ * It shows the demo application's status: the number of articles per status, the
+ * number of messages from ContactScreen and the state of the database
+ * connection.
  *
- * Демонстрирует:
- *   - Screen без формы — собирает данные в query() и отрисовывает через
- *     Block + readonly Input/Number (read-only представление полей)
- *   - commandBar с двумя командами: refresh (обновить snapshot)
- *     + resetContactCounter (сбросить счётчик контактов с confirm-диалогом)
- *   - refresh:true в ответе runMethod заставляет фронт перезагрузить state
+ * It demonstrates:
+ *   - a screen without a form — it gathers the data in query() and renders it
+ *     through a Block plus read-only Input/Number fields;
+ *   - a commandBar with two commands: refresh (to update the snapshot) and
+ *     resetContactCounter (to reset the contact counter, with a confirmation
+ *     dialog);
+ *   - refresh:true in the runMethod response, which makes the frontend reload
+ *     the state.
  */
 final class SystemStatusScreen extends Screen
 {

@@ -28,7 +28,7 @@ await page.waitForTimeout(2500)
 await page.locator('button', { hasText: /Редактировать/ }).first().click()
 await page.waitForTimeout(800)
 
-// === DRAG via real mouse events (HTML5 drag через pointer'ы) ===
+// === DRAG through real mouse events (an HTML5 drag with pointers) ===
 console.log('=== DRAG (mouse + native dragstart triggered via dataTransfer) ===')
 const titleOf = (sel) => page.locator(sel).first().locator('h3, .widget-title').first().textContent().catch(() => '')
 

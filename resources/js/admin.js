@@ -1,26 +1,28 @@
 /**
- * SPA admin entry — host-mount.
+ * The SPA admin entry — the host mount.
  *
- * createAdminApp() из @dskripchenko/laravel-admin собирает Pinia, Router,
- * AdminClient + регистрирует built-in fields/widgets/infolist.
+ * createAdminApp() from @dskripchenko/laravel-admin assembles Pinia, the router
+ * and the AdminClient, and registers the built-in fields, widgets and infolist
+ * entries.
  *
- * WYSIWYG: с v1.2.3 core использует @dskripchenko/wysiwyg как default
- * (zero-dep, ~7 KB gz). Если хотите Quill/Tinymce — раскомментируйте
- * блок registerField ниже.
+ * WYSIWYG: since v1.2.3 the core uses @dskripchenko/wysiwyg as the default
+ * (dependency-free, about 7 KB gzipped). For Quill or Tinymce, uncomment the
+ * registerField block below.
  */
-// (1) UI-кит: tokens + themes + reset + global + Uid*-компоненты.
+// (1) The UI kit: the tokens, the themes, the reset, the globals and the Uid*
+// components.
 import '@dskripchenko/ui/styles/all.css'
-// (2) admin-каркасные стили
+// (2) The admin shell styles
 import '@dskripchenko/laravel-admin/style.css'
-// (3) WYSIWYG (default) стили — сам JS подтягивается через core's WysiwygField.
+// (3) The WYSIWYG (default) styles — the JS itself is pulled in through the core's WysiwygField.
 import '@dskripchenko/wysiwyg/style.css'
 
 import { createAdminApp } from '@dskripchenko/laravel-admin'
 
 const { app } = createAdminApp(window.__ADMIN_BOOTSTRAP__, {
     onAppCreated: (vueApp) => {
-        // Optional: переключить wysiwyg на Quill/Tinymce.
-        // ─────────────────────────────────────────────────
+        // Optional: switch the wysiwyg over to Quill or Tinymce.
+        // -------------------------------------------------
         // import { defineAsyncComponent } from 'vue'
         // import { registerField } from '@dskripchenko/laravel-admin'
         // import '@vueup/vue-quill/dist/vue-quill.snow.css'

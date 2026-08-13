@@ -21,11 +21,11 @@ await Promise.all([
 await page.waitForTimeout(2_500)
 console.log('--- after login:', page.url())
 
-// 2. Список пунктов меню
+// 2. The list of menu items
 const navItems = await page.locator('aside a, aside button').allTextContents()
 console.log('--- menu items:', navItems.map((s) => s.trim()).filter(Boolean).slice(0, 25))
 
-// 3. Перейти на ContactScreen напрямую через URL
+// 3. Go to ContactScreen directly, through the URL
 await page.goto('http://127.0.0.1:8000/admin/screens/contact', { waitUntil: 'networkidle' })
 await page.waitForTimeout(1_500)
 console.log('--- contact screen url:', page.url())
@@ -34,12 +34,12 @@ console.log('--- contact title:', contactTitle)
 
 await page.screenshot({ path: '/tmp/screen-contact-1-empty.png', fullPage: false })
 
-// 4. Заполнить форму
+// 4. Fill in the form
 await page.locator('input[type="text"]').first().fill('Денис тестировщик')
 await page.locator('input[type="email"]').fill('test@example.com')
 const subjectSelect = page.locator('select').first()
 await subjectSelect.selectOption('bug').catch(async () => {
-    // если select это UidSelect (custom) — кликаем option напрямую
+    // when the select is a UidSelect (a custom one) we click the option directly
     await page.locator('text="Тема"').click({ force: true }).catch(() => undefined)
 })
 await page.locator('textarea').fill('Это тестовое сообщение из smoke-теста, длиннее 10 символов.')
@@ -51,16 +51,16 @@ const submitBtn = page.getByRole('button', { name: /Отправить/i }).firs
 await submitBtn.click()
 await page.waitForTimeout(1_500)
 
-// 6. Проверить, что появилось сообщение об успехе
+// 6. Check that the success message appeared
 const alertText = await page.locator('[role="alert"], [role="status"]').allTextContents()
 console.log('--- alert(s) after send:', alertText)
 await page.screenshot({ path: '/tmp/screen-contact-3-success.png', fullPage: false })
 
-// 7. Проверить, что поля очистились
+// 7. Check that the fields were cleared
 const emailValue = await page.locator('input[type="email"]').inputValue()
 console.log('--- email after send (should be empty):', JSON.stringify(emailValue))
 
-// 8. Перейти на SystemStatusScreen
+// 8. Go to SystemStatusScreen
 await page.goto('http://127.0.0.1:8000/admin/screens/system-status', { waitUntil: 'networkidle' })
 await page.waitForTimeout(1_500)
 console.log('--- system-status url:', page.url())

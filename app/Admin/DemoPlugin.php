@@ -15,15 +15,18 @@ use Dskripchenko\LaravelAdmin\Menu\MenuNode;
 use Dskripchenko\LaravelAdmin\Plugin\AdminPlugin;
 
 /**
- * Demo-plugin host-проекта: регистрирует Article/Product/Order Resource'ы.
+ * The host project's demo plugin: it registers the Article, Product and Order
+ * resources.
  *
- * Регистрируется через config('admin.plugins'). Plugin'овая регистрация
- * происходит в AdminServiceProvider::bootPlugins() ДО ResourceCompiler::compile,
- * поэтому HTTP routes для resources доступны после boot.
+ * It is registered through config('admin.plugins'). The plugin registration
+ * happens in AdminServiceProvider::bootPlugins() BEFORE
+ * ResourceCompiler::compile, so the HTTP routes of the resources are available
+ * after the boot.
  *
- * (Альтернативно `Admin::resources([...])` в AppServiceProvider::boot() не
- * работает в текущей версии core — host провайдеры boot'аются ПОСЛЕ admin
- * boot'а. Будет улучшено в core v1.2 — lazy route compilation.)
+ * (The alternative, `Admin::resources([...])` in AppServiceProvider::boot(),
+ * does not work in the current version of the core — the host providers boot
+ * AFTER the admin does. This will be improved in core v1.2, with lazy route
+ * compilation.)
  */
 final class DemoPlugin implements AdminPlugin
 {
@@ -39,7 +42,7 @@ final class DemoPlugin implements AdminPlugin
 
     public function register(): void
     {
-        // Permissions, settings и т.п. — здесь.
+        // Permissions, settings and the like go here.
     }
 
     public function boot(Admin $admin): void
@@ -55,9 +58,10 @@ final class DemoPlugin implements AdminPlugin
             SystemStatusScreen::class,
         ]);
 
-        // Иерархическое меню — демонстрирует indent (depth 0..2) и stripe-mode
-        // (depth 3+). withAuto(false) — мы явно описываем всё что должно
-        // попасть в sidebar, без auto-fill оставшихся items.
+        // A hierarchical menu — it demonstrates the indentation (depth 0..2)
+        // and the stripe mode (depth 3 and deeper). withAuto(false) means we
+        // describe everything that should reach the sidebar explicitly, without
+        // auto-filling the remaining items.
         $admin->menu()->withAuto(false);
         $admin->menu()->add(
             MenuNode::make('content', 'Контент')->icon('book-open')->children([

@@ -14,13 +14,13 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
 /**
- * Seeder для демонстрационного стенда.
+ * The seeder of the demonstration stand.
  *
- * Создаёт:
- *   - admin@example.com / password (suspendsuper-admin login)
- *   - 50 фейковых статей (~80% published)
- *   - 50 товаров в 4 категориях
- *   - 50 заказов с разнообразными статусами
+ * It creates:
+ *   - admin@example.com / password (the super-admin login)
+ *   - 50 fake articles (about 80% of them published)
+ *   - 50 products across 4 categories
+ *   - 50 orders with assorted statuses
  */
 final class DemoSeeder extends Seeder
 {
@@ -34,18 +34,18 @@ final class DemoSeeder extends Seeder
 
     private function seedAdmin(): void
     {
-        // ───────────────────────────────────────────────────────────────
-        // Baseline-роли для демонстрации RBAC.
+        // ---------------------------------------------------------------
+        // The baseline roles, to demonstrate the RBAC.
         //
-        // super-admin — wildcard '*' (всё). Используется системой.
-        // editor      — управление контентом + media, БЕЗ настроек системы.
-        //               view+create+update без delete для articles/products/
-        //               orders + полный доступ к media.
-        // viewer      — read-only доступ ко всему. *.view permissions.
+        // super-admin — the '*' wildcard (everything). Used by the system.
+        // editor      — managing the content and the media, WITHOUT the system
+        //               settings. view+create+update without delete for the
+        //               articles/products/orders, plus full access to the media.
+        // viewer      — read-only access to everything. The *.view permissions.
         //
-        // permissions используют wildcard'ы (`admin.shop.*`,
-        // `admin.system.*.view`) — Role::hasPermission() поддерживает их.
-        // ───────────────────────────────────────────────────────────────
+        // The permissions use wildcards (`admin.shop.*`,
+        // `admin.system.*.view`) — Role::hasPermission() supports them.
+        // ---------------------------------------------------------------
         $superRole = Role::query()->updateOrCreate(
             ['slug' => 'super-admin'],
             [
@@ -71,7 +71,7 @@ final class DemoSeeder extends Seeder
                     'admin.shop.products.update',
                     'admin.shop.orders.view',
                     'admin.shop.orders.update',
-                    // Media — полный доступ.
+                    // Media — full access.
                     'admin.media.*',
                 ],
                 'is_system' => false,

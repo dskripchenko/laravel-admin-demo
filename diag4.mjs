@@ -21,7 +21,7 @@ await Promise.all([
 const after = await ctx.cookies()
 console.log('=== After login XSRF:', after.find((c) => c.name === 'XSRF-TOKEN')?.value.slice(0, 30))
 
-// Проверим что header в search pose отправит правильный XSRF.
+// We check that the header in the search pose sends the right XSRF.
 await page.waitForTimeout(500)
 const sent = await page.evaluate(async () => {
     const xsrf = document.cookie.split('; ').find(c => c.startsWith('XSRF-TOKEN='))?.split('=')[1]

@@ -18,14 +18,14 @@ await Promise.all([
 ])
 console.log('--- logged in')
 
-// Дождаться появления sidebar меню
+// Wait for the sidebar menu to appear
 await page.waitForTimeout(3000)
 
-// Diag: какие нав-элементы есть
+// Diagnostics: which nav elements are there
 const navItems = await page.locator('nav a, nav button, [role=menuitem]').allTextContents()
 console.log('--- nav items:', navItems.slice(0, 30))
 
-// Найти ссылку Статьи
+// Find the Статьи link
 const articlesLink = page.locator('a, button').filter({ hasText: /^\s*Статьи\s*$/ }).first()
 const articlesCount = await articlesLink.count()
 console.log('--- articles links count:', articlesCount)
@@ -39,7 +39,7 @@ await articlesLink.click()
 await page.waitForTimeout(2000)
 console.log('--- url after Статьи click:', page.url())
 
-// Найти кнопку создания
+// Find the create button
 const createCandidates = await page.locator('button, a').filter({ hasText: /создать|добавить|new|create/i }).all()
 console.log('--- create candidates:', createCandidates.length)
 for (const c of createCandidates.slice(0, 3)) console.log('     ', (await c.textContent())?.trim())
@@ -103,11 +103,11 @@ await page.keyboard.press('Escape')
 await page.waitForTimeout(200)
 const slashAfterEsc = await slashMenu.count()
 console.log('--- slash open after Esc:', slashAfterEsc)
-// Esc оставляет `/` в тексте (как в Notion). Удаляем backspace'ом.
+// Esc leaves the `/` in the text (as in Notion). We remove it with a backspace.
 await page.keyboard.press('Backspace')
 await page.waitForTimeout(100)
 
-// /h2 фильтр
+// The /h2 filter
 await page.keyboard.type('/h2', { delay: 30 })
 await page.waitForTimeout(300)
 const filteredCount = await page.locator('.dsk-wysiwyg-slash__item').count()
@@ -130,7 +130,7 @@ const html = await editor.innerHTML()
 console.log('\n--- editor HTML (raw DOM, with ZWSP):')
 console.log(html.slice(0, 2000))
 
-// v-model значение через formState — то, что улетит в БД (после vacuumZwsp).
+// The v-model value through formState — what will fly into the database (after vacuumZwsp).
 const vModelValue = await page.evaluate(() => {
     const form = document.querySelector('input[name="body"], textarea[name="body"]')
     return form ? form.value : null

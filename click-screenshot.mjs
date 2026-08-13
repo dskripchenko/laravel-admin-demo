@@ -18,7 +18,7 @@ await Promise.all([
     page.locator('button[type="submit"]').click(),
 ])
 
-// Подождать пока manifest загрузится (router получит routes для articles).
+// Wait until the manifest loads (the router then gets the routes for the articles).
 await page.waitForFunction(
     () => {
         const cards = document.querySelectorAll('.admin-home__card')
@@ -28,10 +28,10 @@ await page.waitForFunction(
 )
 console.log('--- home loaded with', await page.locator('.admin-home__card').count(), 'cards')
 
-// Diagnostic: какие routes сейчас в router?
+// Diagnostics: which routes are in the router right now?
 const routeNames = await page.evaluate(() => {
-    // Гарантируем доступ к router'у через Vue app: пробуем глобально.
-    // Если нет — вернём пустой массив.
+    // We make sure the router is reachable through the Vue app: we try
+    // globally. When there is none we return an empty array.
     const app = (globalThis).__VUE_APP__
     return app && app._context && app._context.app
         ? []
@@ -39,7 +39,7 @@ const routeNames = await page.evaluate(() => {
 })
 console.log('--- routeNames count (might be empty if not exposed):', routeNames.length)
 
-// SPA navigation на articles через click.
+// An SPA navigation to the articles through a click.
 const articles = page.getByRole('button', { name: /Статьи/ })
 await articles.click()
 await page.waitForTimeout(1500)

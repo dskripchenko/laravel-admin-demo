@@ -15,7 +15,7 @@ final class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        // Demo-Resource'ы регистрируются через App\Admin\DemoPlugin
-        // (см. config/admin.php → plugins[]).
+        // The demo resources are registered through App\Admin\DemoPlugin (see
+        // config/admin.php → plugins[]).
     }
 }

@@ -56,7 +56,7 @@ console.log('dialog text snippet:', dialogText?.slice(0, 250))
 const selects = await page.locator('[role=dialog] select, .uid-modal-content select').all()
 console.log('selects in dialog:', selects.length)
 
-// Try save the new widget — кнопка "Сохранить" в диалоге (НЕ та что в header)
+// Try to save the new widget — the "Сохранить" button in the dialog (NOT the one in the header)
 const dialogSaveBtn = page.locator('[role=dialog] button, .uid-modal-content button').filter({ hasText: /Добавить|Сохранить/ }).last()
 const saveBtnVisible = await dialogSaveBtn.isVisible().catch(() => false)
 console.log('dialog save btn visible:', saveBtnVisible)
@@ -78,7 +78,7 @@ if (saveRequests.length > 0) {
     console.log('saved widgets count:', data.widgets?.length, ' first 3:', data.widgets?.slice(0, 3))
 }
 
-// === Reload — проверим персистентность ===
+// === Reload — we check the persistence ===
 console.log('\n=== RELOAD (persistence) ===')
 await page.reload({ waitUntil: 'networkidle' })
 await page.waitForTimeout(2_500)

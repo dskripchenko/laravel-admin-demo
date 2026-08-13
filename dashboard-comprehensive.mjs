@@ -50,7 +50,7 @@ console.log('cells:', initial)
 await page.locator('button', { hasText: /Редактировать/ }).first().click()
 await page.waitForTimeout(500)
 
-// 1) DRAG: переместить 1-й виджет на 3-ю позицию
+// 1) DRAG: move the first widget into the third position
 console.log('\n=== DRAG ===')
 const drag = await page.evaluate(() => {
     const cells = Array.from(document.querySelectorAll('.admin-dashboard__cell'))

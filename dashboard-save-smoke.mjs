@@ -33,7 +33,7 @@ await page.locator('button', { hasText: /Редактировать/ }).first().
 await page.waitForTimeout(500)
 console.log('in edit mode:', await page.locator('.admin-dashboard__grid--editing').count() > 0)
 
-// Сразу Save (без модификаций)
+// Save straight away (with no changes)
 const allButtons = await page.locator('.admin-page__actions button').allTextContents()
 console.log('all buttons:', allButtons.map((s) => s.trim()))
 const saveBtn = page.getByRole('button', { name: 'Сохранить', exact: true }).first()

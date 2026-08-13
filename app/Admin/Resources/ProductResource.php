@@ -15,10 +15,10 @@ use Dskripchenko\LaravelAdmin\Resource\Resource;
 use Dskripchenko\LaravelAdmin\Table\TableColumn;
 
 /**
- * Demo Resource — каталог товаров.
+ * A demo resource — the product catalogue.
  *
- * Показывает: денежное поле с decimal-precision, switcher для is_active,
- * фильтр-в-категорию, поиск по SKU/name.
+ * It shows: a money field with a decimal precision, a switcher for is_active, a
+ * filter by category and a search by SKU or name.
  */
 final class ProductResource extends Resource
 {

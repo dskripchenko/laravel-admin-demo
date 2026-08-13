@@ -15,13 +15,13 @@ await page.waitForTimeout(2500)
 
 console.log('after login:', page.url())
 
-// Navigate to dashboard через меню — раскрываем «Аналитика», кликаем «Аналитика» (dashboard)
+// Navigate to the dashboard through the menu — we expand "Аналитика" and click "Аналитика" (the dashboard)
 await page.locator('aside button', { hasText: 'Аналитика' }).first().click()
 await page.waitForTimeout(500)
 const dashLinks = await page.locator('aside .admin-sidebar-node[data-depth="1"]').allTextContents()
 console.log('analytics children:', dashLinks.map(s => s.trim()))
 
-// Кликнем на dashboard-leaf «Аналитика» (под analytics — там child тоже называется «Аналитика», resolved label)
+// We click the dashboard leaf "Аналитика" (under analytics the child is called "Аналитика" too, that is the resolved label)
 const dashLink = page.locator('aside .admin-sidebar-node[data-depth="1"] a').first()
 const href = await dashLink.getAttribute('href')
 console.log('dashboard link href:', href)

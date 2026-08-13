@@ -29,10 +29,10 @@ await page.keyboard.type('жирным', { delay: 20 })
 await page.keyboard.down('Meta'); await page.keyboard.press('b'); await page.keyboard.up('Meta')
 await page.keyboard.type(' текстом.', { delay: 20 })
 
-// Скрин до toggle
+// A screenshot before the toggle
 await page.screenshot({ path: '/tmp/wysiwyg-src-1-before.png', fullPage: false })
 
-// Нажимаем "Исходный код" (последняя кнопка в toolbar)
+// We press "Исходный код" (the last button of the toolbar)
 const sourceBtn = page.locator('.dsk-wysiwyg-toolbar__btn').last()
 const titleBefore = await sourceBtn.getAttribute('title')
 console.log('--- last toolbar btn title:', titleBefore)
@@ -46,17 +46,17 @@ const sourceContent = await textarea.inputValue()
 console.log('--- source HTML:')
 console.log(sourceContent)
 
-// Скрин в source-режиме
+// A screenshot in source mode
 await page.screenshot({ path: '/tmp/wysiwyg-src-2-source.png', fullPage: false })
 
-// Редактируем HTML — вставляем <em>дополнение</em>
+// We edit the HTML — an <em>дополнение</em> is inserted
 await textarea.click()
 await page.keyboard.down('Meta'); await page.keyboard.press('a'); await page.keyboard.up('Meta')
 await page.keyboard.press('Backspace')
 await page.keyboard.type('<h1>Из source</h1><p>Параграф с <em>курсивом</em>.</p>', { delay: 5 })
 await page.waitForTimeout(200)
 
-// Возврат
+// Back again
 await sourceBtn.click()
 await page.waitForTimeout(300)
 const editorVisible = await editor.isVisible()

@@ -1,12 +1,13 @@
 /**
- * E2E full-flow smoke для laravel-admin.
+ * The end-to-end full-flow smoke test of laravel-admin.
  *
- * Покрытие: login → manifest load → меню (иерархия) → resources index/edit →
- * dashboard (view + edit-mode + save) → screens (form submit) → notifications
- * drawer → profile → logout. На каждом шаге собирает console errors.
+ * The coverage: login → the manifest loads → the menu (the hierarchy) → the
+ * resources' index and edit pages → the dashboard (viewing, the edit mode, a
+ * save) → the screens (a form submit) → the notifications drawer → the profile →
+ * logout. It collects the console errors at every step.
  *
- * Запуск: cd demo && node e2e-full-flow.mjs
- * Сервер: php artisan serve --port=8000 в фоне.
+ * Run it with: cd demo && node e2e-full-flow.mjs
+ * The server: php artisan serve --port=8000 in the background.
  */
 import { chromium } from 'playwright'
 
@@ -95,7 +96,7 @@ async function main() {
 
     await runStep('8. Notifications drawer', async () => {
         const bell = page.locator('button[aria-label*=Уведомлен], .admin-topbar button:has(svg)').first()
-        // Найдём именно колокольчик — надёжнее по count'у visible buttons
+        // We find the bell itself — going by the count of visible buttons is more reliable
         const bellBtns = await page.locator('.admin-topbar button').all()
         for (const btn of bellBtns) {
             const aria = await btn.getAttribute('aria-label') ?? ''
@@ -111,11 +112,11 @@ async function main() {
         await page.goto(`${BASE}/admin/profile`, { waitUntil: 'networkidle' })
         await page.waitForTimeout(1_500)
         const sections = await page.locator('.admin-profile__nav button, aside button').count()
-        // Хотя бы 2 секции (Основное + что-то ещё)
+        // At least two sections (Основное plus something else)
     })
 
     await runStep('10. Logout', async () => {
-        // Через UserMenu или через напрямый POST
+        // Through the UserMenu or through a direct POST
         await page.evaluate(async () => {
             await fetch('/api/admin/auth/logout', {
                 method: 'POST', credentials: 'include',

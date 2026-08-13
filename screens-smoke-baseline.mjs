@@ -19,12 +19,12 @@ await Promise.all([
 ])
 await page.waitForTimeout(2_500)
 
-// Перейти на /admin (главная) — без screen
+// Go to /admin (the home page) — with no screen
 console.log('after login, url=', page.url())
 await page.waitForTimeout(2_000)
 console.log('errors after main page:', pageErrors)
 
-// Перейти на article-edit (Resource pipeline)
+// Go to the article edit page (the resource pipeline)
 await page.goto('http://127.0.0.1:8000/admin/r/articles', { waitUntil: 'networkidle' })
 await page.waitForTimeout(2_000)
 console.log('errors after articles index:', pageErrors)

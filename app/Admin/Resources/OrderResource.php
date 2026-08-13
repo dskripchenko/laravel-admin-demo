@@ -14,10 +14,10 @@ use Dskripchenko\LaravelAdmin\Resource\Resource;
 use Dskripchenko\LaravelAdmin\Table\TableColumn;
 
 /**
- * Demo Resource — заказы.
+ * A demo resource — the orders.
  *
- * Показывает: workflow-статус с цветными badge'ами, фильтр по дате,
- * email-search, money-формат для total.
+ * It shows: a workflow status with coloured badges, a filter by date, a search
+ * by email and a money format for the total.
  */
 final class OrderResource extends Resource
 {

@@ -15,15 +15,16 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 /**
- * ContactScreen — пример кастомной формы вне CRUD.
+ * ContactScreen — an example of a custom form outside the CRUD.
  *
- * Демонстрирует:
- *   - Screen с произвольным state (не привязан к Eloquent-модели)
- *   - Layout::rows() с Input/Select/Textarea
- *   - commandBar с Button::method('send') — submit-кнопка
- *   - command-метод send($state) с валидацией и реальным side-effect'ом
- *     (увеличение счётчика в кэше + запись в log)
- *   - возврат `state` для очистки полей после успеха + `message` + `alerts`
+ * It demonstrates:
+ *   - a screen with arbitrary state (not bound to an Eloquent model);
+ *   - Layout::rows() with Input/Select/Textarea;
+ *   - a commandBar with Button::method('send') as the submit button;
+ *   - the command method send($state) with validation and a real side effect
+ *     (incrementing a counter in the cache and writing to the log);
+ *   - returning `state` to clear the fields after a success, plus `message` and
+ *     `alerts`.
  */
 final class ContactScreen extends Screen
 {
@@ -39,7 +40,7 @@ final class ContactScreen extends Screen
 
     public function permission(): array|string|null
     {
-        // null = только аутентификация (любой залогиненный admin может писать).
+        // null means authentication only (any signed-in admin may write).
         return null;
     }
 
@@ -91,8 +92,8 @@ final class ContactScreen extends Screen
     }
 
     /**
-     * Command-метод. SPA отправляет POST /api/admin/contact/runMethod
-     * c body `{method: 'send', payload: {...state}}`.
+     * The command method. The SPA sends a POST /api/admin/contact/runMethod with
+     * the body `{method: 'send', payload: {...state}}`.
      *
      * @param  array<string, mixed>  $state
      * @return array<string, mixed>

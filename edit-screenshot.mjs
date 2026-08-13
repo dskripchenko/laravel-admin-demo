@@ -31,7 +31,7 @@ await page.waitForFunction(
 )
 
 await page.goto(target, { waitUntil: 'networkidle' })
-// Дождёмся появления dynamic routes (manifest async load).
+// We wait for the dynamic routes to appear (the manifest loads asynchronously).
 try {
     await page.waitForFunction(
         () => !document.body.innerText.includes('Страница не найдена'),

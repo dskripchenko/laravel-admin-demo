@@ -21,13 +21,13 @@ console.log(`admin-loading-bar: ${hasLoadingBar}`)
 console.log(`admin-page-host: ${hasPageHost}`)
 console.log(`uid-sidebar-layout: ${hasShell}`)
 
-// Click Articles, наблюдаем classes на enter/leave
+// Click Articles and watch the classes on enter/leave
 console.log('\n=== Click Articles (sidebar) ===')
 await page.evaluate(() => {
     document.querySelector('a[href*="/r/articles"]')?.click()
 })
 
-// За 50ms смотрим: есть ли .admin-page-leave-active
+// Over 50 ms we look for .admin-page-leave-active
 await page.waitForTimeout(50)
 const leaveActive = await page.locator('.admin-page-leave-active').count()
 const enterActive = await page.locator('.admin-page-enter-active').count()

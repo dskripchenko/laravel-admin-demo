@@ -22,17 +22,17 @@ const wysiwyg = page.locator('.dsk-wysiwyg').first()
 const initial = await wysiwyg.boundingBox()
 console.log('--- initial bbox:', initial)
 
-// Проверим что resize: vertical применился через getComputedStyle
+// We check that resize: vertical took effect, through getComputedStyle
 const computedResize = await wysiwyg.evaluate((el) => getComputedStyle(el).resize)
 console.log('--- computed resize:', computedResize)
 
-// Растягиваем — устанавливаем height напрямую (имитируем drag).
+// We stretch it — the height is set directly (imitating a drag).
 await wysiwyg.evaluate((el) => { el.style.height = '500px' })
 await page.waitForTimeout(200)
 const after = await wysiwyg.boundingBox()
 console.log('--- after height=500px:', after)
 
-// Ввод текста после resize — content scrollable
+// Typing text after the resize — the content scrolls
 const editor = page.locator('.dsk-wysiwyg__content').first()
 await editor.click()
 for (let i = 0; i < 30; i++) {
@@ -41,7 +41,7 @@ for (let i = 0; i < 30; i++) {
 await page.waitForTimeout(300)
 await page.screenshot({ path: '/tmp/wysiwyg-resize-1-large.png', fullPage: false })
 
-// Сжимаем
+// We shrink it
 await wysiwyg.evaluate((el) => { el.style.height = '180px' })
 await page.waitForTimeout(200)
 const compact = await wysiwyg.boundingBox()

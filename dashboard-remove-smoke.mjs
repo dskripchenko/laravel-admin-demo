@@ -16,7 +16,7 @@ await page.waitForTimeout(2500)
 await page.goto('http://127.0.0.1:8000/admin/dashboard/content', { waitUntil: 'networkidle' })
 await page.waitForTimeout(2_500)
 
-// Сброс persisted layout'а — POST /dashboard/reset.
+// Resetting the persisted layout — POST /dashboard/reset.
 await page.evaluate(async () => {
     await fetch('/api/admin/dashboard/reset', {
         method: 'POST', credentials: 'include',
@@ -48,7 +48,7 @@ console.log('cells after remove:', afterRemove, '(expected', before - 1, ')')
 
 await page.screenshot({ path: '/tmp/dash-remove-after.png', fullPage: false })
 
-// Remove ещё двух, проверим persistence
+// Remove two more and check the persistence
 await page.locator('.admin-widget-actions button[aria-label="Удалить"]').last().click()
 await page.waitForTimeout(500)
 await page.locator('.admin-widget-actions button[aria-label="Удалить"]').last().click()

@@ -1,11 +1,12 @@
 /**
- * Audit-проход по всем 11 Resource'ам demo стенда: index → view → edit.
- * Для каждой страницы: screenshot + сбор console errors + проверка
- * базовых элементов (title, table/card rendered, no '404', no error-state).
+ * An audit pass over all 11 resources of the demo stand: index → view → edit.
+ * For every page: a screenshot, the collected console errors and a check of the
+ * basic elements (the title, a rendered table or card, no '404', no error
+ * state).
  *
- * Output:
- *   /tmp/admin-audit/{slug}-{kind}.png — скриншоты
- *   /tmp/admin-audit/report.json       — структурированный отчёт
+ * The output:
+ *   /tmp/admin-audit/{slug}-{kind}.png — the screenshots
+ *   /tmp/admin-audit/report.json       — the structured report
  */
 import { chromium } from 'playwright'
 import { writeFileSync, mkdirSync } from 'node:fs'
@@ -75,14 +76,14 @@ async function probe(slug, kind, urlPath) {
         } else if (kind === 'edit' && bodyText.includes("Зарегистрируйте")) {
             res.warnings.push('field components not registered for some types')
         }
-        // Проверка: title содержит label resource'а либо kind ('Создать', 'Редактировать')
+        // The check: the title holds the resource's label or the kind ('Создать', 'Редактировать')
         res.title = title
         res.bodyHead = bodyText.slice(0, 200).replace(/\s+/g, ' ')
     } catch (e) {
         res.status = 'crashed'
         res.errors.push(`navigate crash: ${e.message}`)
     }
-    // Captured logs за время этого probe
+    // The logs captured during this probe
     res.logs = allLogs.slice(before).filter((l) => l.type === 'error' || l.type === 'pageerror')
     return res
 }
@@ -93,17 +94,17 @@ for (const r of RESOURCES) {
     report.push(indexResult)
     console.log(`  index: ${indexResult.status}${indexResult.warnings.length ? ' [W:' + indexResult.warnings.join('; ') + ']' : ''}`)
 
-    // Достать первый id из этой index-таблицы для view/edit probes.
+    // Take the first id from this index table, for the view and edit probes.
     let firstId = null
     try {
-        // Из items в store через JS
+        // From the items in the store, through JS
         firstId = await page.evaluate((slug) => {
             const links = document.querySelectorAll('a[href*="/r/' + slug + '/"]')
             for (const a of links) {
                 const m = a.getAttribute('href').match(/\/r\/[^/]+\/(\d+|[A-Za-z0-9-]+)(?:\/edit)?$/)
                 if (m) return m[1]
             }
-            // fallback: поищем text-content row IDs
+            // The fallback: we look for the row ids in the text content
             const cell = document.querySelector('.uid-table__row .uid-table__td:nth-child(2)')
             return cell?.textContent?.trim() ?? null
         }, r.slug)

@@ -19,8 +19,8 @@ await Promise.all([
 ])
 await page.waitForTimeout(2000)
 
-// Navigate to dashboard. Через manifest dashboards маршрут — /admin/dashboards/{slug}.
-// Проверим прямые URL.
+// Navigate to the dashboard. Through the manifest the dashboards route is
+// /admin/dashboards/{slug}. We check the direct URLs.
 await page.goto('http://127.0.0.1:8000/admin/dashboard/content', { waitUntil: 'networkidle' })
 await page.waitForTimeout(2000)
 console.log('--- on dashboard url:', page.url())
@@ -88,7 +88,7 @@ if (cells.length >= 2) {
     const handle1box = await handle1.boundingBox()
     console.log('--- handle1 box:', handle1box, ' target box:', handle2box)
     if (handle1box && handle2box) {
-        // HTML5 drag-and-drop NEED'ит специальный playwright API:
+        // An HTML5 drag-and-drop NEEDS a special playwright API:
         await handle1.hover()
         await page.mouse.down()
         await page.mouse.move(handle2box.x + handle2box.width / 2, handle2box.y + handle2box.height / 2, { steps: 12 })

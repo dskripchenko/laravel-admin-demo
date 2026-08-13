@@ -24,8 +24,8 @@ await page.waitForTimeout(2_500)
 await page.locator('button', { hasText: /Редактировать/ }).first().click()
 await page.waitForTimeout(500)
 
-// Native HTML5 drag через dispatchEvent — playwright drag-to работает
-// неправильно для draggable=true элементов в Chromium.
+// A native HTML5 drag through dispatchEvent — playwright's drag-to behaves
+// incorrectly for draggable=true elements in Chromium.
 const dragChange = await page.evaluate(() => {
     const cells = Array.from(document.querySelectorAll('.admin-dashboard__cell'))
     if (cells.length < 3) return { error: 'not enough cells' }
@@ -39,7 +39,7 @@ const dragChange = await page.evaluate(() => {
     if (!handle) return { error: 'no drag handle' }
 
     const dataTransfer = new DataTransfer()
-    // Эмулируем native HTML5 drag-цикл
+    // We emulate the native HTML5 drag cycle
     handle.dispatchEvent(new DragEvent('dragstart', { bubbles: true, cancelable: true, dataTransfer }))
     target.dispatchEvent(new DragEvent('dragover', { bubbles: true, cancelable: true, dataTransfer }))
     target.dispatchEvent(new DragEvent('drop', { bubbles: true, cancelable: true, dataTransfer }))

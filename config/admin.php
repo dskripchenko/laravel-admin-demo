@@ -5,12 +5,12 @@ use App\Admin\DemoPlugin;
 use Dskripchenko\LaravelAdmin\Models\AdminUser;
 
 /**
- * Demo-конфиг dskripchenko/laravel-admin.
+ * The demo config of dskripchenko/laravel-admin.
  *
- * Все плагины активированы — стенд показывает полный набор функций.
- * Для реального проекта оставьте только нужные пакеты в plugins[].
+ * Every plugin is enabled — the stand shows the full set of features. For a real
+ * project keep only the packages you need in plugins[].
  *
- * Полный набор настроек см. в core: config/admin.php (опубликован
+ * For the full set of settings see the core's config/admin.php (published by
  * `php artisan vendor:publish --tag=admin-config`).
  */
 
@@ -62,28 +62,30 @@ return [
     ],
 
     /**
-     * Sister-pack плагины. Каждый авторегистрирует свои Resource'ы и routes
-     * автоматически (через Laravel auto-discovery + RegistersAdminPlugin
-     * trait в ServiceProvider'е каждого pack'а).
+     * The sister-pack plugins. Each of them registers its own resources and
+     * routes automatically (through Laravel's auto-discovery plus the
+     * RegistersAdminPlugin trait in every pack's service provider).
      *
-     * Этот массив поддерживается совместимости ради — фактически плагины
-     * добавляются через `config['admin.plugins'][] = ...` в register()
-     * пакетных провайдеров.
+     * This array is kept for compatibility — in fact the plugins are added
+     * through `config['admin.plugins'][] = ...` in the register() of the
+     * packages' providers.
      */
     'plugins' => [
-        // sister-pack'и сами регистрируются через RegistersAdminPlugin trait.
-        // Здесь только host-проект:
+        // The sister packs register themselves through the RegistersAdminPlugin
+        // trait. Only the host project goes here:
         DemoPlugin::class,
     ],
 
     /**
-     * Frontend SPA assets — подгружаются через Vite manifest.
+     * The frontend SPA assets — they are pulled in through the Vite manifest.
      *
-     * Vite пишет `public/build/manifest.json` на `npm run build` (laravel-vite-plugin
-     * выкладывает manifest по стандартному пути `.vite/manifest.json`). Core ShellController
-     * парсит manifest и резолвит chunks с CSS/JS для указанного entry.
+     * Vite writes `public/build/manifest.json` on `npm run build`
+     * (laravel-vite-plugin puts the manifest at the standard `.vite/manifest.json`
+     * path). The core's ShellController parses the manifest and resolves the CSS
+     * and JS chunks of the given entry.
      *
-     * Подмена через config('admin.assets.css|js') возможна для override.
+     * Substituting through config('admin.assets.css|js') is possible as an
+     * override.
      */
     'assets' => [
         'vite_manifest' => public_path('build/manifest.json'),

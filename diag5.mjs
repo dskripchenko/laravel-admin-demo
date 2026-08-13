@@ -14,7 +14,7 @@ await Promise.all([
 ])
 await page.waitForTimeout(2500) // manifest
 
-// Все routes
+// Every route
 const routes = await page.evaluate(() => {
     const win = globalThis
     // Trying to find Vue's router instance via app

@@ -27,13 +27,13 @@ await editor.scrollIntoViewIfNeeded()
 await editor.click()
 await page.waitForTimeout(300)
 
-// Очищаем content и набираем bullet-list
+// We clear the content and type a bullet list
 await page.keyboard.press('Control+A')
 await page.keyboard.press('Delete')
 await page.waitForTimeout(200)
 await page.keyboard.type('- item one', { delay: 30 })
 await page.waitForTimeout(300)
-// Markdown shortcut '- ' создаёт li → input должен сейчас быть внутри <li>
+// The markdown shortcut '- ' creates an li, so the input must now be inside the <li>
 const inLi = await page.evaluate(() => {
   const sel = window.getSelection()
   if (!sel || sel.rangeCount === 0) return null
@@ -49,7 +49,7 @@ const inLi = await page.evaluate(() => {
 })
 console.log('caret context after "- item one":', inLi)
 
-// Теперь Enter (новый li), затем "/h2" — slash-menu должно открыться
+// Now Enter (a new li), then "/h2" — the slash menu must open
 await page.keyboard.press('Enter')
 await page.waitForTimeout(200)
 await page.keyboard.type('/h2', { delay: 30 })
@@ -61,7 +61,7 @@ console.log('slash-menu visible inside <li>:', menuVisible)
 console.log('menu text:', menuText?.slice(0, 200))
 
 if (menuVisible) {
-  // Выберем h2 (Enter)
+  // We choose h2 (Enter)
   await page.keyboard.press('Enter')
   await page.waitForTimeout(400)
   const html = await page.locator('.dsk-wysiwyg__content').innerHTML()

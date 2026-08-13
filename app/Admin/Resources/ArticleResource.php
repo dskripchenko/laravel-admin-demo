@@ -15,10 +15,10 @@ use Dskripchenko\LaravelAdmin\Resource\Resource;
 use Dskripchenko\LaravelAdmin\Table\TableColumn;
 
 /**
- * Demo Resource — статьи блога.
+ * A demo resource — the blog's articles.
  *
- * Показывает: WYSIWYG-поле (Quill/Tinymce подключаются плагинами),
- * select-статус, slug, фильтры, search-by-title.
+ * It shows: a WYSIWYG field (Quill and Tinymce are wired in by plugins), a
+ * status select, a slug, the filters and a search by title.
  */
 final class ArticleResource extends Resource
 {

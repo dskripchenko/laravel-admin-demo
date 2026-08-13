@@ -15,16 +15,16 @@ use Dskripchenko\LaravelAdmin\Widget\StatsOverviewWidget;
 use Illuminate\Support\Carbon;
 
 /**
- * ContentDashboard — главный экран demo-админки. Воспроизводит layout
- * эталонного дизайна (см. design_handoff_laravel_admin):
+ * ContentDashboard — the main screen of the demo admin panel. It reproduces the
+ * layout of the reference design (see design_handoff_laravel_admin):
  *
- *   Row 1: 4 stat-карточки (Total / Views / Avg time / In review)
- *   Row 2: bar-chart публикаций по дням + donut статусов
- *   Row 3: recent-list последние публикации + heatmap активности
- *   Row 4: gauge SEO + markdown-заметка команды
+ *   Row 1: four stat cards (Total / Views / Avg time / In review)
+ *   Row 2: a bar chart of publications per day plus a donut of the statuses
+ *   Row 3: a recent list of the latest publications plus an activity heatmap
+ *   Row 4: an SEO gauge plus the team's markdown note
  *
- * widgets() возвращает array<Widget>; их порядок задаёт раскладку
- * по grid'у (frontend читает widget.size как span 1..12).
+ * widgets() returns an array<Widget>; their order defines the grid layout (the
+ * frontend reads widget.size as a span of 1..12).
  */
 final class ContentDashboardScreen extends DashboardScreen
 {
@@ -45,8 +45,9 @@ final class ContentDashboardScreen extends DashboardScreen
 
     public function widgets(): array
     {
-        // periodDays() из DashboardScreen (default 30). Frontend меняет period
-        // через /dashboard/widgets endpoint → withPeriod() выставляет $period.
+        // periodDays() comes from DashboardScreen (30 by default). The frontend
+        // changes the period through the /dashboard/widgets endpoint, and
+        // withPeriod() sets $period.
         $days = $this->periodDays();
         $since = Carbon::now()->subDays($days);
 
@@ -87,7 +88,7 @@ final class ContentDashboardScreen extends DashboardScreen
             ->size(3)
             ->stat('IN REVIEW', $inReview);
 
-        // Bar chart публикаций по дням за выбранный period.
+        // A bar chart of the publications per day over the chosen period.
         $rows = Article::query()
             ->selectRaw('DATE(created_at) as d, COUNT(*) as c')
             ->where('created_at', '>=', $since)
@@ -96,8 +97,8 @@ final class ContentDashboardScreen extends DashboardScreen
             ->get();
         $labels = [];
         $values = [];
-        // Для очень больших периодов (all = 3650 дней) лимитируем чтобы chart
-        // не разъезжался — берём максимум 60 точек.
+        // For very long periods (all = 3650 days) we cap it so that the chart
+        // does not fall apart — at most 60 points are taken.
         $chartDays = min($days, 60);
         for ($i = $chartDays - 1; $i >= 0; $i--) {
             $date = Carbon::now()->subDays($i)->toDateString();
@@ -116,7 +117,7 @@ final class ContentDashboardScreen extends DashboardScreen
             ->labels($labels)
             ->dataset('Опубликовано', $values, '#10b981');
 
-        // Donut статусов.
+        // A donut of the statuses.
         $donut = (new class extends ChartWidget {
             public static function slug(): string { return 'content.status-donut'; }
         })
@@ -145,7 +146,7 @@ final class ContentDashboardScreen extends DashboardScreen
             ->column('created_at', 'CREATED')
             ->linkTo('articles');
 
-        // Heatmap активности (24 часа × 7 дней).
+        // An activity heatmap (24 hours × 7 days).
         $heatmap = (new class extends HeatmapWidget {
             public static function slug(): string { return 'content.activity-heatmap'; }
         })
@@ -188,8 +189,9 @@ MD);
     }
 
     /**
-     * Псевдо-матрица активности 7×24. Реальный data-source — log/audit
-     * по hour of day; здесь deterministic-pattern для demo.
+     * A pseudo activity matrix of 7×24. The real data source would be the log
+     * or the audit by hour of day; here it is a deterministic pattern, for the
+     * demo.
      *
      * @return list<list<int>>
      */
@@ -199,7 +201,7 @@ MD);
         for ($d = 0; $d < 7; $d++) {
             $row = [];
             for ($h = 0; $h < 24; $h++) {
-                // working-hours peak с пятна шумом, weekends — затишье.
+                // A working-hours peak with a bit of noise, quiet at the weekends.
                 $base = ($d < 5 && $h >= 9 && $h <= 18) ? 70 : 20;
                 $row[] = max(0, $base + (int) (sin($d * 24 + $h) * 25));
             }
