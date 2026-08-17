@@ -17,8 +17,9 @@ use Dskripchenko\LaravelAdmin\Table\TableColumn;
 /**
  * A demo resource — the blog's articles.
  *
- * It shows: a WYSIWYG field (Quill and Tinymce are wired in by plugins), a
- * status select, a slug, the filters and a search by title.
+ * It shows: a WYSIWYG field (the core's default; Quill and Tinymce are two
+ * uncommented lines away in `resources/js/admin.js`), a status select, a slug,
+ * the filters and a search by title.
  */
 final class ArticleResource extends Resource
 {

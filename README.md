@@ -17,15 +17,20 @@ The same repository works in both modes.
 
 - **Three demo resources** — Articles (a WYSIWYG blog), Products (a catalogue
   with categories), Orders (workflow statuses).
-- **All eight sister packages enabled** in `config/admin.php`:
+- **The sister packages enabled** in `config/admin.php`:
   - `laravel-admin-starter` — system resources (Users / Roles / AuditLog / Settings / Translations / ContentBlocks)
   - `laravel-admin-health` — health-check dashboard
-  - `laravel-admin-jobs` — failed jobs, batches, queue depth
+  - `laravel-admin-jobs` — failed jobs, batches
   - `laravel-admin-media` — media library
   - `laravel-admin-pulse` — telemetry (request / query / job / exception)
-  - `laravel-admin-search` — global search (⌘K)
-  - `laravel-admin-quill` — the Quill editor
-  - `laravel-admin-tinymce` — the TinyMCE editor
+
+  Three packages were retired on 17.08.2026: the core had grown its own
+  versions of what they offered. `laravel-admin-search` duplicated the core's
+  global search — and, being installed, its route SHADOWED the core's, so this
+  demo was showing the weaker of the two. `laravel-admin-quill` and
+  `laravel-admin-tinymce` were empty shells: the editors' Vue components live
+  in the core, and switching to them is a few lines in `resources/js/admin.js`
+  (see the comment there).
 - **Demo data**: 50 articles, 50 products, 50 orders (`DemoSeeder`).
 - **Admin account**: `admin@example.com` / `password`.
 
