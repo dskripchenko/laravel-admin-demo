@@ -24,6 +24,18 @@ of laravel-admin.
 - The laravel-admin documentation rendered inside the panel, in the panel's
   language, with in-panel links and "Edit on GitHub".
 - The showcase convention: every example screen shows its own PHP source.
+- The showcase itself, about 50 examples in seven groups: Dashboards (every
+  widget type, named widget instances, a dashboard screen with periods,
+  polling and gated widgets), Forms (every field type, validation, dependent
+  fields, infolists), Grids (focused resources for columns and badges,
+  filters and export, row and bulk actions, inline editing, a tree, embedded
+  tables, reordering and soft deletes), Layouts, Actions (confirmations,
+  modal forms, responses, background jobs, permission-gated buttons),
+  Navigation (a nested menu, badges, query parameters) and Notifications
+  (toasts, the notification centre, callouts, error states).
+- The Russian-only documentation pages: recipes, the HTTP API, the sister
+  packs and the contributing guide.
+- Landing screenshots in the light and the dark theme.
 - A home dashboard with sales KPIs, revenue, order status, best sellers, a
   heatmap and a fulfilment gauge.
 - A landing page at `/` (English and Russian, light and dark, no Node build).
