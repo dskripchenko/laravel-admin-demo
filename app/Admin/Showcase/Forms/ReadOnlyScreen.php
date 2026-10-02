@@ -105,8 +105,8 @@ final class ReadOnlyScreen extends ShowcaseScreen
                         TextEntry::make('stock')->label('In stock'),
                     ])->layout('columns'),
                     MapEntry::make('warehouse')->label('Warehouse'),
-                    FieldEntry::fromField(Rating::make('rating')->count(5)->half()),
-                    FieldEntry::fromField(Markdown::make('description')),
+                    FieldEntry::fromField(Rating::make('rating')->title('Rating')->count(5)->half()),
+                    FieldEntry::fromField(Markdown::make('description')->title('Description')),
                 ])->layout('grid'),
             ])->icon('eye')->description('The same values, drawn for reading.'),
             Layout::block('Locked form fields', [

@@ -62,8 +62,10 @@ final class GridLifecycleScreen extends GridShowcaseScreen
 
         return [
             Layout::block('What to try', [
-                Layout::markdown(__('**Open the table** of blog categories and drag a row by its handle, then duplicate one. **Open the trash** — a posts table: delete a post, switch the trashed filter to see it, restore it or delete it forever. That table also refreshes itself every 30 seconds.')),
+                Layout::markdown(__('Drag a row of the blog categories below by its handle, then duplicate one. **Open the trash** at the top — a posts table of its own page: delete a post, switch the trashed filter to see it, restore it or delete it forever. That table also refreshes itself every 30 seconds.')),
             ]),
+            // The live table itself: the resource's index, embedded into the screen.
+            Layout::resourceIndex(GridReorderResource::class),
             Layout::block('One method each', [Layout::markdown($table)]),
         ];
     }

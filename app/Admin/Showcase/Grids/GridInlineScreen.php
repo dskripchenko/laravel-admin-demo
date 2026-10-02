@@ -48,6 +48,8 @@ final class GridInlineScreen extends GridShowcaseScreen
             Layout::block('What to try', [
                 Layout::markdown(__('Click a cell of the table to edit it in place; Enter or leaving the cell saves, Escape cancels. Clear a title or type a negative number of views to see the server refuse it. The title of a published post is locked by `editableForRow()`: the cell does not open, and the server answers 403 to an edit sent anyway. Viewers get the same table, read-only.')),
             ]),
+            // The live table itself: the resource's index, embedded into the screen.
+            Layout::resourceIndex(GridInlineResource::class),
             Layout::block('Editable columns', [Layout::markdown($types)]),
         ];
     }

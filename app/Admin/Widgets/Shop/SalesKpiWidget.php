@@ -30,11 +30,11 @@ final class SalesKpiWidget extends Widget
         $previous = $this->totals($previousFrom, $from);
 
         $stats = StatsOverviewWidget::make()
-            ->stat('Revenue', '$'.number_format($current['revenue'], 0), 'green', 'dollar-sign')
+            ->stat('Revenue', round($current['revenue']), 'green', 'dollar-sign')->money('USD')
             ->trend(...$this->delta($current['revenue'], $previous['revenue']))
             ->stat('Orders', $current['orders'], 'blue', 'shopping-cart')
             ->trend(...$this->delta($current['orders'], $previous['orders']))
-            ->stat('Average order', '$'.number_format($current['average'], 2), 'amber', 'receipt')
+            ->stat('Average order', round($current['average'], 2), 'amber', 'receipt')->money('USD', 2)
             ->trend(...$this->delta($current['average'], $previous['average']))
             ->stat('New customers', $current['customers'], 'gray', 'user-plus')
             ->trend(...$this->delta($current['customers'], $previous['customers']));

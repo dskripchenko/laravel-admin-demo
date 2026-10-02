@@ -51,8 +51,10 @@ final class GridFiltersScreen extends GridShowcaseScreen
 
         return [
             Layout::block('What to try', [
-                Layout::markdown(__('Open the table, search for a city or an order number, sort by any underlined header and add filters from the toolbar: several statuses at once, a period, a customer, "with a discount". The summary under the table follows the filters. Save the combination as a view, export what you see to CSV or JSON, and change the page size at the bottom.')),
+                Layout::markdown(__('In the table below, search for a city or an order number, sort by any underlined header and add filters from the toolbar: several statuses at once, a period, a customer, "with a discount". The summary under the table follows the filters. Save the combination as a view, export what you see to CSV or JSON, and change the page size at the bottom.')),
             ]),
+            // The live table itself: the resource's index, embedded into the screen.
+            Layout::resourceIndex(GridFiltersResource::class),
             Layout::block('Filter types', [Layout::markdown($table)]),
         ];
     }

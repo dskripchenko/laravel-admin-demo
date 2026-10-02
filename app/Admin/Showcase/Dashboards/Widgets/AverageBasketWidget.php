@@ -33,8 +33,8 @@ final class AverageBasketWidget extends Widget
 
         return StatsOverviewWidget::make()
             ->stat('Period', $period, 'gray', 'calendar')
-            ->stat('Average basket', '$'.number_format($average, 2), 'amber', 'receipt')
-            ->stat('Items per order', number_format((float) $items, 1), 'blue', 'package')
+            ->stat('Average basket', round($average, 2), 'amber', 'receipt')->money('USD', 2)
+            ->stat('Items per order', round((float) $items, 1), 'blue', 'package')->precision(1)
             ->stat('Paid orders', $count, 'green', 'check-circle')
             ->data();
     }
