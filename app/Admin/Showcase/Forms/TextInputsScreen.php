@@ -52,7 +52,11 @@ final class TextInputsScreen extends ShowcaseScreen
 
     public function query(mixed ...$params): array
     {
-        $title = 'Щука и ёж: a winter story';
+        // A title the slug has to clean up: Cyrillic to transliterate in the
+        // Russian panel, accents and an ampersand in the English one.
+        $title = app()->getLocale() === 'ru'
+            ? 'Щука и ёж: зимняя история'
+            : 'Crème brûlée & café: a winter story';
 
         return [
             'id' => 1042,
