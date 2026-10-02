@@ -1,0 +1,104 @@
+{
+    "$schema": "https://getcomposer.org/schema.json",
+    "name": "dskripchenko/laravel-admin-demo",
+    "type": "project",
+    "description": "The live showcase of dskripchenko/laravel-admin: a shop and a blog with realistic data, demo accounts, and the framework documentation rendered inside the admin itself.",
+    "keywords": [
+        "laravel",
+        "admin",
+        "admin-panel",
+        "demo",
+        "showcase",
+        "crud",
+        "dashboard"
+    ],
+    "homepage": "https://github.com/dskripchenko/laravel-admin-demo",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Denis Skripchenko",
+            "email": "denskrp90@gmail.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/dskripchenko/laravel-admin-demo/issues",
+        "source": "https://github.com/dskripchenko/laravel-admin-demo"
+    },
+    "require": {
+        "php": "^8.4",
+        "ext-gd": "*",
+        "dskripchenko/laravel-admin": "^1.37",
+        "dskripchenko/laravel-admin-health": "^1.4.2",
+        "dskripchenko/laravel-admin-jobs": "^1.4.2",
+        "dskripchenko/laravel-admin-media": "^1.5",
+        "dskripchenko/laravel-admin-pulse": "^1.5",
+        "dskripchenko/laravel-admin-starter": "^1.4",
+        "fakerphp/faker": "^1.23",
+        "laravel/framework": "^13.17",
+        "laravel/tinker": "^3.0"
+    },
+    "require-dev": {
+        "laravel/pail": "^1.2.5",
+        "laravel/pao": "^1.0.6",
+        "laravel/pint": "^1.27",
+        "mockery/mockery": "^1.6",
+        "nunomaduro/collision": "^8.6",
+        "phpunit/phpunit": "^12.5.12"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "setup": [
+            "composer install",
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
+            "@php artisan key:generate",
+            "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
+            "@php artisan demo:reset --force"
+        ],
+        "dev": [
+            "Composer\\Config::disableProcessTimeout",
+            "@php artisan dev"
+        ],
+        "test": [
+            "@php artisan config:clear --ansi @no_additional_args",
+            "@php artisan test"
+        ],
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi"
+        ],
+        "post-update-cmd": [
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
+            "@php artisan admin:publish --ansi"
+        ],
+        "pre-package-uninstall": [
+            "Illuminate\\Foundation\\ComposerScripts::prePackageUninstall"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "dont-discover": []
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
