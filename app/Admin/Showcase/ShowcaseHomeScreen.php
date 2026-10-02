@@ -48,8 +48,7 @@ final class ShowcaseHomeScreen extends Screen
 
         return [
             Layout::markdown($intro)->card(),
-            Layout::columns(array_slice($groups, 0, 4)),
-            Layout::columns(array_slice($groups, 4)),
+            ...array_map(fn (array $pair) => Layout::columns($pair), array_chunk($groups, 2)),
         ];
     }
 
