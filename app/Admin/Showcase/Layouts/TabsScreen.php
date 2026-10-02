@@ -27,6 +27,11 @@ final class TabsScreen extends ShowcaseScreen
         return 'layouts';
     }
 
+    public static function icon(): string
+    {
+        return 'files';
+    }
+
     public function name(): string
     {
         return 'Tabs';

@@ -29,8 +29,14 @@ final class LayoutsGroup extends ShowcaseGroup
     public static function screens(): array
     {
         return [
-            TabsScreen::class,
+            RowsScreen::class,
             ColumnsScreen::class,
+            CardsScreen::class,
+            TabsScreen::class,
+            AccordionScreen::class,
+            ModalsScreen::class,
+            WizardScreen::class,
+            MarkdownScreen::class,
         ];
     }
 }
