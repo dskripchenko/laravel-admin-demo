@@ -28,6 +28,12 @@ final class AuthorResource extends Resource
         return 'Authors';
     }
 
+    /** One record's name, for titles, confirmations and toasts: "Create author". */
+    public static function singularLabel(): ?string
+    {
+        return 'author';
+    }
+
     public function fields(): array
     {
         return [

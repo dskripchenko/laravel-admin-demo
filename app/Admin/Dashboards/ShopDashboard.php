@@ -9,7 +9,9 @@ use App\Admin\Widgets\Shop\OrderStatusWidget;
 use App\Admin\Widgets\Shop\RevenueChartWidget;
 use App\Admin\Widgets\Shop\SalesKpiWidget;
 use App\Admin\Widgets\Shop\TopProductsWidget;
+use App\Enums\OrderStatus;
 use App\Models\Shop\Order;
+use Dskripchenko\LaravelAdmin\Table\TableColumn;
 use Dskripchenko\LaravelAdmin\Widget\DashboardScreen;
 use Dskripchenko\LaravelAdmin\Widget\RecentListWidget;
 
@@ -50,7 +52,9 @@ final class ShopDashboard extends DashboardScreen
             TopProductsWidget::make()->title('Best sellers')->size(6)->rowSpan(3)->periodAware(),
             RecentListWidget::make()->title('Latest orders')->size(6)->rowSpan(3)
                 ->model(Order::class)->orderBy('placed_at', 'desc')->limit(8)
-                ->column('number', 'Order')->column('customer_name', 'Customer')->column('total', 'Total')
+                ->column('number', 'Order')->column('customer_name', 'Customer')
+                ->column(TableColumn::make('status')->label('Status')->asBadge(OrderStatus::colors(), OrderStatus::options()))
+                ->column(TableColumn::make('total')->label('Total')->asMoney('USD')->align('right'))
                 ->linkTo('orders'),
             OrderHeatmapWidget::make()->title('When customers order')->size(8)->rowSpan(2)->periodAware(),
             FulfilmentGaugeWidget::make()->title('Delivered of closed orders')->size(4)->rowSpan(2)->periodAware(),

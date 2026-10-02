@@ -27,6 +27,12 @@ final class BlogCategoryResource extends Resource
         return 'Blog categories';
     }
 
+    /** One record's name, for titles, confirmations and toasts: "Create blog category". */
+    public static function singularLabel(): ?string
+    {
+        return 'blog category';
+    }
+
     public function fields(): array
     {
         return [

@@ -29,6 +29,12 @@ final class GridInlineResource extends Resource
         return 'Inline editing';
     }
 
+    /** One record's name, for titles, confirmations and toasts: "Create post". */
+    public static function singularLabel(): ?string
+    {
+        return 'post';
+    }
+
     public static function permission(): string
     {
         return 'admin.posts';

@@ -49,10 +49,13 @@ final class ListsScreen extends ShowcaseScreen
         return [
             Layout::dashboard([
                 // The latest records of a model; a row opens the record in its resource.
-                // A column may be an accessor or a relation path, customer.name here.
+                // A column may be an accessor or a relation path, customer.name here,
+                // and a TableColumn formats like a resource list: money, dates, badges.
                 RecentListWidget::make()->title('Latest orders')->size(6)->rowSpan(3)
                     ->model(Order::class)->orderBy('placed_at', 'desc')->limit(6)
-                    ->column('number', 'Order')->column('customer.name', 'Customer')->column('total', 'Total')
+                    ->column('number', 'Order')->column('customer.name', 'Customer')
+                    ->column(TableColumn::make('placed_at')->label('Placed')->asDate('d.m.Y'))
+                    ->column(TableColumn::make('total')->label('Total')->asMoney('USD')->align('right'))
                     ->linkTo('orders'),
 
                 // Any query, with the column presets of a resource list.

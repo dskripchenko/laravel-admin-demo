@@ -40,6 +40,12 @@ final class ProductResource extends Resource
         return 'Products';
     }
 
+    /** One record's name, for titles, confirmations and toasts: "Create product". */
+    public static function singularLabel(): ?string
+    {
+        return 'product';
+    }
+
     public function fields(): array
     {
         return [

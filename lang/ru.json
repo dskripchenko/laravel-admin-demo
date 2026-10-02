@@ -135,7 +135,6 @@
     "Average basket": "Средняя корзина",
     "Average order": "Средний чек",
     "Average order by weekday": "Средний чек по дням недели",
-    "Average order, $": "Средний чек, $",
     "Back to drafts": "В черновики",
     "Back to Menu tree": "Назад к «Дереву меню»",
     "Background jobs": "Фоновые задачи",
@@ -691,7 +690,6 @@
     "Returns, down from 2.1%": "Возвратов, было 2,1%",
     "Revenue": "Выручка",
     "Revenue this week, **+8%**": "Выручка за неделю, **+8%**",
-    "Revenue, $": "Выручка, $",
     "Revenue, last 12 months": "Выручка за 12 месяцев",
     "Review": "Проверка",
     "Rich text and code": "Форматированный текст и код",
@@ -998,5 +996,13 @@
     "Welcome to the demo": "Добро пожаловать в демо",
     "Everything you change here is reset every hour.": "Всё, что вы здесь меняете, сбрасывается каждый час.",
     "Post published": "Пост опубликован",
-    "\"Spring collection\" is live on the blog.": "«Весенняя коллекция» опубликована в блоге."
+    "\"Spring collection\" is live on the blog.": "«Весенняя коллекция» опубликована в блоге.",
+    "product": "товар",
+    "order": "заказ",
+    "category": "категория",
+    "customer": "покупатель",
+    "tag": "тег",
+    "author": "автор",
+    "post": "публикация",
+    "blog category": "рубрика"
 }

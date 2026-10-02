@@ -25,6 +25,12 @@ final class TagResource extends Resource
         return 'Tags';
     }
 
+    /** One record's name, for titles, confirmations and toasts: "Create tag". */
+    public static function singularLabel(): ?string
+    {
+        return 'tag';
+    }
+
     public function fields(): array
     {
         return [

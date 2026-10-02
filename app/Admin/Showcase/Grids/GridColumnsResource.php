@@ -28,6 +28,12 @@ final class GridColumnsResource extends Resource
         return 'Columns and formatting';
     }
 
+    /** One record's name, for titles, confirmations and toasts: "Create product". */
+    public static function singularLabel(): ?string
+    {
+        return 'product';
+    }
+
     /** The same permissions as the products section. */
     public static function permission(): string
     {

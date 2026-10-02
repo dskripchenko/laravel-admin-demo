@@ -56,6 +56,13 @@ of laravel-admin.
   still takes about five seconds.
 - Queued jobs and reported exceptions are recorded for the Telemetry dashboard
   (`App\Support\PulseRecorders`), as the pulse pack's guide describes.
+- Every resource names one record through `singularLabel()` ("product",
+  "order", "author"…, translated in `lang/ru.json`), so the panel says "Create
+  author" / "Создать: автор" instead of "Create: Authors".
+- The "Latest orders" widgets show totals as money and a status badge, the
+  showcase's product list shows prices and update times, and the revenue and
+  average-order charts show money in their tooltips and axes
+  (`TableColumn` columns in `RecentListWidget`, `ChartWidget::money()`).
 
 ### Changed
 - On laravel-admin ^1.40 (with laravel-delayed-process ^2.1.2), the showcase

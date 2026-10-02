@@ -35,6 +35,12 @@ final class GridFiltersResource extends Resource
         return 'Search, sorting and filters';
     }
 
+    /** One record's name, for titles, confirmations and toasts: "Create order". */
+    public static function singularLabel(): ?string
+    {
+        return 'order';
+    }
+
     public static function permission(): string
     {
         return 'admin.orders';

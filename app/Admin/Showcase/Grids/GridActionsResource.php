@@ -36,6 +36,12 @@ final class GridActionsResource extends Resource
         return 'Row and bulk actions';
     }
 
+    /** One record's name, for titles, confirmations and toasts: "Create order". */
+    public static function singularLabel(): ?string
+    {
+        return 'order';
+    }
+
     public static function permission(): string
     {
         return 'admin.orders';

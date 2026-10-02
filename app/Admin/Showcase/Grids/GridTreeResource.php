@@ -32,6 +32,12 @@ final class GridTreeResource extends Resource
         return 'Category tree';
     }
 
+    /** One record's name, for titles, confirmations and toasts: "Create category". */
+    public static function singularLabel(): ?string
+    {
+        return 'category';
+    }
+
     public static function permission(): string
     {
         return 'admin.product-categories';

@@ -44,6 +44,12 @@ final class OrderResource extends Resource
         return 'Orders';
     }
 
+    /** One record's name, for titles, confirmations and toasts: "Create order". */
+    public static function singularLabel(): ?string
+    {
+        return 'order';
+    }
+
     public function fields(): array
     {
         return [
