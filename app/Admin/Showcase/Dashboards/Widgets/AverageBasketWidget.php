@@ -32,10 +32,10 @@ final class AverageBasketWidget extends Widget
         $period = $context->isAll() ? __('all time') : __(':days days', ['days' => $context->days()]);
 
         return StatsOverviewWidget::make()
-            ->stat(__('Period'), $period, 'gray', 'calendar')
-            ->stat(__('Average basket'), '$'.number_format($average, 2), 'amber', 'receipt')
-            ->stat(__('Items per order'), number_format((float) $items, 1), 'blue', 'package')
-            ->stat(__('Paid orders'), $count, 'green', 'check-circle')
+            ->stat('Period', $period, 'gray', 'calendar')
+            ->stat('Average basket', '$'.number_format($average, 2), 'amber', 'receipt')
+            ->stat('Items per order', number_format((float) $items, 1), 'blue', 'package')
+            ->stat('Paid orders', $count, 'green', 'check-circle')
             ->data();
     }
 }

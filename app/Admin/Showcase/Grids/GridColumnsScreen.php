@@ -43,7 +43,7 @@ final class GridColumnsScreen extends GridShowcaseScreen
     {
         return [
             'preview' => Product::query()->orderBy('id')->limit(5)->get()
-                ->map(fn (Product $product) => $product->only(['name', 'sku', 'status', 'price', 'is_featured', 'published_at']))
+                ->map(fn (Product $product) => $product->only(['cover_url', 'name', 'sku', 'status', 'price', 'is_featured', 'published_at']))
                 ->all(),
         ];
     }
@@ -52,16 +52,17 @@ final class GridColumnsScreen extends GridShowcaseScreen
     {
         return [
             Layout::block('What to try', [
-                Layout::markdown(__('Open the table and look at the cells: every column is one preset of `TableColumn`. Copy a SKU with its button, hide and show columns from the toolbar (the name cannot be hidden: `cantHide()`), sort by price or stock and see the summary row under the table — average and range of the price, total stock — follow the filters.')),
+                Layout::markdown(__('Open the table and look at the cells: every column is one preset of `TableColumn`. Copy a SKU with its button, hide and show columns from the toolbar (the name cannot be hidden: `cantHide()`; "Updated" starts hidden: `defaultHidden()`), sort by price or stock and see the summary row under the table — average and range of the price, total stock — follow the filters. The description column shows the size of the text: `format()` turns the value into a number on the server, `asBytes()` prints it. Dates take PHP `date()` formats, with month names in the panel language.')),
             ]),
             Layout::block('Preview', [
                 RelationTable::make('preview')->title('The first five products')->columns([
+                    TableColumn::make('cover_url')->label('Image')->asImage(32, 32)->width('56px'),
                     TableColumn::make('name'),
                     TableColumn::make('sku')->label('SKU'),
                     TableColumn::make('status')->asBadge(ProductStatus::colors(), ProductStatus::options()),
                     TableColumn::make('price')->asMoney('USD')->align('right'),
                     TableColumn::make('is_featured')->label('Featured')->asBoolean(),
-                    TableColumn::make('published_at')->label('Published')->asDate('d.m.Y'),
+                    TableColumn::make('published_at')->label('Published')->asDate('j M Y'),
                 ]),
             ])->description('A RelationTable field on a screen draws its rows with the same presets.'),
         ];

@@ -9,8 +9,8 @@ use Dskripchenko\LaravelAdmin\Field\Input;
 use Dskripchenko\LaravelAdmin\Field\Number;
 use Dskripchenko\LaravelAdmin\Field\RelationTable;
 use Dskripchenko\LaravelAdmin\Layout\Layout;
+use Dskripchenko\LaravelAdmin\Resource\ActionFailedException;
 use Dskripchenko\LaravelAdmin\Table\TableColumn;
-use Illuminate\Validation\ValidationException;
 
 /**
  * Notifications › Empty and error states: field errors from the server, a
@@ -70,7 +70,7 @@ final class StatesScreen extends ShowcaseScreen
             Layout::markdown(__(<<<'MD'
 **The other buttons above**
 
-- **Refuse with a reason** — the method looks at the state and declines: a `ValidationException` naming no field of the form shows its message as an error toast.
+- **Refuse with a reason** — the method looks at the state and declines: an `ActionFailedException` answers `422` with `errorKey: action_failed`, and its message shows as an error toast.
 - **Administrators only** carries `->permission('admin.system-users.update')`. The Editor and the Viewer do not see it at all, and calling its method anyway answers `403` with `errorKey: action_forbidden`.
 - **Try a blocked action** opens your profile. On this demo stand changing the password is refused by the read-only guard: `403 demo_readonly`, shown as the toast "Demo mode: this action is disabled".
 MD))->card(),
@@ -103,9 +103,7 @@ MD))->card(),
 
     public function refuse(): array
     {
-        throw ValidationException::withMessages([
-            'form' => __('The order is already shipped and cannot be changed.'),
-        ]);
+        throw new ActionFailedException(__('The order is already shipped and cannot be changed.'));
     }
 
     public function adminOnly(): array

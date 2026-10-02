@@ -8,8 +8,8 @@ use Dskripchenko\LaravelAdmin\Layout\Layout;
 
 /**
  * Actions › Background jobs: an AsyncAction starts a delayed process in the
- * queue and the panel polls it until it finishes. The handler must be
- * allowlisted — see ActionsGroup::boot().
+ * queue, the handler reports its progress and the panel polls it until it
+ * finishes. The handler must be allowlisted — see ActionsGroup::boot().
  */
 final class BackgroundJobsScreen extends ShowcaseScreen
 {
@@ -42,7 +42,7 @@ final class BackgroundJobsScreen extends ShowcaseScreen
     {
         return [
             Layout::markdown(implode("\n\n", [
-                __('**Build a report** starts `ReportBuilder::build()` as a delayed process: the request returns at once with the process id, a queue worker runs the handler, and the panel polls `delayed/status` every two seconds, showing a progress dialog until the handler returns its message.'),
+                __('**Build a report** starts `ReportBuilder::build()` as a delayed process: the request returns at once with the process id, a queue worker runs the handler, and the panel polls `delayed/status` every two seconds. The handler reports how far it got through `ProcessProgressInterface::setProgress()`, and the progress dialog draws it as a bar until the handler returns its message.'),
                 __('**Big report** passes other parameters through `withParams()` and polls less often.'),
                 '> **Note** '.__('Only allowlisted handlers can be started: `AllowlistRegistrar::allow(ReportBuilder::class, \'build\')`. Without it the SPA gets 403, whatever the request says.'),
             ]))->card(),
@@ -51,14 +51,15 @@ final class BackgroundJobsScreen extends ShowcaseScreen
 
     public function commandBar(): array
     {
+        // The parameters are positional: they are passed to build() in order.
         return [
             AsyncAction::make('Build a report')->icon('file-text')->primary()
                 ->handler(ReportBuilder::class, 'build')
-                ->withParams(['rows' => 500, 'format' => 'csv'])
+                ->withParams([500, 'csv'])
                 ->pollInterval(2),
             AsyncAction::make('Big report')->icon('database')
                 ->handler(ReportBuilder::class, 'build')
-                ->withParams(['rows' => 2000, 'format' => 'xlsx'])
+                ->withParams([2000, 'xlsx'])
                 ->pollInterval(3)
                 ->confirm('It takes about six seconds. Start?'),
         ];

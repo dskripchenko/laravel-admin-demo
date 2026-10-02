@@ -67,6 +67,19 @@ class ShowcaseGridsTest extends DemoTestCase
         $this->assertSame(4242, $post->refresh()->views);
     }
 
+    public function test_the_row_lock_is_enforced_on_the_server(): void
+    {
+        $this->loginAs('admin');
+        $post = Post::query()->where('status', PostStatus::Published->value)->firstOrFail();
+        $title = $post->title;
+
+        $this->postJson('/api/admin/showcase-grid-inline/inlineUpdate', ['id' => $post->id, 'column' => 'title', 'value' => 'A new title'])
+            ->assertForbidden();
+        $this->assertSame($title, $post->refresh()->title);
+        $this->postJson('/api/admin/showcase-grid-inline/inlineUpdate', ['id' => $post->id, 'column' => 'views', 'value' => 7])
+            ->assertOk();
+    }
+
     public function test_viewers_cannot_run_the_row_actions(): void
     {
         $this->loginAs('viewer');

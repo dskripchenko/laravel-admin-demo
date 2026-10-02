@@ -20,8 +20,8 @@ final class LiveOrdersWidget extends Widget
     public function data(): array
     {
         return StatsOverviewWidget::make()
-            ->stat(__('Orders, 24 h'), Order::query()->where('placed_at', '>=', now()->subDay())->count(), 'blue', 'shopping-cart')
-            ->stat(__('Read at'), now()->format('H:i:s'), 'gray', 'clock')
+            ->stat('Orders, 24 h', Order::query()->where('placed_at', '>=', now()->subDay())->count(), 'blue', 'shopping-cart')
+            ->stat('Read at', now()->format('H:i:s'), 'gray', 'clock')
             ->data();
     }
 }

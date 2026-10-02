@@ -55,28 +55,30 @@ final class KpiScreen extends ShowcaseScreen
             Layout::dashboard([
                 // One card: a label and a value.
                 StatsOverviewWidget::make()->title('A single value')->size(3)
-                    ->stat(__('Customers'), Customer::query()->count()),
+                    ->stat('Customers', Customer::query()->count()),
 
                 // Several cards in one widget, each with a colour, an icon and a trend.
                 StatsOverviewWidget::make()->title('Cards with colours, icons and trends')->size(9)
-                    ->stat(__('Revenue'), '$'.number_format($revenue), 'green', 'dollar-sign')->trend(12.5, 'up')
-                    ->stat(__('Orders'), number_format($orders), 'blue', 'shopping-cart')->trend(3.1, 'up')
-                    ->stat(__('Refunds'), Order::query()->where('status', 'refunded')->count(), 'red', 'rotate-ccw')->trend(1.4, 'down'),
+                    ->stat('Revenue', '$'.number_format($revenue), 'green', 'dollar-sign')->trend(12.5, 'up')
+                    ->stat('Orders', number_format($orders), 'blue', 'shopping-cart')->trend(3.1, 'up')
+                    ->stat('Refunds', Order::query()->where('status', 'refunded')->count(), 'red', 'rotate-ccw')->trend(1.4, 'down'),
 
-                // A gauge: a value on a range over coloured zones (any CSS colour).
+                // A gauge: a value on a range over coloured zones. A tone (success,
+                // warning, danger, info, primary, neutral) follows the theme; any
+                // other CSS colour is drawn as given.
                 GaugeWidget::make()->title('Delivered of closed orders')->size(4)->rowSpan(2)
                     ->value($closed > 0 ? round($delivered / $closed * 100, 1) : 0)
-                    ->range(0, 100)->unit('%')
-                    ->threshold(0, 80, '#ef4444')->threshold(80, 90, '#f59e0b')->threshold(90, 100, '#10b981'),
+                    ->range(0, 100)->unit('%')->precision(1)
+                    ->threshold(0, 80, 'danger')->threshold(80, 90, 'warning')->threshold(90, 100, 'success'),
 
                 GaugeWidget::make()->title('Products in stock')->size(4)->rowSpan(2)
                     ->value($inStock)
                     ->range(0, Product::query()->count())
-                    ->threshold(0, 150, '#f59e0b')->threshold(150, 1000, '#10b981'),
+                    ->threshold(0, 150, 'warning')->threshold(150, 1000, 'success'),
 
                 GaugeWidget::make()->title('Server load')->size(4)->rowSpan(2)
                     ->value(42)->range(0, 100)->unit('%')
-                    ->threshold(0, 60, '#10b981')->threshold(60, 85, '#f59e0b')->threshold(85, 100, '#ef4444'),
+                    ->threshold(0, 60, '#22c55e')->threshold(60, 85, '#eab308')->threshold(85, 100, '#dc2626'),
             ]),
         ];
     }

@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use App\Admin\Showcase\Actions\ActionsGroup;
 use App\Admin\Showcase\Actions\ReportBuilder;
 use App\Admin\Showcase\Actions\SampleCsv;
+use Dskripchenko\DelayedProcess\Contracts\ProcessRunnerInterface;
+use Dskripchenko\DelayedProcess\Models\DelayedProcess;
 
 class ShowcaseActionsTest extends DemoTestCase
 {
@@ -22,11 +24,16 @@ class ShowcaseActionsTest extends DemoTestCase
         $this->loginAs('viewer');
         $run = fn (string $method) => $this->postJson('/api/admin/showcase-actions-responses/runMethod', ['method' => $method, 'payload' => []])->assertOk();
 
-        $run('messageWithLink')->assertJsonPath('payload.message_link.url', '/admin/screens/showcase');
+        $run('messageWithLink')->assertJsonPath('payload.message_link.url', '/screens/showcase');
+        $run('messageWithListLink')->assertJsonPath('payload.message_link.url', '/r/orders');
+        $run('messageWithBareLink')->assertJsonPath('payload.message_link', ['url' => '/r/products', 'label' => 'Open']);
         $this->assertCount(4, $run('alerts')->json('payload.alerts'));
         $this->assertMatchesRegularExpression('/^[1-6]$/', $run('rollDice')->json('payload.state.dice'));
         $run('reload')->assertJsonPath('payload.refresh', true);
         $run('redirect')->assertJsonPath('payload.redirect_url', '/admin/screens/showcase-actions-buttons');
+
+        $this->postJson('/api/admin/showcase-actions-responses/runMethod', ['method' => 'refuse', 'payload' => []])
+            ->assertStatus(422)->assertJsonPath('payload.errorKey', 'action_failed');
 
         $url = $run('download')->json('payload.download_url');
         $this->get($url)->assertOk()->assertHeader('content-type', 'text/csv; charset=utf-8');
@@ -70,11 +77,15 @@ class ShowcaseActionsTest extends DemoTestCase
         $uuid = $this->postJson('/api/admin/delayed/run', [
             'entity' => ReportBuilder::class,
             'method' => 'build',
-            'params' => ['rows' => 50, 'format' => 'csv'],
+            'params' => [150, 'csv'],
         ])->assertOk()->json('payload.uuid');
 
-        // Inside the test transaction the queued job is not run; the status is readable.
-        $this->assertContains($this->getJson('/api/admin/delayed/status?uuid='.$uuid)->assertOk()->json('payload.status'), ['new', 'wait', 'done']);
+        // Run the process here, the way the queue worker would.
+        app(ProcessRunnerInterface::class)->run(DelayedProcess::query()->where('uuid', $uuid)->firstOrFail());
+
+        $status = $this->getJson('/api/admin/delayed/status?uuid='.$uuid)->assertOk();
+        $status->assertJsonPath('payload.status', 'done')->assertJsonPath('payload.progress', 100);
+        $this->assertSame(150, $status->json('payload.data.rows'));
         $this->assertSame(50, app(ReportBuilder::class)->build(50)['rows']);
     }
 }

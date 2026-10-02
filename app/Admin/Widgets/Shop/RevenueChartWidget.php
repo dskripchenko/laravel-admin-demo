@@ -36,7 +36,7 @@ final class RevenueChartWidget extends Widget
 
         return ChartWidget::make()
             ->chartType('bar')
-            ->labels($months->map->format('M')->all())
+            ->labels($months->map->translatedFormat('M')->all())
             ->dataset('Revenue, $', array_map(fn (float $v) => round($v), array_values($revenue)), '#6366f1')
             ->data();
     }
