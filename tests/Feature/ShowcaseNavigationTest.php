@@ -33,8 +33,11 @@ class ShowcaseNavigationTest extends DemoTestCase
         $this->loginAs('editor');
 
         $items = $this->getJson('/api/admin/system/menu')->assertOk()->json('payload.items');
+        // The server filters the menu by permission: the editor's tree has no
+        // orders entry at all, while the rest of the nested demo stays.
         $nested = $this->find($items, 'showcase-nested');
-        $this->assertSame(['admin.orders.view'], $this->find([$nested], 'resource.orders')['permissions']);
+        $this->assertNotNull($nested);
+        $this->assertNull($this->find([$nested], 'resource.orders'));
 
         $bar = $this->getJson('/api/admin/showcase-navigation-links/state')->assertOk()->json('payload.command_bar');
         $this->assertNotContains('A list', array_column($bar, 'label'));
