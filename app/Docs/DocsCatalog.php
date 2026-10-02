@@ -48,7 +48,7 @@ final class DocsCatalog
         ['page' => 'api/conventions', 'title' => 'Conventions', 'group' => 'HTTP API', 'icon' => 'list-checks', 'screen' => Pages\ApiConventionsPage::class],
         ['page' => 'api/schemas', 'title' => 'Response schemas', 'group' => 'HTTP API', 'icon' => 'file-code', 'screen' => Pages\ApiSchemasPage::class],
         ['page' => 'api/registration', 'title' => 'Registration', 'group' => 'HTTP API', 'icon' => 'plug', 'screen' => Pages\ApiRegistrationPage::class],
-        ['page' => 'api/auth', 'title' => 'Authentication', 'group' => 'HTTP API', 'icon' => 'lock', 'screen' => Pages\ApiAuthPage::class],
+        ['page' => 'api/auth', 'title' => 'Auth', 'group' => 'HTTP API', 'icon' => 'lock', 'screen' => Pages\ApiAuthPage::class],
         ['page' => 'api/profile', 'title' => 'Profile', 'group' => 'HTTP API', 'icon' => 'user-circle', 'screen' => Pages\ApiProfilePage::class],
         ['page' => 'api/system', 'title' => 'System', 'group' => 'HTTP API', 'icon' => 'server', 'screen' => Pages\ApiSystemPage::class],
         ['page' => 'api/resources', 'title' => 'Resources', 'group' => 'HTTP API', 'icon' => 'database', 'screen' => Pages\ApiResourcesPage::class],

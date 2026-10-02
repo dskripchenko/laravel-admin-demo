@@ -90,13 +90,17 @@ final class ModalsScreen extends ShowcaseScreen
                 ]),
 
             Layout::drawer('Filters', [
-                Layout::markdown(__('The fields edit the screen\'s state as you change them; Apply filters in the command bar sends it to the server.')),
+                Layout::markdown(__('The fields edit the screen\'s state as you change them; Apply in the footer sends it to the server. A drawer takes `footer()` and `dismissable()`, like a modal.')),
                 Select::make('status')->options(['pending' => 'Pending', 'paid' => 'Paid', 'shipped' => 'Shipped']),
                 DateRange::make('period'),
             ])
                 ->withId('filters-drawer')
                 ->position('right')
-                ->size('md'),
+                ->size('md')
+                ->footer([
+                    Button::make('Close')->withName('close'),
+                    Button::make('Apply')->method('applyFilters')->primary(),
+                ]),
 
             Layout::drawer('Activity log', [
                 Layout::markdown(implode("\n", [
@@ -118,7 +122,6 @@ final class ModalsScreen extends ShowcaseScreen
             Button::make('Terms')->opens('terms-modal')->icon('file-text'),
             Button::make('Filters')->opens('filters-drawer')->icon('filter'),
             Button::make('Activity')->opens('log-drawer')->icon('activity'),
-            Button::make('Apply filters')->method('applyFilters')->icon('check'),
         ];
     }
 

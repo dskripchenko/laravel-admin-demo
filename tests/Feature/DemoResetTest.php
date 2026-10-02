@@ -23,5 +23,9 @@ class DemoResetTest extends TestCase
         $this->assertGreaterThan(200, Product::query()->count());
         $this->assertTrue(config('admin.auth.model')::query()->where('email', 'admin@demo.test')->exists());
         $this->assertNotEmpty(Storage::disk('public')->allFiles('media'));
+
+        $viewer = config('admin.auth.model')::query()->where('email', 'viewer@demo.test')->firstOrFail();
+        $this->assertCount(4, $viewer->notifications);
+        $this->assertCount(3, $viewer->unreadNotifications);
     }
 }

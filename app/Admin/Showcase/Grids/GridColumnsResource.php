@@ -7,7 +7,6 @@ use App\Models\Shop\Product;
 use Dskripchenko\LaravelAdmin\Resource\Resource;
 use Dskripchenko\LaravelAdmin\Table\TableColumn;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 
 /**
  * Grids › Columns: one column per preset. With no fields() the resource is a
@@ -52,10 +51,15 @@ final class GridColumnsResource extends Resource
             TableColumn::make('is_featured')->label('Featured')->asBoolean('Featured', 'Regular')->align('center'),
             TableColumn::make('rating')->align('right')
                 ->format(fn (mixed $value) => $value === null ? '—' : number_format((float) $value, 1).' ★'),
-            TableColumn::make('description_size')->label('Description')->asBytes()->align('right'),
-            TableColumn::make('edit_url')->label('Link')->asLink('{edit_url}'),
-            TableColumn::make('published_at')->label('Published')->asDate('d.m.Y')->sort(),
-            TableColumn::make('updated_at')->label('Updated')->asDateTime('d.m.Y H:i')->sort()->defaultHidden(),
+            // format() runs on the server over the row: the cell gets the size
+            // of the text instead of the text, and asBytes() prints it.
+            TableColumn::make('description')->asBytes()->align('right')
+                ->format(fn (mixed $value) => strlen((string) $value)),
+            // {id} is read from the row on the client: no computed key needed.
+            TableColumn::make('slug')->label('Link')->asLink(self::adminPath().'/r/products/{id}/edit'),
+            // PHP date() tokens; month names follow the panel language.
+            TableColumn::make('published_at')->label('Published')->asDate('j M Y')->sort(),
+            TableColumn::make('updated_at')->label('Updated')->asDateTime('D, d.m.Y H:i')->sort()->defaultHidden(),
         ];
     }
 
@@ -64,12 +68,8 @@ final class GridColumnsResource extends Resource
         return parent::indexQuery()->with(['category', 'cover.variants']);
     }
 
-    /** Cells read flat keys of the row: computed values are added here. */
-    public function transformRecord(Model $record): array
+    private static function adminPath(): string
     {
-        return parent::transformRecord($record) + [
-            'description_size' => strlen((string) $record->getAttribute('description')),
-            'edit_url' => '/'.trim((string) config('admin.path', 'admin'), '/').'/r/products/'.$record->getKey().'/edit',
-        ];
+        return '/'.trim((string) config('admin.path', 'admin'), '/');
     }
 }

@@ -25,10 +25,10 @@ final class PaymentMethodsWidget extends Widget
         $labels = [];
         $values = [];
         foreach (OrderResource::PAYMENT_METHODS as $method => $label) {
-            $labels[] = __($label);
+            $labels[] = $label;
             $values[] = (int) ($counts[$method] ?? 0);
         }
 
-        return ChartWidget::make()->chartType('doughnut')->labels($labels)->dataset(__('Orders'), $values)->data();
+        return ChartWidget::make()->chartType('doughnut')->labels($labels)->dataset('Orders', $values)->data();
     }
 }

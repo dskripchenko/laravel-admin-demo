@@ -5,6 +5,7 @@ namespace App\Admin\Screens\Docs;
 use App\Docs\DocsCatalog;
 use Composer\InstalledVersions;
 use Dskripchenko\LaravelAdmin\Action\Link;
+use Dskripchenko\LaravelAdmin\I18n\Localize;
 use Dskripchenko\LaravelAdmin\Layout\Layout;
 use Dskripchenko\LaravelAdmin\Screen\Screen;
 
@@ -38,12 +39,12 @@ final class DocsHomeScreen extends Screen
     {
         $sections = [];
         foreach (DocsCatalog::PAGES as $entry) {
-            $sections[$entry['group'] ?? ''][] = '- ['.__($entry['title']).']('.DocsCatalog::slugFor($entry['page']).')';
+            $sections[$entry['group'] ?? ''][] = '- ['.Localize::string($entry['title']).']('.DocsCatalog::slugFor($entry['page']).')';
         }
 
         $markdown = __('Every page below is a screen of this panel: `Layout::markdown()` renders the Markdown files the package ships in `docs/`, in the language you picked in the top bar.')."\n\n";
         foreach ($sections as $group => $lines) {
-            $markdown .= '## '.($group === '' ? __('Start here') : __($group))."\n\n".implode("\n", $lines)."\n\n";
+            $markdown .= '## '.($group === '' ? __('Start here') : Localize::string($group))."\n\n".implode("\n", $lines)."\n\n";
         }
 
         return [

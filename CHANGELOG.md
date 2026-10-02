@@ -42,6 +42,28 @@ of laravel-admin.
 - A Playwright crawler that signs in as each role and visits every menu entry.
 - A one-container Docker image (FrankenPHP, SQLite, scheduler, queue worker).
 
+### Changed
+- On laravel-admin ^1.40 (with laravel-delayed-process ^2.1.2), the showcase
+  uses what it fixed instead of working around it: the breadcrumb trail on
+  "Where am I", a real progress bar for the background report
+  (`ProcessProgressInterface::setProgress()`), the drawer's `footer()`,
+  `message_link` in every shape, `ActionFailedException` from a screen method,
+  `Select::multiple()` and a checkbox group, `asImage()` in a `RelationTable`,
+  `defaultHidden()` and PHP date formats in columns, gauge `precision()` and
+  theme tones in gauges and charts, widget captions translated by the panel,
+  a relation column in a `RecentListWidget`, and the docs page "Auth".
+- The inline-editing example states that `editableForRow()` is enforced on
+  the server too.
+
+### Fixed
+- The Description and Link columns of the columns example were empty: they
+  came from `transformRecord()`, which the list does not use. They are now a
+  `format()` over the description and an `asLink()` template.
+- The background report failed in the queue worker: named parameters reach a
+  delayed-process handler as one array, so the actions pass them in order.
+- Revenue chart months follow the panel language.
+- Every demo account starts with a few notifications under the bell.
+
 ### Removed
 - The previous demo application and its debugging scripts.
 

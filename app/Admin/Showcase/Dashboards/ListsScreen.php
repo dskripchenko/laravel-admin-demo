@@ -49,9 +49,10 @@ final class ListsScreen extends ShowcaseScreen
         return [
             Layout::dashboard([
                 // The latest records of a model; a row opens the record in its resource.
+                // A column may be an accessor or a relation path, customer.name here.
                 RecentListWidget::make()->title('Latest orders')->size(6)->rowSpan(3)
                     ->model(Order::class)->orderBy('placed_at', 'desc')->limit(6)
-                    ->column('number', 'Order')->column('status', 'Status')->column('total', 'Total')
+                    ->column('number', 'Order')->column('customer.name', 'Customer')->column('total', 'Total')
                     ->linkTo('orders'),
 
                 // Any query, with the column presets of a resource list.
@@ -95,7 +96,7 @@ final class ListsScreen extends ShowcaseScreen
         $days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
         $months = collect(range(5, 0))->map(fn (int $i) => now()->startOfMonth()->subMonths($i)->translatedFormat('M'))->all();
 
-        return [array_map(fn (string $day) => __($day), $days), $months];
+        return [$days, $months];
     }
 
     /** @return list<list<int>> */

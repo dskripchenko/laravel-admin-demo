@@ -25,8 +25,8 @@ final class CustomerSegmentsWidget extends Widget
 
         return ChartWidget::make()
             ->chartType('bar')
-            ->labels(array_map(fn (CustomerSegment $s) => __($s->label()), CustomerSegment::cases()))
-            ->dataset(__('Customers'), array_map(fn (CustomerSegment $s) => (int) ($counts[$s->value] ?? 0), CustomerSegment::cases()), '#8b5cf6')
+            ->labels(array_map(fn (CustomerSegment $s) => $s->label(), CustomerSegment::cases()))
+            ->dataset('Customers', array_map(fn (CustomerSegment $s) => (int) ($counts[$s->value] ?? 0), CustomerSegment::cases()), '#8b5cf6')
             ->data();
     }
 }

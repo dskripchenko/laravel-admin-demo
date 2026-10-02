@@ -38,7 +38,7 @@ final class OverviewDashboard extends DashboardScreen
                 ->stat('Drafts', Post::where('status', 'draft')->count(), 'gray', 'edit'),
 
             ChartWidget::make()->title('Published per month')->size(8)->chartType('area')
-                ->labels($months->map->format('M')->all())
+                ->labels($months->map->translatedFormat('M')->all())
                 ->dataset('Posts', $months->map(fn (Carbon $m) => Post::where('status', 'published')
                     ->whereBetween('published_at', [$m, $m->copy()->endOfMonth()])->count())->all()),
 

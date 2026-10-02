@@ -7,11 +7,13 @@ use Dskripchenko\LaravelAdmin\Action\Button;
 use Dskripchenko\LaravelAdmin\Action\DropDown;
 use Dskripchenko\LaravelAdmin\Field\Label;
 use Dskripchenko\LaravelAdmin\Layout\Layout;
+use Dskripchenko\LaravelAdmin\Resource\ActionFailedException;
 
 /**
  * Actions › Responses: what a screen method may answer. The array it returns
  * is normalized into one payload: message, message_link, alerts, state,
- * refresh, redirect_url and download_url.
+ * refresh, redirect_url and download_url. An ActionFailedException refuses
+ * with a reason instead.
  */
 final class ResponsesScreen extends ShowcaseScreen
 {
@@ -68,6 +70,7 @@ final class ResponsesScreen extends ShowcaseScreen
                     '| `refresh` | '.__('Reloads the screen through query()').' |',
                     '| `redirect_url` | '.__('Navigates to another page').' |',
                     '| `download_url` | '.__('Downloads a file').' |',
+                    '| `ActionFailedException` | '.__('A refusal with a reason: 422 and an error toast').' |',
                 ]))->card(),
             ]),
         ];
@@ -79,11 +82,14 @@ final class ResponsesScreen extends ShowcaseScreen
             DropDown::make('Messages')->icon('message-circle')->items([
                 Button::make('Message')->method('message'),
                 Button::make('Message with a link')->method('messageWithLink'),
+                Button::make('Link as [url, label]')->method('messageWithListLink'),
+                Button::make('Link as a bare URL')->method('messageWithBareLink'),
                 Button::make('Alerts')->method('alerts'),
             ]),
             Button::make('Roll the dice')->method('rollDice')->icon('refresh-cw'),
             Button::make('Refresh')->method('reload')->icon('rotate-ccw'),
             Button::make('Redirect')->method('redirect')->icon('link'),
+            Button::make('Refuse')->method('refuse')->icon('x-circle'),
             Button::make('Download')->method('download')->icon('download')->primary(),
         ];
     }
@@ -97,8 +103,24 @@ final class ResponsesScreen extends ShowcaseScreen
     {
         return [
             'message' => __('The report is ready.'),
-            'message_link' => ['url' => '/admin/screens/showcase', 'label' => __('Open the showcase')],
+            // A panel path (without the /admin prefix) opens through the router.
+            'message_link' => ['url' => '/screens/showcase', 'label' => __('Open the showcase')],
         ];
+    }
+
+    public function messageWithListLink(): array
+    {
+        return [
+            'message' => __('The report is ready.'),
+            // ['href' => …, 'text' => …] works as well.
+            'message_link' => ['/r/orders', __('Open the orders')],
+        ];
+    }
+
+    public function messageWithBareLink(): array
+    {
+        // Without a label the link gets the default caption, "Open".
+        return ['message' => __('The report is ready.'), 'message_link' => '/r/products'];
     }
 
     public function alerts(): array
@@ -129,6 +151,12 @@ final class ResponsesScreen extends ShowcaseScreen
     public function redirect(): array
     {
         return ['redirect_url' => '/admin/screens/showcase-actions-buttons'];
+    }
+
+    public function refuse(): array
+    {
+        // A refusal on the merits: the panel shows the text as an error toast.
+        throw new ActionFailedException(__('The report cannot be built: the month is not closed yet.'));
     }
 
     public function download(): array

@@ -17,9 +17,9 @@ use Dskripchenko\LaravelAdmin\Field\TreeSelect;
 use Dskripchenko\LaravelAdmin\Layout\Layout;
 
 /**
- * Forms › Choices: picking from a list — closed (Select, Radio), open
- * (Combobox, TagsInput), yes/no (Checkbox, Switcher) and hierarchical
- * (TreeSelect, Cascader). Options come from an array, an enum or a model.
+ * Forms › Choices: picking from a list — closed (Select, Radio), several at
+ * once (Select::multiple(), a Checkbox group), open (Combobox, TagsInput),
+ * yes/no (Checkbox, Switcher) and hierarchical (TreeSelect, Cascader). Options come from an array, an enum or a model.
  */
 final class ChoicesScreen extends ShowcaseScreen
 {
@@ -50,7 +50,7 @@ final class ChoicesScreen extends ShowcaseScreen
 
     public function description(): ?string
     {
-        return 'Select, Combobox, Radio, Checkbox, Switcher, TagsInput, TreeSelect and Cascader.';
+        return 'Select (one or several), Combobox, Radio, Checkbox (one or a group), Switcher, TagsInput, TreeSelect and Cascader.';
     }
 
     public function query(mixed ...$params): array
@@ -59,10 +59,12 @@ final class ChoicesScreen extends ShowcaseScreen
             'plan' => 'team',
             'status' => 'active',
             'category_id' => null,
+            'channels' => ['web', 'marketplace'],
             'model' => 'claude-opus-5',
             'billing' => 'yearly',
             'agree' => true,
             'published' => false,
+            'notify' => ['email'],
             'tags' => ['new', 'sale'],
             'regions' => [3],
             'location' => ['eu', 'de', 'berlin'],
@@ -83,6 +85,12 @@ final class ChoicesScreen extends ShowcaseScreen
                         Select::make('status')->title('Status (from an enum)')->fromEnum(ProductStatus::class)->span(6),
                         Select::make('category_id')->title('Category (from a model)')
                             ->fromModel(Category::query()->orderBy('name'))->searchable()->clearable(),
+                        Select::make('channels')->title('Sales channels (several)')->options([
+                            'web' => 'Web shop',
+                            'marketplace' => 'Marketplace',
+                            'retail' => 'Retail store',
+                            'wholesale' => 'Wholesale',
+                        ])->multiple()->help('multiple(): the value is a list'),
                         Combobox::make('model')->title('Model (any value allowed)')->options([
                             'claude-opus-5' => 'Claude Opus 5',
                             'claude-sonnet-5' => 'Claude Sonnet 5',
@@ -94,6 +102,11 @@ final class ChoicesScreen extends ShowcaseScreen
                     Layout::rows([
                         Checkbox::make('agree')->title('I agree to the terms')->span(6),
                         Switcher::make('published')->title('Status')->labels('Published', 'Draft')->span(6),
+                        Checkbox::make('notify')->title('Notify me by')->options([
+                            'email' => 'Email',
+                            'sms' => 'SMS',
+                            'push' => 'Push',
+                        ])->inline()->help('A Checkbox with options() is a group; its value is a list'),
                         TagsInput::make('tags')->suggestions(['new', 'sale', 'bestseller', 'gift'])->maxItems(5),
                         TreeSelect::make('regions')->title('Regions')->tree([
                             ['value' => 1, 'label' => 'Europe', 'children' => [
@@ -138,6 +151,10 @@ final class ChoicesScreen extends ShowcaseScreen
             'plan' => 'required|in:starter,team,enterprise',
             'agree' => 'accepted',
             'tags' => 'array|max:5',
+            'channels' => 'required|array|min:1',
+            'channels.*' => 'in:web,marketplace,retail,wholesale',
+            'notify' => 'array',
+            'notify.*' => 'in:email,sms,push',
         ], [
             'agree.accepted' => __('Please accept the terms.'),
         ])->validate();
