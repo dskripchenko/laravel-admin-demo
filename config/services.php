@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    // The stock API App\Jobs\SyncWarehouseStock compares against. The demo
+    // has none: empty, the job checks the catalogue alone.
+    'warehouse' => [
+        'endpoint' => env('WAREHOUSE_ENDPOINT'),
+    ],
+
 ];

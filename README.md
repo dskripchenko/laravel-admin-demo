@@ -7,7 +7,9 @@ a Laravel 13 application whose admin panel *is* the documentation site.
 
 - **A live panel** with a demo shop (category tree, products with images,
   customers, orders with a status flow) and a blog (Markdown posts, categories,
-  tags, authors) — a few thousand records, the same on every reset.
+  tags, authors) — a few thousand records, the same on every reset. The
+  System pages of the sister packs come with a week of history: failed jobs
+  to retry, batches, health checks, telemetry and the audit log.
 - **The documentation inside the admin.** The Markdown the package ships in
   `vendor/dskripchenko/laravel-admin/docs/{en,ru}` is rendered by
   `Layout::markdown()` in the panel's current language, with links between
@@ -64,7 +66,7 @@ usual cron entry and a queue worker:
 ```
 
 ```bash
-php artisan queue:work --tries=3   # under supervisord/systemd
+php artisan queue:work --queue=high,default,low --tries=3   # under supervisord/systemd
 ```
 
 The Docker image runs both for you.
@@ -81,6 +83,9 @@ The Docker image runs both for you.
 | `app/Admin/Screens/Docs` | One screen per page (`/admin/screens/docs-concepts-menu`) and the contents page |
 | `app/Admin/Showcase` | `ShowcaseScreen` + `ShowsSource` and the example screens |
 | `app/Console/Commands/DemoResetCommand.php` | `demo:reset` |
+| `database/seeders` | The seed; `SystemSeeder`, `TelemetrySeeder` and `ActivitySeeder` replay the week behind the System pages |
+| `app/Jobs` | The demo's queued jobs (harmless when retried: they deliver nothing) |
+| `app/Support/PulseRecorders.php` | Jobs and exceptions on the Telemetry dashboard |
 | `app/Http/Middleware/DemoNotice.php` | The banner text in the visitor's language and the countdown |
 | `resources/views/landing.blade.php` | The landing page |
 | `config/demo.php` | Demo accounts, reset schedule, docs repository |
