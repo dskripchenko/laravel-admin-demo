@@ -28,6 +28,11 @@ final class NotificationsGroup extends ShowcaseGroup
 
     public static function screens(): array
     {
-        return [];
+        return [
+            ToastsScreen::class,
+            NotificationCentreScreen::class,
+            CalloutsScreen::class,
+            StatesScreen::class,
+        ];
     }
 }

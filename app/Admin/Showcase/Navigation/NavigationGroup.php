@@ -28,6 +28,18 @@ final class NavigationGroup extends ShowcaseGroup
 
     public static function screens(): array
     {
-        return [];
+        return [
+            MenuTreeScreen::class,
+            MenuBadgesScreen::class,
+            LinksScreen::class,
+            QueryParamsScreen::class,
+            BackNavigationScreen::class,
+        ];
+    }
+
+    /** The examples, then the five-level branch the "Menu tree" page describes. */
+    public static function menu(): array
+    {
+        return [...parent::menu(), MenuTreeScreen::tree()];
     }
 }
