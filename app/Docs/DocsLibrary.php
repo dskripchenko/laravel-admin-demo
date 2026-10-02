@@ -25,6 +25,9 @@ final class DocsLibrary
 {
     public const FALLBACK_LOCALE = 'en';
 
+    /** Names of the documentation's languages, for the "only in …" note. */
+    public const LANGUAGES = ['en' => 'English', 'ru' => 'Russian', 'de' => 'German', 'zh' => 'Chinese'];
+
     /** @var array<string, array{title: string, markdown: string, locale: string, path: string}> */
     private array $memo = [];
 
@@ -56,10 +59,14 @@ final class DocsLibrary
         return $this->memo[$memoKey] ??= $this->load($page, $locale);
     }
 
-    /** The locale whose file exists for the page: the requested one or English. */
+    /**
+     * The locale whose file exists for the page: the requested one, then
+     * English, then any other — some pages are written in Russian only.
+     */
     public function resolveLocale(string $page, string $locale): ?string
     {
-        foreach (array_unique([$locale, self::FALLBACK_LOCALE]) as $candidate) {
+        $others = array_map('basename', glob($this->root().'/*', GLOB_ONLYDIR) ?: []);
+        foreach (array_unique([$locale, self::FALLBACK_LOCALE, ...$others]) as $candidate) {
             if (is_file($this->root()."/{$candidate}/{$page}.md")) {
                 return $candidate;
             }
@@ -85,7 +92,9 @@ final class DocsLibrary
 
         $file = $this->root()."/{$served}/{$page}.md";
         $stat = stat($file) ?: ['size' => 0, 'mtime' => 0];
-        $key = 'docs:'.md5($file.'|'.$stat['size'].'|'.$stat['mtime'].'|'.$this->catalog->fingerprint());
+        // The requested locale is part of the key: a page served in another
+        // language carries a note in the requested one.
+        $key = 'docs:'.md5($file.'|'.$stat['size'].'|'.$stat['mtime'].'|'.$locale.'|'.$this->catalog->fingerprint());
 
         return Cache::rememberForever($key, function () use ($file, $page, $served, $locale): array {
             [$title, $body] = $this->splitFrontMatter((string) file_get_contents($file));
@@ -96,7 +105,12 @@ final class DocsLibrary
             }
             $body = $this->rewriteLinks($body, $served, $page);
             if ($served !== $locale) {
-                $body = '> **Note** '.__('This page has not been translated yet; the English version is shown.')."\n\n".$body;
+                $note = $served === self::FALLBACK_LOCALE
+                    ? __('This page has not been translated yet; the English version is shown.')
+                    : __('This page is only available in :language so far.', ['language' => __(self::LANGUAGES[$served] ?? $served)]);
+                $body = '> **Note** '.$note."\n\n".$body;
+                // The menu's title, in the panel's language.
+                $title = $this->catalog->title($page) ?? $title;
             }
 
             return [
@@ -165,12 +179,10 @@ final class DocsLibrary
             return $url;
         }
 
-        $prefix = "docs/{$locale}/";
-        if (str_starts_with($resolved, $prefix) && str_ends_with($resolved, '.md')) {
-            $target = substr($resolved, strlen($prefix), -3);
-            if ($this->catalog->has($target)) {
-                return DocsCatalog::slugFor($target).$anchor;
-            }
+        // A page of the catalog in any language (the English pages link to
+        // the Russian-only recipes) opens in the panel.
+        if (preg_match('#^docs/[a-z]{2}/(.+)\.md$#', $resolved, $m) && $this->catalog->has($m[1])) {
+            return DocsCatalog::slugFor($m[1]).$anchor;
         }
 
         return $this->github(str_ends_with($resolved, '/') ? 'tree' : 'blob', $resolved).$anchor;
