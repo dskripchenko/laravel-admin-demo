@@ -28,6 +28,29 @@ final class GridsGroup extends ShowcaseGroup
 
     public static function screens(): array
     {
-        return [];
+        return [
+            GridColumnsScreen::class,
+            GridFiltersScreen::class,
+            GridActionsScreen::class,
+            GridInlineScreen::class,
+            GridTreeScreen::class,
+            GridEmbeddedScreen::class,
+            GridLifecycleScreen::class,
+        ];
+    }
+
+    public static function resources(): array
+    {
+        return [
+            GridColumnsResource::class,
+            GridFiltersResource::class,
+            GridActionsResource::class,
+            GridInlineResource::class,
+            GridTreeResource::class,
+            GridEmbedAuthorsResource::class,
+            GridEmbedPostsResource::class,
+            GridReorderResource::class,
+            GridTrashResource::class,
+        ];
     }
 }
