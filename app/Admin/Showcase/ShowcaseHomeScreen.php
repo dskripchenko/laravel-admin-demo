@@ -6,21 +6,10 @@ use Dskripchenko\LaravelAdmin\Layout\Layout;
 use Dskripchenko\LaravelAdmin\Screen\Screen;
 
 /**
- * The showcase's front page: what each group demonstrates and where to look.
+ * The showcase's front page: every group and every example in it, linked.
  */
 final class ShowcaseHomeScreen extends Screen
 {
-    /** Group key => [title, what it shows]. */
-    public const GROUPS = [
-        'dashboards' => ['Dashboards', 'Widgets, periods, per-user layouts.'],
-        'forms' => ['Forms', 'Every field type, validation, reactive listeners.'],
-        'grids' => ['Grids', 'Sorting, filters, inline editing, bulk actions, saved views.'],
-        'layouts' => ['Layouts', 'Rows, columns, tabs, blocks, modals, wizards.'],
-        'actions' => ['Actions', 'Buttons, confirmations, modal forms, downloads.'],
-        'navigation' => ['Navigation', 'Trees, nested menus, links between records.'],
-        'notifications' => ['Notifications', 'Toasts, alerts, the notification centre.'],
-    ];
-
     public static function slug(): string
     {
         return 'showcase';
@@ -43,12 +32,28 @@ final class ShowcaseHomeScreen extends Screen
 
     public function layout(): array
     {
-        $markdown = __('Each example is an ordinary screen class of this application. Under the example you will find its source, read through reflection from the very class that rendered the page.')."\n\n";
-        $markdown .= '| '.__('Group').' | '.__('What it shows').' |'."\n|---|---|\n";
-        foreach (self::GROUPS as [$title, $about]) {
-            $markdown .= '| **'.__($title).'** | '.__($about)." |\n";
+        $intro = __('Each example is an ordinary screen class of this application. Under the example you will find its source, read through reflection from the very class that rendered the page.');
+
+        $groups = [];
+        foreach (Showcase::GROUPS as $group) {
+            $lines = [];
+            foreach ($group::screens() as $screen) {
+                $page = app($screen);
+                $lines[] = '- ['.__($page->name()).']('.$screen::slug().') — '.__((string) $page->description());
+            }
+            $groups[] = Layout::block(__($group::title()), [
+                Layout::markdown(implode("\n", $lines))->linkBase($this->screensBase()),
+            ])->icon($group::icon())->description(__($group::about()));
         }
 
-        return [Layout::markdown($markdown)->card()];
+        return [
+            Layout::markdown($intro)->card(),
+            ...array_map(fn (array $pair) => Layout::columns($pair), array_chunk($groups, 2)),
+        ];
+    }
+
+    private function screensBase(): string
+    {
+        return '/'.trim((string) config('admin.path', 'admin'), '/').'/screens/';
     }
 }

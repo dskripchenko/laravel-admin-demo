@@ -29,7 +29,24 @@ class DocsTest extends DemoTestCase
         $markdown = app(DocsLibrary::class)->page('concepts/widgets-and-dashboards', 'en')['markdown'];
 
         $this->assertStringContainsString('](docs-concepts-screens)', $markdown);
-        $this->assertStringContainsString('](https://github.com/dskripchenko/laravel-admin/blob/main/docs/ru/api/system.md)', $markdown);
+        // The Russian-only HTTP API pages are in the catalog too.
+        $this->assertStringContainsString('](docs-api-system)', $markdown);
+        // Source files stay on GitHub.
+        $actions = app(DocsLibrary::class)->page('concepts/actions', 'en')['markdown'];
+        $this->assertStringContainsString('](docs-recipes-custom-actions)', $actions);
+    }
+
+    public function test_a_russian_only_page_is_shown_in_russian_with_a_note(): void
+    {
+        $page = app(DocsLibrary::class)->page('recipes/soft-deletes', 'en');
+
+        $this->assertSame('ru', $page['locale']);
+        $this->assertSame('Soft deletes', $page['title']);
+        $this->assertStringContainsString('only available in Russian', $page['markdown']);
+
+        $russian = app(DocsLibrary::class)->page('recipes/soft-deletes', 'ru');
+        $this->assertSame('ru', $russian['locale']);
+        $this->assertStringNotContainsString('only available', $russian['markdown']);
     }
 
     public function test_the_russian_panel_reads_russian_pages(): void

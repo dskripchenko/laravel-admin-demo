@@ -26,11 +26,14 @@ trait ShowsSource
 
     /**
      * A highlighted, copyable block with the source of this class, or of one
-     * of its methods (with its doc comment).
+     * of its methods (with its doc comment). `$class` shows another class
+     * instead — a resource or a widget the example is made of.
+     *
+     * @param  class-string|null  $class
      */
-    protected function sourceCode(?string $method = null, ?int $maxHeight = 560): Code
+    protected function sourceCode(?string $method = null, ?int $maxHeight = 560, ?string $class = null): Code
     {
-        $class = new ReflectionClass($this);
+        $class = new ReflectionClass($class ?? $this);
         $file = (string) $class->getFileName();
         $lines = self::$sourceFiles[$file] ??= file($file, FILE_IGNORE_NEW_LINES) ?: [];
 
@@ -38,7 +41,7 @@ trait ShowsSource
             $code = implode("\n", $lines);
             $title = $this->relativePath($file);
         } else {
-            $reflection = new ReflectionMethod($this, $method);
+            $reflection = new ReflectionMethod($class->getName(), $method);
             $start = $reflection->getStartLine();
             $doc = $reflection->getDocComment();
             if ($doc !== false) {

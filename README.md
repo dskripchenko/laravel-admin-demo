@@ -77,7 +77,7 @@ The Docker image runs both for you.
 | `app/Admin/Resources/{Shop,Blog}` | Products, categories, orders, customers; posts, categories, tags, authors |
 | `app/Admin/Dashboards/ShopDashboard.php` + `app/Admin/Widgets` | The home dashboard |
 | `app/Docs/DocsCatalog.php` | The documentation pages, their order and menu groups |
-| `app/Docs/DocsLibrary.php` | Reads a page, falls back to English, rewrites links, caches |
+| `app/Docs/DocsLibrary.php` | Reads a page, falls back to English (or Russian), rewrites links, caches |
 | `app/Admin/Screens/Docs` | One screen per page (`/admin/screens/docs-concepts-menu`) and the contents page |
 | `app/Admin/Showcase` | `ShowcaseScreen` + `ShowsSource` and the example screens |
 | `app/Console/Commands/DemoResetCommand.php` | `demo:reset` |
@@ -93,13 +93,25 @@ add an entry to `DocsCatalog::PAGES` and a three-line screen class in
 `app/Admin/Screens/Docs/Pages`. Relative links to pages in the catalog become
 links to their screens; links to anything else (sources, pages that are not in
 the catalog) open on GitHub. Prepared pages are cached until the file changes.
+A page missing in the panel's language falls back to English; the pages written
+in Russian only (recipes, the HTTP API, the sister packs) are shown in Russian
+with a note.
 
 ### Showcase screens
 
-Extend `App\Admin\Showcase\ShowcaseScreen`, implement `demo()` and `group()`, and
-add the class to `AdminServiceProvider::SHOWCASE`. The page appends a
-"How it's built" block with the class's source — or one method's, via
-`sourceMethod()` — read through reflection.
+The showcase is split into groups (Dashboards, Forms, Grids, Layouts, Actions,
+Navigation, Notifications); each lives in its own directory under
+`app/Admin/Showcase` with a `*Group` class that lists its screens in reading
+order, and `Showcase::GROUPS` orders the groups.
+
+Extend `App\Admin\Showcase\ShowcaseScreen`, implement `demo()` and `group()`,
+give it an `icon()` (and a `badge()` if it deserves one), and add the class to
+its group's `screens()`. The page appends a "How it's built" block with the
+class's source — or one method's, via `sourceMethod()` — read through
+reflection; `sourceClasses()` adds tabs with the other classes the example is
+made of (a resource, a widget, a job). A group's `resources()` are registered
+with the panel and kept out of the menu: a grid example is a resource, opened
+from its explainer screen.
 
 ### Translations
 

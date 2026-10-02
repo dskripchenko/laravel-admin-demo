@@ -25,6 +25,11 @@ final class ColumnsScreen extends ShowcaseScreen
         return 'layouts';
     }
 
+    public static function icon(): string
+    {
+        return 'columns';
+    }
+
     public function name(): string
     {
         return 'Columns and blocks';
@@ -56,13 +61,13 @@ final class ColumnsScreen extends ShowcaseScreen
                     Input::make('company')->required(),
                     Input::make('vat')->title('VAT number'),
                     Textarea::make('address')->rows(3),
-                ])->icon('building')->description('Two thirds of the width'),
+                ])->icon('building')->description(__('Two thirds of the width')),
                 Layout::block('Contact', [
                     Input::make('contact')->title('Name'),
                     Select::make('role')->options(['ceo' => 'CEO', 'cto' => 'CTO', 'cfo' => 'CFO']),
                     Input::make('phone')->type('tel'),
                     Label::make('customer_since')->title('Customer since'),
-                ])->icon('user')->description('One third'),
+                ])->icon('user')->description(__('One third')),
             ])->ratios([2, 1]),
         ];
     }

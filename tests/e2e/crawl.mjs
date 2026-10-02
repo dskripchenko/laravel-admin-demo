@@ -13,7 +13,7 @@
  *   BASE_URL           http://127.0.0.1:8000
  *   ROLES              admin,editor,viewer
  *   SCREENSHOTS        tests/e2e/screenshots
- *   LANDING_SHOTS      1 also writes the landing screenshots to public/landing/
+ *   LANDING_SHOTS      1 also writes the landing screenshots (light and dark) to public/landing/
  *   PLAYWRIGHT_MODULE  path of the playwright module (default: "playwright")
  *   CHROMIUM_PATH      a chromium executable to use instead of the bundled one
  */
@@ -38,6 +38,7 @@ const LANDING_SHOTS = {
     '/r/products/1/edit': 'product-form',
     '/screens/docs-concepts-resources': 'docs',
     '/screens/showcase-forms-basics': 'showcase',
+    '/screens/showcase-dashboards-charts': 'charts',
   },
 }
 
@@ -136,7 +137,8 @@ for (const role of ROLES) {
       continue
     }
     await settle(page)
-    const notFound = await page.locator('text=/^404/').count()
+    // The SPA's own 404 page — not a docs page that mentions the status code.
+    const notFound = await page.locator('.admin-status-page__code', { hasText: '404' }).count()
     if (notFound > 0) problems.push({ role, url: current, kind: '404', detail: 'the SPA showed its 404 page' })
     const forbidden = page.url().endsWith('/forbidden')
     if (forbidden) problems.push({ role, url: current, kind: '403', detail: 'redirected to /forbidden' })
@@ -145,8 +147,13 @@ for (const role of ROLES) {
     await page.screenshot({ path: join(SHOTS, `${name}.png`) })
     const landingName = LANDING_SHOTS[role]?.[path]
     if (landingName && LANDING) {
+      // Both themes: the landing page shows the one matching the visitor's.
       mkdirSync('public/landing', { recursive: true })
       await page.screenshot({ path: join('public/landing', `${landingName}.jpg`), type: 'jpeg', quality: 80 })
+      await page.evaluate(() => document.documentElement.setAttribute('data-theme', 'dark'))
+      await page.waitForTimeout(300)
+      await page.screenshot({ path: join('public/landing', `${landingName}-dark.jpg`), type: 'jpeg', quality: 80 })
+      await page.evaluate(() => document.documentElement.setAttribute('data-theme', 'light'))
     }
     visited.push({ role, url: current })
   }

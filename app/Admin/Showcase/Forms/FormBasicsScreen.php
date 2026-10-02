@@ -30,6 +30,11 @@ final class FormBasicsScreen extends ShowcaseScreen
         return 'forms';
     }
 
+    public static function icon(): string
+    {
+        return 'clipboard-list';
+    }
+
     public function name(): string
     {
         return 'Form basics';

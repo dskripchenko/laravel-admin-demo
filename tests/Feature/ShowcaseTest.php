@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Providers\AdminServiceProvider;
+use App\Admin\Showcase\Showcase;
 
 class ShowcaseTest extends DemoTestCase
 {
@@ -10,7 +10,7 @@ class ShowcaseTest extends DemoTestCase
     {
         $this->loginAs('viewer');
 
-        foreach (AdminServiceProvider::SHOWCASE as $screen) {
+        foreach (Showcase::screens() as $screen) {
             $layout = $this->getJson('/api/admin/'.$screen::slug().'/state')->assertOk()->json('payload.layout');
             $source = collect($layout)->last();
 

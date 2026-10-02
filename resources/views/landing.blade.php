@@ -63,6 +63,14 @@ h1 em { font-style: normal; color: var(--accent); }
 .note { margin-top: 14px; font-size: 14px; color: var(--muted); }
 .shot { margin: 44px auto 0; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); box-shadow: var(--shadow); background: var(--bg-soft); }
 .shot img { display: block; width: 100%; height: auto; }
+/* Every screenshot comes in both themes; the page shows the one that matches. */
+:root img.on-dark { display: none; }
+:root[data-theme="dark"] img.on-light { display: none; }
+:root[data-theme="dark"] img.on-dark { display: block; }
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) img.on-light { display: none; }
+    :root:not([data-theme="light"]) img.on-dark { display: block; }
+}
 section { padding: 56px 0; }
 section.soft { background: var(--bg-soft); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 h2 { font-size: clamp(24px, 3vw, 34px); letter-spacing: -.01em; margin: 0 0 8px; }
@@ -121,6 +129,8 @@ footer a { color: var(--muted); }
         ['product-form', 'A product form with a media picker.'],
         ['tree', 'A category tree, from a parent_id column.'],
         ['docs', 'This documentation, rendered by the panel.'],
+        ['showcase', 'The showcase: a live example above, the PHP that built it below.'],
+        ['charts', 'Every chart type of the dashboard widgets.'],
     ];
 @endphp
 <header class="top">
@@ -148,7 +158,8 @@ footer a { color: var(--muted); }
         </div>
         <p class="note">{{ __('No sign-up: pick Administrator, Editor or Viewer on the login page. The data resets every hour.') }}</p>
         <div class="shot">
-            <img src="/landing/dashboard.jpg" width="1440" height="900" alt="{{ __('The shop dashboard of the demo') }}">
+            <img class="on-light" src="/landing/dashboard.jpg" width="1440" height="900" alt="{{ __('The shop dashboard of the demo') }}">
+            <img class="on-dark" src="/landing/dashboard-dark.jpg" width="1440" height="900" loading="lazy" alt="{{ __('The shop dashboard of the demo') }}">
         </div>
     </div>
 
@@ -175,7 +186,8 @@ footer a { color: var(--muted); }
             <div class="gallery">
                 @foreach ($gallery as [$image, $caption])
                     <figure>
-                        <img src="/landing/{{ $image }}.jpg" width="1440" height="900" loading="lazy" alt="{{ __($caption) }}">
+                        <img class="on-light" src="/landing/{{ $image }}.jpg" width="1440" height="900" loading="lazy" alt="{{ __($caption) }}">
+                        <img class="on-dark" src="/landing/{{ $image }}-dark.jpg" width="1440" height="900" loading="lazy" alt="{{ __($caption) }}">
                         <figcaption>{{ __($caption) }}</figcaption>
                     </figure>
                 @endforeach
