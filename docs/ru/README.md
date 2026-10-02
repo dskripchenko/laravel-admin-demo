@@ -8,6 +8,9 @@
 - **Живая панель** с демо-магазином (дерево категорий, товары с картинками,
   покупатели, заказы со сменой статусов) и блогом (публикации в Markdown,
   рубрики, теги, авторы) — несколько тысяч записей, одинаковых после каждого сброса.
+  Системные разделы пакетов-спутников показывают неделю истории: упавшие
+  задачи для перезапуска, пакеты задач, проверки состояния, телеметрию и
+  журнал аудита.
 - **Документация внутри админки.** Markdown, который пакет поставляет в
   `vendor/dskripchenko/laravel-admin/docs/{en,ru}`, показывается через
   `Layout::markdown()` на текущем языке панели; ссылки между страницами
@@ -64,7 +67,7 @@ php artisan demo:reset --force
 ```
 
 ```bash
-php artisan queue:work --tries=3   # под supervisord или systemd
+php artisan queue:work --queue=high,default,low --tries=3   # под supervisord или systemd
 ```
 
 Docker-образ запускает и то, и другое сам.
@@ -81,6 +84,9 @@ Docker-образ запускает и то, и другое сам.
 | `app/Admin/Screens/Docs` | По экрану на страницу (`/admin/screens/docs-concepts-menu`) и оглавление |
 | `app/Admin/Showcase` | `ShowcaseScreen` + `ShowsSource` и экраны-примеры |
 | `app/Console/Commands/DemoResetCommand.php` | `demo:reset` |
+| `database/seeders` | Наполнение; `SystemSeeder`, `TelemetrySeeder` и `ActivitySeeder` воспроизводят неделю за системными разделами |
+| `app/Jobs` | Задачи очереди демо (перезапуск безвреден: они ничего не отправляют) |
+| `app/Support/PulseRecorders.php` | Задачи и исключения на панели телеметрии |
 | `app/Http/Middleware/DemoNotice.php` | Текст баннера на языке посетителя и отсчёт до сброса |
 | `resources/views/landing.blade.php` | Лендинг |
 | `config/demo.php` | Демо-аккаунты, расписание сброса, репозиторий документации |

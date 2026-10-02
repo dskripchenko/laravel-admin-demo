@@ -41,6 +41,21 @@ of laravel-admin.
 - A landing page at `/` (English and Russian, light and dark, no Node build).
 - A Playwright crawler that signs in as each role and visits every menu entry.
 - A one-container Docker image (FrankenPHP, SQLite, scheduler, queue worker).
+- The System pages are seeded with the last week of the back office instead of
+  "Nothing here yet": eight failed jobs of the demo's own job classes
+  (`app/Jobs`) with different exceptions, safe to retry or forget; job batches
+  (nightly stock syncs, one with failures, a blog reindex, a newsletter still
+  being sent); a health history at a quarter-hour cadence in which the queue
+  check reports the reindex backlog; a day of telemetry with the working
+  day's traffic, a short database-lock incident, slow queries, jobs and
+  exceptions, aggregated by the pulse pack's aggregator; and an audit log of
+  the staff's logins and edits through the week. Everything is replayed at its
+  moment through the packs' and the framework's own code (the queue, the
+  failed-job provider, the batch repository, the health runner, the pulse
+  sampler and aggregator, the audit trait), not inserted by hand; a reset
+  still takes about five seconds.
+- Queued jobs and reported exceptions are recorded for the Telemetry dashboard
+  (`App\Support\PulseRecorders`), as the pulse pack's guide describes.
 
 ### Changed
 - On laravel-admin ^1.40 (with laravel-delayed-process ^2.1.2), the showcase
@@ -54,6 +69,8 @@ of laravel-admin.
   a relation column in a `RecentListWidget`, and the docs page "Auth".
 - The inline-editing example states that `editableForRow()` is enforced on
   the server too.
+- The queue worker of the Docker image drains the `high`, `default` and `low`
+  queues.
 
 ### Fixed
 - The Description and Link columns of the columns example were empty: they

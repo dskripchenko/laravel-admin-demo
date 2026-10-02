@@ -1,5 +1,6 @@
 <?php
 
+use App\Support\PulseRecorders;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -22,6 +23,9 @@ return Application::configure(basePath: dirname(__DIR__))
         }
     })
     ->withExceptions(function (Exceptions $exceptions): void {
+        // Reported exceptions on the Telemetry dashboard (laravel-admin-pulse).
+        $exceptions->reportable(fn (Throwable $e) => PulseRecorders::recordException($e));
+
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );

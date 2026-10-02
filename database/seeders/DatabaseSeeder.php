@@ -6,8 +6,9 @@ use Illuminate\Database\Seeder;
 
 /**
  * The whole demo stand: accounts and roles, the shop, the blog, a few
- * notifications. Every run produces the same data (a fixed Faker seed); dates
- * are relative to today so the dashboards always look current.
+ * notifications, and the last week of the back office behind the System
+ * pages. Every run produces the same data (a fixed Faker seed); dates are
+ * relative to today so the dashboards always look current.
  */
 class DatabaseSeeder extends Seeder
 {
@@ -20,6 +21,8 @@ class DatabaseSeeder extends Seeder
             BlogSeeder::class,
             ActivitySeeder::class,
             NotificationSeeder::class,
+            SystemSeeder::class,
+            TelemetrySeeder::class,
         ]);
     }
 }

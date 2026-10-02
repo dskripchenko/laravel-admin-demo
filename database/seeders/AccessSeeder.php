@@ -6,11 +6,13 @@ use Dskripchenko\LaravelAdmin\Permission\Models\Role;
 use Faker\Factory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Artisan;
 
 /**
  * Roles and administrators: the demo accounts from config/demo.php, plus a
- * handful of staff accounts so the users list has something to show.
+ * handful of staff accounts so the users list has something to show. The
+ * accounts date from a month ago, and so do their audit entries.
  */
 class AccessSeeder extends Seeder
 {
@@ -42,6 +44,16 @@ class AccessSeeder extends Seeder
     ];
 
     public function run(): void
+    {
+        Carbon::setTestNow(Carbon::now()->subDays(30)->setTime(10, 0));
+        try {
+            $this->accounts();
+        } finally {
+            Carbon::setTestNow();
+        }
+    }
+
+    private function accounts(): void
     {
         foreach (self::ROLES as $slug => $role) {
             Role::query()->updateOrCreate(['slug' => $slug], $role);
