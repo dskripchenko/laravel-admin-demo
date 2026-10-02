@@ -43,7 +43,8 @@ final class GridEmbeddedScreen extends GridShowcaseScreen
 
         return [
             ...parent::commandBar(),
-            Link::make('Edit an author')->href("{$base}/{$author}/edit")->icon('pencil')
+            // The example lives on an author's edit page, so that page is the primary action.
+            Link::make('Edit an author')->href("{$base}/{$author}/edit")->icon('pencil')->primary()
                 ->permission(GridEmbedAuthorsResource::permission().'.update')
                 ->canSee($author !== null),
         ];
@@ -58,7 +59,7 @@ final class GridEmbeddedScreen extends GridShowcaseScreen
     {
         return [
             Layout::block('What to try', [
-                Layout::markdown(__('Open an author and switch to the **Posts** tab: it is the table of another resource, narrowed to this author by the `author_id` filter. Edit a title or a status right in the cell, add a post with the quick-add row (the author is filled in for you), delete one, or select several and delete them together. Every request is checked against the posts resource’s own permissions.')),
+                Layout::markdown(__('An embedded table lives on a parent’s edit page, so this example opens as a page of its own: press **Edit an author** at the top and switch to the **Posts** tab: it is the table of another resource, narrowed to this author by the `author_id` filter. Edit a title or a status right in the cell, add a post with the quick-add row (the author is filled in for you), delete one, or select several and delete them together. Every request is checked against the posts resource’s own permissions.')),
             ]),
         ];
     }

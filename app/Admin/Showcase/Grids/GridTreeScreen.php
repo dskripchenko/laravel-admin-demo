@@ -24,6 +24,11 @@ final class GridTreeScreen extends GridShowcaseScreen
         return GridTreeResource::class;
     }
 
+    protected static function openLink(): array
+    {
+        return ['Open the tree', 'folder-tree'];
+    }
+
     public function name(): string
     {
         return 'Tree view';
@@ -38,8 +43,10 @@ final class GridTreeScreen extends GridShowcaseScreen
     {
         return [
             Layout::block('What to try', [
-                Layout::markdown(__('Open the tree, expand the branches and search: the matching nodes stay visible together with their ancestors. Select a node — its toolbar has **Add a subcategory**, declared in `treeNodeActions()`, which opens the create form with the parent already picked. A double click opens the edit form.')),
+                Layout::markdown(__('Expand the branches of the tree below and search: the matching nodes stay visible together with their ancestors. Select a node — its toolbar has **Add a subcategory**, declared in `treeNodeActions()`, which opens the create form with the parent already picked. A double click opens the edit form.')),
             ]),
+            // The live table itself: the resource's index, embedded into the screen.
+            Layout::resourceIndex(GridTreeResource::class),
         ];
     }
 }

@@ -58,9 +58,11 @@ final class KpiScreen extends ShowcaseScreen
                     ->stat('Customers', Customer::query()->count()),
 
                 // Several cards in one widget, each with a colour, an icon and a trend.
+                // Values are raw numbers: the panel formats them in its locale,
+                // and money() adds the currency.
                 StatsOverviewWidget::make()->title('Cards with colours, icons and trends')->size(9)
-                    ->stat('Revenue', '$'.number_format($revenue), 'green', 'dollar-sign')->trend(12.5, 'up')
-                    ->stat('Orders', number_format($orders), 'blue', 'shopping-cart')->trend(3.1, 'up')
+                    ->stat('Revenue', round($revenue), 'green', 'dollar-sign')->money('USD')->trend(12.5, 'up')
+                    ->stat('Orders', $orders, 'blue', 'shopping-cart')->trend(3.1, 'up')
                     ->stat('Refunds', Order::query()->where('status', 'refunded')->count(), 'red', 'rotate-ccw')->trend(1.4, 'down'),
 
                 // A gauge: a value on a range over coloured zones. A tone (success,

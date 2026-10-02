@@ -9,6 +9,7 @@ use Dskripchenko\LaravelAdmin\Field\Number;
 use Dskripchenko\LaravelAdmin\Field\Rating;
 use Dskripchenko\LaravelAdmin\Field\Slider;
 use Dskripchenko\LaravelAdmin\Layout\Layout;
+use Illuminate\Support\Number as NumberFormat;
 
 /**
  * Forms › Numbers and colours: numbers typed, slid and starred, and colours
@@ -100,6 +101,9 @@ final class NumbersScreen extends ShowcaseScreen
 
         $total = round((float) $state['price'] * (int) $state['quantity'] * (1 - (float) ($state['discount'] ?? 0) / 100), 2);
 
-        return ['message' => __('Valid! The total would be $:total.', ['total' => number_format($total, 2)])];
+        // Money in the panel's language: its separators and the currency's sign.
+        $money = NumberFormat::currency($total, 'USD', app()->getLocale());
+
+        return ['message' => __('Valid! The total would be :total.', ['total' => $money])];
     }
 }

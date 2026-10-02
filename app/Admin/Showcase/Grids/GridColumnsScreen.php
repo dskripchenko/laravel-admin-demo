@@ -52,8 +52,10 @@ final class GridColumnsScreen extends GridShowcaseScreen
     {
         return [
             Layout::block('What to try', [
-                Layout::markdown(__('Open the table and look at the cells: every column is one preset of `TableColumn`. Copy a SKU with its button, hide and show columns from the toolbar (the name cannot be hidden: `cantHide()`; "Updated" starts hidden: `defaultHidden()`), sort by price or stock and see the summary row under the table — average and range of the price, total stock — follow the filters. The description column shows the size of the text: `format()` turns the value into a number on the server, `asBytes()` prints it. Dates take PHP `date()` formats, with month names in the panel language.')),
+                Layout::markdown(__('Look at the cells of the table below: every column is one preset of `TableColumn`. Copy a SKU with its button, hide and show columns from the toolbar (the name cannot be hidden: `cantHide()`; "Updated" starts hidden: `defaultHidden()`), sort by price or stock and see the summary row under the table — average and range of the price, total stock — follow the filters. The description column shows the size of the text: `format()` turns the value into a number on the server, `asBytes()` prints it. Dates take PHP `date()` formats, with month names in the panel language.')),
             ]),
+            // The live table itself: the resource's index, embedded into the screen.
+            Layout::resourceIndex(GridColumnsResource::class),
             Layout::block('Preview', [
                 RelationTable::make('preview')->title('The first five products')->columns([
                     TableColumn::make('cover_url')->label('Image')->asImage(32, 32)->width('56px'),
