@@ -30,6 +30,17 @@ final class FormsGroup extends ShowcaseGroup
     {
         return [
             FormBasicsScreen::class,
+            TextInputsScreen::class,
+            ChoicesScreen::class,
+            DatesScreen::class,
+            NumbersScreen::class,
+            RichTextScreen::class,
+            FilesScreen::class,
+            RelationsScreen::class,
+            CompositeScreen::class,
+            ValidationScreen::class,
+            DependentFieldsScreen::class,
+            ReadOnlyScreen::class,
         ];
     }
 }
