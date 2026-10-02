@@ -1,0 +1,20 @@
+# docker compose up -d --build
+# The stand listens on :8080; put a TLS-terminating proxy (Caddy, nginx,
+# Traefik) in front of it for a public domain.
+services:
+  demo:
+    build: .
+    image: laravel-admin-demo
+    restart: unless-stopped
+    ports:
+      - "${DEMO_PORT:-8080}:8080"
+    env_file:
+      - path: .env.docker
+        required: false
+    environment:
+      APP_URL: ${APP_URL:-http://localhost:8080}
+    volumes:
+      - demo-data:/data
+
+volumes:
+  demo-data:
