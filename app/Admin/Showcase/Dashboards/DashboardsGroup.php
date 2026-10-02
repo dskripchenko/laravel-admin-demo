@@ -3,6 +3,8 @@
 namespace App\Admin\Showcase\Dashboards;
 
 use App\Admin\Showcase\ShowcaseGroup;
+use Dskripchenko\LaravelAdmin\Facades\Admin;
+use Dskripchenko\LaravelAdmin\Menu\MenuNode;
 
 final class DashboardsGroup extends ShowcaseGroup
 {
@@ -28,6 +30,25 @@ final class DashboardsGroup extends ShowcaseGroup
 
     public static function screens(): array
     {
-        return [];
+        return [
+            KpiScreen::class,
+            ChartsScreen::class,
+            ListsScreen::class,
+            CustomWidgetScreen::class,
+            DashboardScreenScreen::class,
+        ];
+    }
+
+    public static function boot(): void
+    {
+        Admin::screen([ShowcaseDashboard::class]);
+    }
+
+    public static function menu(): array
+    {
+        return [
+            ...parent::menu(),
+            MenuNode::dashboard(ShowcaseDashboard::slug())->label('Live dashboard')->icon('layout-dashboard'),
+        ];
     }
 }
