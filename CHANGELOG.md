@@ -8,6 +8,31 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 Entries for releases published before this file existed were reconstructed from
 the tagged commit history.
 
+## [Unreleased] — 2.0.0
+
+The demo is rebuilt from scratch as the public showcase and documentation site
+of laravel-admin.
+
+### Added
+- A fresh Laravel 13 application on laravel-admin ^1.37 with the starter, health,
+  jobs, pulse and media packs.
+- A demo shop (category tree, products with images, customers, orders with a
+  status flow and line items) and a blog (posts in Markdown, categories, tags,
+  authors), seeded deterministically with a few thousand records.
+- Demo mode: one-click Administrator / Editor / Viewer accounts, the read-only
+  guard, a banner with a countdown, and `demo:reset` scheduled hourly.
+- The laravel-admin documentation rendered inside the panel, in the panel's
+  language, with in-panel links and "Edit on GitHub".
+- The showcase convention: every example screen shows its own PHP source.
+- A home dashboard with sales KPIs, revenue, order status, best sellers, a
+  heatmap and a fulfilment gauge.
+- A landing page at `/` (English and Russian, light and dark, no Node build).
+- A Playwright crawler that signs in as each role and visits every menu entry.
+- A one-container Docker image (FrankenPHP, SQLite, scheduler, queue worker).
+
+### Removed
+- The previous demo application and its debugging scripts.
+
 ## [v1.3.0] - 2026-07-20
 
 ### Added

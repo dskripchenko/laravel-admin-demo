@@ -1,42 +1,87 @@
 <?php
 
 declare(strict_types=1);
-use App\Admin\DemoPlugin;
+
+use App\Http\Middleware\DemoNotice;
+use Dskripchenko\LaravelAdmin\Http\Middleware\AdminAuth;
+use Dskripchenko\LaravelAdmin\Http\Middleware\AdminCspNonce;
+use Dskripchenko\LaravelAdmin\Http\Middleware\AdminLocale;
+use Dskripchenko\LaravelAdmin\Http\Middleware\CaptureApiRequest;
+use Dskripchenko\LaravelAdmin\Http\Middleware\RunActionMiddleware;
 use Dskripchenko\LaravelAdmin\Models\AdminUser;
 
-/**
- * The demo config of dskripchenko/laravel-admin.
- *
- * Every plugin is enabled — the stand shows the full set of features. For a real
- * project keep only the packages you need in plugins[].
- *
- * For the full set of settings see the core's config/admin.php (published by
- * `php artisan vendor:publish --tag=admin-config`).
- */
+$demoAccounts = array_map(
+    static fn (array $account): array => [
+        'label' => $account['label'],
+        'email' => $account['email'],
+        'password' => $account['password'],
+        'description' => $account['description'],
+    ],
+    (require __DIR__.'/demo.php')['accounts'],
+);
 
 return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | The URL and the domain
+    |--------------------------------------------------------------------------
+    */
+
+    // The SPA shell lives under `path`, /admin/* for instance.
     'path' => env('ADMIN_PATH', 'admin'),
-    'api_path' => env('ADMIN_API_PATH', 'api/admin'),
+    'domain' => env('ADMIN_DOMAIN'),
+    // The API lives SEPARATELY from the SPA, at /api/admin/*; it does not nest under path.
+    // laravel-api serves it at /{laravel-api.prefix}/admin/*, and that is the
+    // default here too (null). Set it only when a proxy rewrites the path
+    // the browser sees; to move the API itself, change laravel-api.prefix.
+    'api_path' => env('ADMIN_API_PATH'),
+
+    'api' => [
+        // The admin API's global per-user rate limit: 'requests,minutes'.
+        'throttle' => env('ADMIN_API_THROTTLE', '240,1'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Auth — multi-guard
+    |--------------------------------------------------------------------------
+    | strategy: 'dedicated' — an 'admin' guard of our own plus the AdminUser
+    |                        model
+    |           'shared'    — we reuse the host project's existing guard
+    */
 
     'auth' => [
-        'strategy' => 'dedicated',
-        'guard' => 'admin',
-        'provider' => 'admin_users',
+        'strategy' => env('ADMIN_AUTH_STRATEGY', 'dedicated'),
+
+        'guard' => env('ADMIN_GUARD', 'admin'),
+        'provider' => env('ADMIN_PROVIDER', 'admin_users'),
         'model' => AdminUser::class,
         'table' => 'admin_users',
         'password_broker' => 'admin_users',
-        'login_throttle' => '5,1',
+
+        'login_throttle' => env('ADMIN_LOGIN_THROTTLE', '5,1'),
+
         'two_factor' => [
+            // false hides two-factor setup in the profile and refuses to
+            // enable it. Users who enrolled earlier still pass the challenge
+            // at login and may still switch it off.
             'enabled' => true,
+            // The role slugs whose holders must enable 2FA before they can use
+            // the panel; '*' means everyone. Until they do, every request
+            // other than the profile, the session and the shell answers 403
+            // `two_factor_setup_required`, and the SPA opens the profile.
+            'enforce_for' => [],
             'recovery_codes' => 8,
             'window' => 1,
-            'enforce_for' => [],
         ],
+
         'impersonation' => [
             'enabled' => true,
             'permission' => 'admin.impersonate',
             'block_higher_powered' => true,
         ],
+
         'api_tokens' => [
             'enabled' => true,
             'rate_limit' => '60,1',
@@ -44,54 +89,362 @@ return [
         ],
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Middleware
+    |--------------------------------------------------------------------------
+    */
+
+    'middleware' => [
+        'shell' => [
+            'web',
+            AdminLocale::class,
+            AdminCspNonce::class,
+            // The demo banner: translated text and the countdown to the reset.
+            DemoNotice::class,
+        ],
+        'api' => [
+            // The stack of the PANELS — `admin` and admin.panels.* — run per
+            // request by RunVersionMiddleware. A version a host module adds
+            // next to the panels does not get it: it keeps the middleware its
+            // own BaseApi class declares.
+            //
+            // The admin API is session-based rather than stateless, so it
+            // uses the `web` middleware group for StartSession,
+            // EncryptCookies and CSRF. Headless bearer tokens through Sanctum
+            // are optional and come later.
+            'web',
+            CaptureApiRequest::class,
+            AdminAuth::class,
+            RunActionMiddleware::class,
+            AdminLocale::class,
+        ],
+        'public' => [
+            'web',
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | The SPA bootstrap strategy
+    |--------------------------------------------------------------------------
+    */
+
+    'bootstrap' => [
+        'strategy' => env('ADMIN_BOOTSTRAP_STRATEGY', 'inline'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Branding and the UI
+    |--------------------------------------------------------------------------
+    */
+
     'brand' => [
-        'name' => env('ADMIN_BRAND_NAME', 'Laravel-Admin Demo'),
-        'logo' => null,
-        'favicon' => null,
+        'name' => env('ADMIN_BRAND_NAME', 'Laravel Admin'),
+        // The logo image's URL, used by the sidebar and the login, forgot and reset pages.
+        'logo' => env('ADMIN_BRAND_LOGO'),
+        // A short textual mark of one or two characters, used when there is no logo.
+        'mark' => env('ADMIN_BRAND_MARK'),
+        'favicon' => env('ADMIN_BRAND_FAVICON'),
+        // The copyright line in the panel's footer; null leaves the footer empty.
+        'copyright' => env('ADMIN_BRAND_COPYRIGHT'),
+        'footer' => null,
+    ],
+
+    /*
+    | The installation banner: a short announcement above the panel.
+    |
+    | It is drawn by the shell rather than by the application, and that is
+    | deliberate. An announcement of this kind is a property of the
+    | INSTALLATION, not of a screen: "this is a demo stand", "the data is
+    | wiped", "a migration is under way". It must be visible even when the SPA
+    | has failed to come up — those are exactly the moments when a person most
+    | needs to understand where they have landed.
+    |
+    | When `text` is empty there is no banner at all and no markup is printed.
+    |
+    | `countdown_to` is the moment in time (ISO-8601) the countdown runs to. The
+    | value is dynamic, so it cannot be put into the config directly: a cached
+    | config would freeze it forever. The host application sets it in the middle
+    | of a request — through a middleware, for instance.
+    */
+    'notice' => [
+        'text' => env('ADMIN_NOTICE'),
+        'href' => env('ADMIN_NOTICE_HREF'),
+        'countdown_to' => null,
+        // The caption next to the countdown: "until the reset", "until it ends" and the like.
+        'countdown_label' => env('ADMIN_NOTICE_COUNTDOWN_LABEL'),
+    ],
+
+    /*
+    | Demo mode: for a public demonstration stand. Off by default.
+    |
+    | `accounts` puts "Sign in as …" buttons on the login page; a click logs in
+    | through the ordinary login endpoint. Their passwords are sent to every
+    | visitor of the login page, so list demo accounts only — never a real one.
+    |
+    | `readonly` refuses the operations that would let one visitor lock out or
+    | spoil the stand for the next: a 403 with errorKey `demo_readonly`, which
+    | the SPA shows as a toast. What is refused:
+    |   - `blocked`: API actions as `controller.action` patterns (`*` matches
+    |     anything), e.g. 'profile.changePassword', 'settings_*.update';
+    |   - `protected_models`: writes to the resources of these models — null
+    |     means the panel's user model and Role; `protected_actions` lists
+    |     which resource actions count as writes;
+    |   - uploaded files over `max_upload_kb` (0 switches the limit off).
+    |
+    | An announcement such as "the data resets every hour" goes into `notice`.
+    */
+    'demo' => [
+        'enabled' => (bool) env('ADMIN_DEMO', false),
+        // From config/demo.php, where the seeder reads them too.
+        'accounts' => $demoAccounts,
+        'readonly' => (bool) env('ADMIN_DEMO_READONLY', true),
+        'blocked' => [
+            'profile.update',
+            'profile.changePassword',
+            'profile.twoFactorEnable',
+            'profile.twoFactorConfirm',
+            'profile.twoFactorDisable',
+            'profile.twoFactorRegenerateCodes',
+            'profile.tokenCreate',
+            'profile.tokenRevoke',
+            'auth.startImpersonation',
+            'import.*',
+            'settings_*.update',
+        ],
+        'protected_models' => null,
+        'protected_actions' => [
+            'create', 'update', 'inlineUpdate', 'replicate', 'reorder',
+            'delete', 'restore', 'forceDelete', 'action',
+        ],
+        'max_upload_kb' => 2048,
     ],
 
     'ui' => [
         'default_theme' => 'light',
-        'default_locale' => 'ru',
-        'available_locales' => ['ru', 'en'],
+        // null — follow config('app.locale'). The browser's Accept-Language and
+        // the user's own choice still come first; see LocaleResolver.
+        'default_locale' => env('ADMIN_LOCALE', 'en'),
+        'available_locales' => ['en', 'ru'],
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | OpenAPI / Scalar
+    |--------------------------------------------------------------------------
+    | `scalar_script` is the URL of the Scalar bundle. An external CDN
+    | (jsdelivr) by default; a host project may set a local self-hosted path for
+    | environments with no access to a CDN
+    | (`/vendor/scalar/api-reference.js`).
+    */
+    'openapi' => [
+        'ui' => env('ADMIN_OPENAPI_UI', 'scalar'),
+        'scalar_theme' => 'default',
+        'scalar_script' => env('ADMIN_SCALAR_SCRIPT', 'https://cdn.jsdelivr.net/npm/@scalar/api-reference'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Notifications
+    |--------------------------------------------------------------------------
+    */
+
+    'notifications' => [
+        'table' => 'admin_notifications',
+        'use_host_table' => false,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Audit
+    |--------------------------------------------------------------------------
+    */
 
     'audit' => [
         'enabled' => true,
-        'retention_days' => 90,
+        'table' => 'admin_audit_logs',
+        'log_auth_events' => true,
+        // Attributes whose changes are stripped from the diff snapshot.
+        // Default: credentials/secrets + bookkeeping timestamps that fire on
+        // every save and would clutter the timeline ("Changed: updated_at
+        // 12:00:01 → 12:00:02"). Hosts can override this list via env or
+        // per-model by overriding getAuditExcluded(): array.
+        'excluded_attributes' => [
+            // Secrets / tokens.
+            'password', 'remember_token', 'two_factor_secret', 'two_factor_recovery_codes',
+            // Auto-managed timestamps.
+            'created_at', 'updated_at', 'deleted_at',
+            // Auth bookkeeping written by login / impersonation flows.
+            'last_login_at', 'last_seen_at', 'current_team_id',
+        ],
+        // When an update event survives `excluded_attributes` with nothing
+        // left to record, skip writing the audit row entirely instead of
+        // leaving an empty "Changed" entry in the timeline.
+        'skip_empty_updates' => true,
+        'retention_days' => 365,
+        'user_agent_max_length' => 1024,
+        'url_max_length' => 2048,
+        // Human-readable labels for actor_type and subject_type: FQCN → label.
+        // An FQCN means nothing to an operator, so the host writes
+        // "Administrator" and the like here. A class outside the map falls back
+        // to the reverse morph-map alias, and then to class_basename.
+        //   App\Models\ClientUser::class => 'Client user',
+        'type_labels' => [],
     ],
 
-    /**
-     * The sister-pack plugins. Each of them registers its own resources and
-     * routes automatically (through Laravel's auto-discovery plus the
-     * RegistersAdminPlugin trait in every pack's service provider).
-     *
-     * This array is kept for compatibility — in fact the plugins are added
-     * through `config['admin.plugins'][] = ...` in the register() of the
-     * packages' providers.
-     */
-    'plugins' => [
-        // The sister packs register themselves through the RegistersAdminPlugin
-        // trait. Only the host project goes here:
-        DemoPlugin::class,
+    /*
+    |--------------------------------------------------------------------------
+    | Roles resource (system-roles)
+    |--------------------------------------------------------------------------
+    */
+
+    'roles' => [
+        // The slug prefixes of the roles that are NOT shown and NOT editable
+        // in the service list of system roles — neither in the list nor
+        // through a direct edit URL. Useful so that roles of another domain
+        // (the client-side `client-*` ones, say) do not mix with the admin
+        // roles. Nothing is hidden by default.
+        'hidden_slug_prefixes' => [],
     ],
 
-    /**
-     * The frontend SPA assets — they are pulled in through the Vite manifest.
-     *
-     * Vite writes `public/build/manifest.json` on `npm run build`
-     * (laravel-vite-plugin puts the manifest at the standard `.vite/manifest.json`
-     * path). The core's ShellController parses the manifest and resolves the CSS
-     * and JS chunks of the given entry.
-     *
-     * Substituting through config('admin.assets.css|js') is possible as an
-     * override.
-     */
+    /*
+    |--------------------------------------------------------------------------
+    | Pagination and uploads (the defaults)
+    |--------------------------------------------------------------------------
+    */
+
+    'pagination' => [
+        'default_per_page' => 25,
+        'max_per_page' => 100,
+        'notifications_per_page' => 20,
+    ],
+
+    'uploads' => [
+        'disk' => env('ADMIN_UPLOADS_DISK', 'local'),
+        'directory' => 'uploads',
+        'max_kilobytes' => 51200,
+        'max_kilobytes_image' => 10240,
+        // The whitelist of disks the admin may stream through
+        // /api/admin/uploads/serve. It solves previewing files on private
+        // disks, where there is no storage:link. A host adds its own disks
+        // here explicitly.
+        'servable_disks' => [env('ADMIN_UPLOADS_DISK', 'local'), 'public'],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Export
+    |--------------------------------------------------------------------------
+    */
+
+    'exports' => [
+        'pdf' => [
+            'driver' => env('ADMIN_PDF_DRIVER', 'mpdf'),
+            'fallback' => 'dompdf',
+            'options' => [
+                'mpdf' => ['mode' => 'utf-8', 'format' => 'A4'],
+                'dompdf' => ['paper' => 'a4', 'orientation' => 'portrait'],
+            ],
+        ],
+        'xlsx' => [
+            'driver' => 'openspout',
+            'options' => ['memory_limit' => '512M'],
+        ],
+        'csv' => [
+            'delimiter' => ';',
+            'enclosure' => '"',
+            'bom' => true,
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | The manifest cache
+    |--------------------------------------------------------------------------
+    */
+
+    'manifest' => [
+        'cache_store' => null,
+        'etag' => true,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | SPA frontend assets
+    |--------------------------------------------------------------------------
+    |
+    | Leave everything empty to use the prebuilt admin application the package
+    | ships: `php artisan admin:install` / `admin:publish` copies it to
+    | public/vendor/admin and the shell loads it — no Node, no build step.
+    |
+    | To build the admin with your own Vite (custom fields, widgets, pages —
+    | `php artisan admin:install --custom-build` sets this up), point the shell
+    | at your build in one of two ways:
+    |
+    | 1. A Vite manifest:
+    |     'vite_manifest' => public_path('build/manifest.json'),
+    |     'vite_entry'    => 'resources/js/admin.js',
+    |     'vite_base_url' => '/build/',
+    |
+    | 2. Explicit URL lists (applied after the manifest's files):
+    |     'css' => ['/build/admin.css'],
+    |     'js'  => ['/build/admin.js'],
+    */
+
     'assets' => [
-        'vite_manifest' => public_path('build/manifest.json'),
-        'vite_entry' => 'resources/js/admin.js',
-        'vite_base_url' => '/build/',
         'css' => [],
         'js' => [],
+        'vite_manifest' => null,
+        'vite_entry' => null,
+        'vite_base_url' => '/build/',
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Plugins
+    |--------------------------------------------------------------------------
+    */
+
+    /*
+    |--------------------------------------------------------------------------
+    | Panels (v1.8) — the additional panels
+    |--------------------------------------------------------------------------
+    | Every panel is an independent surface: its own mount path ('' meaning
+    | the site's root), its own guard and provider, its own laravel-api version
+    | (/api/{id}/...), its own middleware stacks and its own set of plugins. The
+    | top-level keys of this config form the implicit default panel `admin`.
+    |
+    | 'panels' => [
+    |     'client' => [
+    |         'path' => '',                       // the mount prefix ('' = the root)
+    |         'exclude_prefixes' => ['api', 'admin'], // do not swallow other paths
+    |         'auth' => [
+    |             'strategy' => 'dedicated',
+    |             'guard' => 'client',
+    |             'provider' => 'client_users',
+    |             'model' => App\Models\ClientUser::class,
+    |             'table' => 'client_users',
+    |             'password_broker' => 'client_users',
+    |         ],
+    |         'api' => App\Admin\ClientApi::class, // extends Panel\PanelApi
+    |         'middleware' => [
+    |             'shell' => ['web', AdminLocale::class, AdminCspNonce::class],
+    |             // api — ADDITIONS to the shared base stack
+    |             // admin.middleware.api (which is panel-aware: the guard is
+    |             // resolved from the request's panel)
+    |             'api' => [SomePanelMiddleware::class],
+    |         ],
+    |         'plugins' => [App\Admin\ClientPanelPlugin::class],
+    |     ],
+    | ],
+    */
+    'panels' => [],
+
+    'plugins' => [
+        // \Dskripchenko\LaravelAdminStarter\AdminStarterPlugin::class,
+        // \Dskripchenko\LaravelAdminMedia\AdminMediaPlugin::class,
+    ],
+
 ];

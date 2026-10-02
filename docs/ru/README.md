@@ -1,100 +1,151 @@
-# laravel-admin-demo
+# Laravel Admin — демо и сайт документации
 
-Демонстрационный стенд **dskripchenko/laravel-admin** — готовый проект на
-Laravel 12 с подключёнными ядром и всеми восемью соседними пакетами. Нужен для
-двух вещей:
+> 🌐 [English](../../README.md) · **Русский**
 
-1. **Витрина** — публично задеплоенный адрес (`admin-demo.example.com`), где
-   админку можно потыкать, ничего не устанавливая.
-2. **Шаблон быстрого старта** — `composer create-project dskripchenko/laravel-admin-demo my-admin`
-   выводит разработчика в рабочую панель меньше чем за пять минут.
+Публичная витрина [dskripchenko/laravel-admin](https://github.com/dskripchenko/laravel-admin):
+приложение на Laravel 13, чья админ-панель *и есть* сайт документации.
 
-Один и тот же репозиторий работает в обоих режимах.
+- **Живая панель** с демо-магазином (дерево категорий, товары с картинками,
+  покупатели, заказы со сменой статусов) и блогом (публикации в Markdown,
+  рубрики, теги, авторы) — несколько тысяч записей, одинаковых после каждого сброса.
+- **Документация внутри админки.** Markdown, который пакет поставляет в
+  `vendor/dskripchenko/laravel-admin/docs/{en,ru}`, показывается через
+  `Layout::markdown()` на текущем языке панели; ссылки между страницами
+  остаются внутри панели, у каждой страницы — кнопка «Править на GitHub».
+- **Витрина**: каждый пример показывает PHP, который его построил.
+- **Демо-режим**: вход в один клик за Администратора, Редактора или
+  Наблюдателя, защита от изменений, баннер с обратным отсчётом до сброса.
+- **Лендинг** на `/` (английский и русский, светлая и тёмная тема, чистый Blade).
 
-> 🌐 [English](../../README.md) · [Deutsch](../de/README.md) · **Русский** · [中文](../zh/README.md)
-
-## Что внутри
-
-- **Три демонстрационных ресурса** — Articles (блог с WYSIWYG), Products
-  (каталог с категориями), Orders (статусы workflow).
-- **Все восемь соседних пакетов включены** в `config/admin.php`:
-  - `laravel-admin-starter` — системные ресурсы (Users / Roles / AuditLog / Settings / Translations / ContentBlocks)
-  - `laravel-admin-health` — панель проверок состояния
-  - `laravel-admin-jobs` — упавшие задачи, батчи, глубина очереди
-  - `laravel-admin-media` — медиабиблиотека
-  - `laravel-admin-pulse` — телеметрия (запросы, SQL, задачи, исключения)
-  - `laravel-admin-search` — глобальный поиск (⌘K)
-  - `laravel-admin-quill` — редактор Quill
-  - `laravel-admin-tinymce` — редактор TinyMCE
-- **Демо-данные**: 50 статей, 50 товаров, 50 заказов (`DemoSeeder`).
-- **Учётная запись администратора**: `admin@example.com` / `password`.
-
-## Быстрый старт (локально)
+## Локальный запуск
 
 ```bash
-composer create-project dskripchenko/laravel-admin-demo my-admin
-cd my-admin
-composer setup    # install + key:gen + sqlite + migrate + seed + npm build
-php artisan serve
-```
-
-Откройте [http://localhost:8000/admin](http://localhost:8000/admin) и войдите
-как `admin@example.com` / `password`.
-
-### Другой способ — клонированием
-
-```bash
-git clone git@github.com:dskripchenko/laravel-admin-demo.git
+git clone https://github.com/dskripchenko/laravel-admin-demo
 cd laravel-admin-demo
-composer install
-cp .env.example .env
-php artisan key:generate
-touch database/database.sqlite
-php artisan migrate
-php artisan db:seed --class=DemoSeeder
-npm install && npm run build
+composer setup          # зависимости, .env, ключ, SQLite, demo:reset
 php artisan serve
 ```
 
-## Публичный деплой
+Откройте http://localhost:8000 (лендинг) или http://localhost:8000/admin/login.
+Нужен PHP 8.4+ с `gd`, `pdo_sqlite` и `intl`; Node не нужен.
 
-Пошаговое руководство через Laravel Forge — в
-[`deploy/forge.md`](../../deploy/forge.md); вариант с самостоятельным хостингом
-на Docker — в [`deploy/docker-compose.yml`](../../deploy/docker-compose.yml).
+## Демо-аккаунты
 
-После каждого `git push origin main` Forge выполняет:
+| Роль | Email | Пароль | Что может |
+|---|---|---|---|
+| Администратор | `admin@demo.test` | `demo` | Всё, включая пользователей и роли |
+| Редактор | `editor@demo.test` | `demo` | Только каталог, блог и медиатека |
+| Наблюдатель | `viewer@demo.test` | `demo` | Все разделы, только чтение (`admin.*.view`) |
 
-1. `composer install --no-dev --optimize-autoloader`
-2. `npm ci && npm run build`
-3. `php artisan migrate --force`
-4. `php artisan db:seed --class=DemoSeeder` (только если в окружении выставлено `RESET=true`)
+Аккаунты и роли описаны в `config/demo.php` и создаются
+`database/seeders/AccessSeeder.php`. При `ADMIN_DEMO=true` страница входа
+показывает их кнопками «Войти как …». При `ADMIN_DEMO_READONLY=true` (по
+умолчанию) никто — включая администратора — не может менять пользователей,
+роли, настройки, профили и пароли; демо-записи редактировать можно.
 
-Строка cron, которая раз в сутки сбрасывает стенд, — там же, в
-`deploy/forge.md`.
+## Сброс
 
-## Структура
-
-```
-demo/
-├── app/
-│   ├── Admin/Resources/        # ArticleResource, ProductResource, OrderResource
-│   └── Models/                 # Article, Product, Order
-├── config/
-│   └── admin.php               # все восемь пакетов в plugins[], три демо-ресурса
-├── database/
-│   ├── migrations/             # articles + products + orders
-│   └── seeders/DemoSeeder.php  # 50 + 50 + 50 сгенерированных записей
-├── deploy/                     # конфигурация Docker / Forge / nginx
-└── resources/, public/, ...    # обычная раскладка Laravel 12
+```bash
+php artisan demo:reset --force
 ```
 
-## Как сделать своим
+Удаляет сгенерированные картинки, выполняет `migrate:fresh --seed`, заново
+публикует фронтенд админки и чистит кеш (около пяти секунд на SQLite). Данные
+детерминированы, даты считаются от сегодняшнего дня — дашборды всегда выглядят
+свежими.
 
-- Замените `App\Admin\Resources\*` собственными ресурсами.
-- Уберите ненужные пакеты из `plugins[]` в `config/admin.php`.
-- Удалите демо-миграции (`database/migrations/2026_01_01_*`) и `DemoSeeder`,
-  если стартуете с чистого листа.
+Сброс запускает планировщик Laravel (`DEMO_RESET_CRON`, по умолчанию каждый
+час; пустое значение отключает) вместе с проверками здоровья и агрегацией
+телеметрии (`routes/console.php`). На сервере нужны обычная запись cron и
+обработчик очереди:
+
+```cron
+* * * * * cd /path/to/app && php artisan schedule:run >> /dev/null 2>&1
+```
+
+```bash
+php artisan queue:work --tries=3   # под supervisord или systemd
+```
+
+Docker-образ запускает и то, и другое сам.
+
+## Где что лежит
+
+| Путь | Что |
+|---|---|
+| `app/Providers/AdminServiceProvider.php` | Ресурсы, экраны и всё меню |
+| `app/Admin/Resources/{Shop,Blog}` | Товары, категории, заказы, покупатели; публикации, рубрики, теги, авторы |
+| `app/Admin/Dashboards/ShopDashboard.php` + `app/Admin/Widgets` | Главный дашборд |
+| `app/Docs/DocsCatalog.php` | Страницы документации, их порядок и группы меню |
+| `app/Docs/DocsLibrary.php` | Чтение страницы, откат на английский, переписывание ссылок, кеш |
+| `app/Admin/Screens/Docs` | По экрану на страницу (`/admin/screens/docs-concepts-menu`) и оглавление |
+| `app/Admin/Showcase` | `ShowcaseScreen` + `ShowsSource` и экраны-примеры |
+| `app/Console/Commands/DemoResetCommand.php` | `demo:reset` |
+| `app/Http/Middleware/DemoNotice.php` | Текст баннера на языке посетителя и отсчёт до сброса |
+| `resources/views/landing.blade.php` | Лендинг |
+| `config/demo.php` | Демо-аккаунты, расписание сброса, репозиторий документации |
+| `lang/ru.json` | Русский перевод всех строк сайта |
+
+### Страницы документации
+
+Страница — это файл в `docs/{locale}/` установленного пакета. Чтобы добавить
+страницу, допишите запись в `DocsCatalog::PAGES` и класс экрана из трёх строк в
+`app/Admin/Screens/Docs/Pages`. Относительные ссылки на страницы каталога
+становятся ссылками на их экраны; ссылки на всё остальное (исходники, страницы
+вне каталога) ведут на GitHub. Подготовленная страница кешируется, пока файл не
+изменится.
+
+### Экраны витрины
+
+Унаследуйте `App\Admin\Showcase\ShowcaseScreen`, реализуйте `demo()` и
+`group()` и добавьте класс в `AdminServiceProvider::SHOWCASE`. Под примером
+появится блок «Как это сделано» с исходником класса — или одного метода, через
+`sourceMethod()`, — прочитанным через рефлексию.
+
+### Переводы
+
+Строки в коде пишутся по-английски, русский перевод — в `lang/ru.json`.
+Админка сама переводит через него подписи ресурсов, полей, меню и действий,
+лендинг использует `__()`. Добавили видимую строку — добавьте ключ в
+`lang/ru.json`.
+
+## Тесты
+
+```bash
+composer test                    # PHPUnit: аккаунты и роли, защита демо, документация, витрина, сброс
+php artisan serve &
+npm install && npx playwright install chromium
+npm run crawl                    # входит за каждую роль, открывает каждый пункт меню и страницу документации
+```
+
+Краулер падает на ошибках JavaScript, ошибках в консоли и HTTP 5xx и сохраняет
+скриншоты в `tests/e2e/screenshots/`. `LANDING_SHOTS=1 npm run crawl`
+обновляет скриншоты лендинга в `public/landing/`.
+
+## Развёртывание
+
+Один контейнер: FrankenPHP отдаёт приложение, supervisord держит планировщик
+и обработчик очереди, SQLite лежит на томе `/data`. Каждый запуск — это сброс.
+
+```bash
+cp .env.docker.example .env.docker   # задайте APP_URL
+docker compose up -d --build
+curl -f http://127.0.0.1:8080/up
+```
+
+Контейнер слушает порт 8080 (`DEMO_PORT` меняет порт на хосте), проверка
+здоровья — `/up`. Перед ним нужен прокси с TLS, например Caddy:
+
+```caddyfile
+admin.example.com {
+    reverse_proxy 127.0.0.1:8080
+}
+```
+
+Оставляйте `TRUSTED_PROXIES=*`, только если порт контейнера доступен лишь
+прокси. Ключ приложения создаётся при первом запуске и хранится в томе; других
+секретов не нужно.
 
 ## Лицензия
 
-MIT.
+MIT

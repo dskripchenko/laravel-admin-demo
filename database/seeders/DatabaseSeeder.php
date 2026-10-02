@@ -1,20 +1,24 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
-final class DatabaseSeeder extends Seeder
+/**
+ * The whole demo stand: accounts and roles, the shop, the blog. Every run
+ * produces the same data (a fixed Faker seed); dates are relative to today so
+ * the dashboards always look current.
+ */
+class DatabaseSeeder extends Seeder
 {
-    /**
-     * The default seeder — it delegates to DemoSeeder.
-     *
-     * Run it with `php artisan db:seed` or `php artisan migrate --seed`.
-     */
     public function run(): void
     {
-        $this->call(DemoSeeder::class);
+        $this->call([
+            AccessSeeder::class,
+            MediaSeeder::class,
+            ShopSeeder::class,
+            BlogSeeder::class,
+            ActivitySeeder::class,
+        ]);
     }
 }

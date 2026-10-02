@@ -1,14 +1,16 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
     "name": "dskripchenko/laravel-admin-demo",
-    "description": "Demonstration Laravel 12 host project with dskripchenko/laravel-admin and all eight sister packages wired up. Quick-start template and public showcase.",
     "type": "project",
+    "description": "The live showcase of dskripchenko/laravel-admin: a shop and a blog with realistic data, demo accounts, and the framework documentation rendered inside the admin itself.",
     "keywords": [
         "laravel",
         "admin",
+        "admin-panel",
         "demo",
         "showcase",
-        "dskripchenko"
+        "crud",
+        "dashboard"
     ],
     "homepage": "https://github.com/dskripchenko/laravel-admin-demo",
     "license": "MIT",
@@ -23,24 +25,25 @@
         "source": "https://github.com/dskripchenko/laravel-admin-demo"
     },
     "require": {
-        "php": "^8.2",
-        "ext-json": "*",
-        "laravel/framework": "^12.0 || ^13.0",
-        "laravel/tinker": "^3.0",
-        "dskripchenko/laravel-admin": "^1.7",
-        "dskripchenko/laravel-admin-starter": "^1.3",
-        "dskripchenko/laravel-admin-health": "^1.3",
-        "dskripchenko/laravel-admin-jobs": "^1.3",
-        "dskripchenko/laravel-admin-media": "^1.3",
-        "dskripchenko/laravel-admin-pulse": "^1.3"
+        "php": "^8.4",
+        "ext-gd": "*",
+        "dskripchenko/laravel-admin": "^1.37",
+        "dskripchenko/laravel-admin-health": "^1.4.2",
+        "dskripchenko/laravel-admin-jobs": "^1.4.2",
+        "dskripchenko/laravel-admin-media": "^1.5",
+        "dskripchenko/laravel-admin-pulse": "^1.5",
+        "dskripchenko/laravel-admin-starter": "^1.4",
+        "fakerphp/faker": "^1.23",
+        "laravel/framework": "^13.17",
+        "laravel/tinker": "^3.0"
     },
     "require-dev": {
-        "fakerphp/faker": "^1.23",
-        "laravel/pail": "^1.2",
+        "laravel/pail": "^1.2.5",
+        "laravel/pao": "^1.0.6",
         "laravel/pint": "^1.27",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
-        "phpunit/phpunit": "^11.0 || ^12.0"
+        "phpunit/phpunit": "^12.5.12"
     },
     "autoload": {
         "psr-4": {
@@ -60,17 +63,14 @@
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
             "@php artisan key:generate",
             "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
-            "@php artisan migrate --force",
-            "@php artisan db:seed --class=DemoSeeder --force",
-            "npm install --ignore-scripts",
-            "npm run build"
+            "@php artisan demo:reset --force"
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
-            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1 --timeout=0\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite --kill-others"
+            "@php artisan dev"
         ],
         "test": [
-            "@php artisan config:clear --ansi",
+            "@php artisan config:clear --ansi @no_additional_args",
             "@php artisan test"
         ],
         "post-autoload-dump": [
@@ -78,10 +78,11 @@
             "@php artisan package:discover --ansi"
         ],
         "post-update-cmd": [
-            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
+            "@php artisan admin:publish --ansi"
         ],
-        "post-root-package-install": [
-            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        "pre-package-uninstall": [
+            "Illuminate\\Foundation\\ComposerScripts::prePackageUninstall"
         ]
     },
     "extra": {
@@ -94,6 +95,7 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
+            "pestphp/pest-plugin": true,
             "php-http/discovery": true
         }
     },

@@ -1,104 +1,150 @@
-# laravel-admin-demo
+# Laravel Admin — demo and documentation site
 
-A demonstration stand for **dskripchenko/laravel-admin** — a ready Laravel 12
-project with the core and all eight sister packages wired up. It serves two
-purposes:
+> 🌐 **English** · [Русский](docs/ru/README.md)
 
-1. **Showcase** — a publicly deployed URL (`admin-demo.example.com`) where the
-   panel can be clicked through without installing anything.
-2. **Quick-start template** — `composer create-project dskripchenko/laravel-admin-demo my-admin`
-   puts a developer in a working panel in under five minutes.
+The public showcase of [dskripchenko/laravel-admin](https://github.com/dskripchenko/laravel-admin):
+a Laravel 13 application whose admin panel *is* the documentation site.
 
-The same repository works in both modes.
+- **A live panel** with a demo shop (category tree, products with images,
+  customers, orders with a status flow) and a blog (Markdown posts, categories,
+  tags, authors) — a few thousand records, the same on every reset.
+- **The documentation inside the admin.** The Markdown the package ships in
+  `vendor/dskripchenko/laravel-admin/docs/{en,ru}` is rendered by
+  `Layout::markdown()` in the panel's current language, with links between
+  pages kept in the panel and an "Edit on GitHub" button.
+- **A showcase** where every example screen shows the PHP that built it.
+- **Demo mode**: one-click Administrator / Editor / Viewer accounts, read-only
+  protection, a banner with a countdown to the hourly reset.
+- **A landing page** at `/` (English/Russian, light/dark, plain Blade).
 
-> 🌐 **English** · [Deutsch](docs/de/README.md) · [Русский](docs/ru/README.md) · [中文](docs/zh/README.md)
-
-## What's inside
-
-- **Three demo resources** — Articles (a WYSIWYG blog), Products (a catalogue
-  with categories), Orders (workflow statuses).
-- **The sister packages enabled** in `config/admin.php`:
-  - `laravel-admin-starter` — system resources (Users / Roles / AuditLog / Settings / Translations / ContentBlocks)
-  - `laravel-admin-health` — health-check dashboard
-  - `laravel-admin-jobs` — failed jobs, batches
-  - `laravel-admin-media` — media library
-  - `laravel-admin-pulse` — telemetry (request / query / job / exception)
-
-  Three packages were retired on 17.08.2026: the core had grown its own
-  versions of what they offered. `laravel-admin-search` duplicated the core's
-  global search — and, being installed, its route SHADOWED the core's, so this
-  demo was showing the weaker of the two. `laravel-admin-quill` and
-  `laravel-admin-tinymce` were empty shells: the editors' Vue components live
-  in the core, and switching to them is a few lines in `resources/js/admin.js`
-  (see the comment there).
-- **Demo data**: 50 articles, 50 products, 50 orders (`DemoSeeder`).
-- **Admin account**: `admin@example.com` / `password`.
-
-## Quick start (locally)
+## Run locally
 
 ```bash
-composer create-project dskripchenko/laravel-admin-demo my-admin
-cd my-admin
-composer setup    # install + key:gen + sqlite + migrate + seed + npm build
-php artisan serve
-```
-
-Open [http://localhost:8000/admin](http://localhost:8000/admin) and sign in with
-`admin@example.com` / `password`.
-
-### Alternatively, by cloning
-
-```bash
-git clone git@github.com:dskripchenko/laravel-admin-demo.git
+git clone https://github.com/dskripchenko/laravel-admin-demo
 cd laravel-admin-demo
-composer install
-cp .env.example .env
-php artisan key:generate
-touch database/database.sqlite
-php artisan migrate
-php artisan db:seed --class=DemoSeeder
-npm install && npm run build
+composer setup          # install, .env, key, SQLite, demo:reset
 php artisan serve
 ```
 
-## Public deployment
+Open http://localhost:8000 (landing) or http://localhost:8000/admin/login.
+PHP 8.4+ with `gd`, `pdo_sqlite` and `intl`; no Node.
 
-See [`deploy/forge.md`](deploy/forge.md) for a step-by-step guide through
-Laravel Forge, or [`deploy/docker-compose.yml`](deploy/docker-compose.yml) for a
-self-hosted Docker setup.
+## Demo accounts
 
-After every `git push origin main`, Forge runs:
+| Role | Email | Password | Can |
+|---|---|---|---|
+| Administrator | `admin@demo.test` | `demo` | Everything, including users and roles |
+| Editor | `editor@demo.test` | `demo` | Catalog, blog and media only |
+| Viewer | `viewer@demo.test` | `demo` | Every section, read-only (`admin.*.view`) |
 
-1. `composer install --no-dev --optimize-autoloader`
-2. `npm ci && npm run build`
-3. `php artisan migrate --force`
-4. `php artisan db:seed --class=DemoSeeder` (only when `RESET=true` is set in the environment)
+The accounts and their roles are defined in `config/demo.php` and created by
+`database/seeders/AccessSeeder.php`. The login page shows them as "Sign in as …"
+buttons when `ADMIN_DEMO=true`. With `ADMIN_DEMO_READONLY=true` (the default)
+nobody — the administrator included — can change users, roles, settings,
+profiles or passwords; demo records stay editable.
 
-The cron entry that resets the stand once a day is in `deploy/forge.md`.
+## Reset
 
-## Layout
-
-```
-demo/
-├── app/
-│   ├── Admin/Resources/        # ArticleResource, ProductResource, OrderResource
-│   └── Models/                 # Article, Product, Order
-├── config/
-│   └── admin.php               # all eight packs in plugins[], three demo resources
-├── database/
-│   ├── migrations/             # articles + products + orders
-│   └── seeders/DemoSeeder.php  # 50 + 50 + 50 fake records
-├── deploy/                     # Docker / Forge / nginx configuration
-└── resources/, public/, ...    # the standard Laravel 12 layout
+```bash
+php artisan demo:reset --force
 ```
 
-## Making it yours
+Wipes the generated media, runs `migrate:fresh --seed`, republishes the admin
+frontend and clears the cache (about five seconds on SQLite). The seed is
+deterministic; dates are relative to today, so the dashboards always look
+current.
 
-- Replace `App\Admin\Resources\*` with your own resources.
-- Drop the packs you don't need from `plugins[]` in `config/admin.php`.
-- Delete the demo migrations (`database/migrations/2026_01_01_*`) and
-  `DemoSeeder` if you are starting from a clean slate.
+The reset runs from the Laravel scheduler (`DEMO_RESET_CRON`, hourly by default;
+empty disables it), together with the health checks and the telemetry
+aggregation of the sister packs (`routes/console.php`). On a server, add the
+usual cron entry and a queue worker:
+
+```cron
+* * * * * cd /path/to/app && php artisan schedule:run >> /dev/null 2>&1
+```
+
+```bash
+php artisan queue:work --tries=3   # under supervisord/systemd
+```
+
+The Docker image runs both for you.
+
+## Where things are
+
+| Path | What |
+|---|---|
+| `app/Providers/AdminServiceProvider.php` | Resources, screens and the whole menu |
+| `app/Admin/Resources/{Shop,Blog}` | Products, categories, orders, customers; posts, categories, tags, authors |
+| `app/Admin/Dashboards/ShopDashboard.php` + `app/Admin/Widgets` | The home dashboard |
+| `app/Docs/DocsCatalog.php` | The documentation pages, their order and menu groups |
+| `app/Docs/DocsLibrary.php` | Reads a page, falls back to English, rewrites links, caches |
+| `app/Admin/Screens/Docs` | One screen per page (`/admin/screens/docs-concepts-menu`) and the contents page |
+| `app/Admin/Showcase` | `ShowcaseScreen` + `ShowsSource` and the example screens |
+| `app/Console/Commands/DemoResetCommand.php` | `demo:reset` |
+| `app/Http/Middleware/DemoNotice.php` | The banner text in the visitor's language and the countdown |
+| `resources/views/landing.blade.php` | The landing page |
+| `config/demo.php` | Demo accounts, reset schedule, docs repository |
+| `lang/ru.json` | Russian for every string of the site |
+
+### Documentation pages
+
+A page is a file under `docs/{locale}/` of the installed package. To add one,
+add an entry to `DocsCatalog::PAGES` and a three-line screen class in
+`app/Admin/Screens/Docs/Pages`. Relative links to pages in the catalog become
+links to their screens; links to anything else (sources, pages that are not in
+the catalog) open on GitHub. Prepared pages are cached until the file changes.
+
+### Showcase screens
+
+Extend `App\Admin\Showcase\ShowcaseScreen`, implement `demo()` and `group()`, and
+add the class to `AdminServiceProvider::SHOWCASE`. The page appends a
+"How it's built" block with the class's source — or one method's, via
+`sourceMethod()` — read through reflection.
+
+### Translations
+
+Strings are written in English in the code; `lang/ru.json` holds the Russian.
+The admin translates resource, field, menu and action labels through it on its
+own, and the landing page uses `__()`. Add a key to `lang/ru.json` whenever you
+add a visible string.
+
+## Tests
+
+```bash
+composer test                    # PHPUnit: accounts and roles, read-only guard, docs, showcase, reset
+php artisan serve &
+npm install && npx playwright install chromium
+npm run crawl                    # signs in as each role, opens every menu entry and docs page
+```
+
+The crawler fails on JavaScript errors, console errors and HTTP 5xx, and saves
+screenshots to `tests/e2e/screenshots/`. `LANDING_SHOTS=1 npm run crawl`
+refreshes the screenshots of the landing page in `public/landing/`.
+
+## Deploy
+
+One container: FrankenPHP serves the app; supervisord runs the scheduler and
+a queue worker; SQLite lives on the `/data` volume. Every start is a reset.
+
+```bash
+cp .env.docker.example .env.docker   # set APP_URL
+docker compose up -d --build
+curl -f http://127.0.0.1:8080/up
+```
+
+The container listens on port 8080 (`DEMO_PORT` changes the host port) and has
+a health check on `/up`. Put a TLS-terminating proxy in front of it, e.g. Caddy:
+
+```caddyfile
+admin.example.com {
+    reverse_proxy 127.0.0.1:8080
+}
+```
+
+Keep `TRUSTED_PROXIES=*` only while the container's port is reachable from the
+proxy alone. The application key is generated on the first start and kept in
+the volume; nothing else needs a secret.
 
 ## License
 
-MIT.
+MIT

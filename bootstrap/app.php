@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -11,15 +12,17 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // The admin API uses session cookies (the web middleware) for the
-        // authentication. CSRF protection is redundant for a same-origin XHR
-        // (axios with withCredentials) and creates a race condition on
-        // session.regenerate() after a login. The browser's same-origin policy
-        // plus authorization through the session is protection enough.
-        $middleware->validateCsrfTokens(except: [
-            'api/admin/*',
-        ]);
+        // Request timings for the Telemetry dashboard (laravel-admin-pulse).
+        // The admin API runs in the `web` group too, so it is sampled as well.
+        $middleware->appendToGroup('web', 'pulse');
+
+        // Behind a TLS-terminating proxy (see compose.yaml).
+        if ($proxies = env('TRUSTED_PROXIES')) {
+            $middleware->trustProxies(at: $proxies === '*' ? '*' : explode(',', $proxies));
+        }
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->shouldRenderJsonWhen(
+            fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
+        );
     })->create();
