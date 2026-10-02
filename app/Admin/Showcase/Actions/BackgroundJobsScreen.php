@@ -44,7 +44,7 @@ final class BackgroundJobsScreen extends ShowcaseScreen
             Layout::markdown(implode("\n\n", [
                 __('**Build a report** starts `ReportBuilder::build()` as a delayed process: the request returns at once with the process id, a queue worker runs the handler, and the panel polls `delayed/status` every two seconds. The handler reports how far it got through `ProcessProgressInterface::setProgress()`, and the progress dialog draws it as a bar until the handler returns its message.'),
                 __('**Big report** passes other parameters through `withParams()` and polls less often.'),
-                '> **Note** '.__('Only allowlisted handlers can be started: `AllowlistRegistrar::allow(ReportBuilder::class, \'build\')`. Without it the SPA gets 403, whatever the request says.'),
+                '> **'.__('Note').'** '.__('Only allowlisted handlers can be started: `AllowlistRegistrar::allow(ReportBuilder::class, \'build\')`. Without it the SPA gets 403, whatever the request says.'),
             ]))->card(),
         ];
     }

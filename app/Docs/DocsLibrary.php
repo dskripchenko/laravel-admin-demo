@@ -108,7 +108,7 @@ final class DocsLibrary
                 $note = $served === self::FALLBACK_LOCALE
                     ? __('This page has not been translated yet; the English version is shown.')
                     : __('This page is only available in :language so far.', ['language' => __(self::LANGUAGES[$served] ?? $served)]);
-                $body = '> **Note** '.$note."\n\n".$body;
+                $body = '> **'.__('Note').'** '.$note."\n\n".$body;
                 // The menu's title, in the panel's language.
                 $title = $this->catalog->title($page) ?? $title;
             }

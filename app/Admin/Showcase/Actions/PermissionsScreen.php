@@ -88,7 +88,7 @@ final class PermissionsScreen extends ShowcaseScreen
                 Layout::markdown(implode("\n\n", [
                     __('The **Administrator** sees every button, the **Editor** the product ones, the **Viewer** only Anyone and Viewers. Weekdays follows the calendar, not a permission.'),
                     __('The check happens on the server: an action the user may not run never reaches the manifest, and posting its method to `runMethod` anyway answers `403` with `errorKey: action_forbidden`. A method no action names is guarded by the screen\'s own `permission()` only.'),
-                    '> **Tip** '.__('`canSee()` takes a closure without arguments, evaluated when the screen is serialized — here, a button shown on weekdays only.'),
+                    '> **'.__('Tip').'** '.__('`canSee()` takes a closure without arguments, evaluated when the screen is serialized — here, a button shown on weekdays only.'),
                 ]))->card(),
             ]),
         ];
