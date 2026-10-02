@@ -43,7 +43,7 @@ of laravel-admin.
 - A one-container Docker image (FrankenPHP, SQLite, scheduler, queue worker).
 
 ### Changed
-- On laravel-admin ^1.39 (with laravel-delayed-process ^2.1.2), the showcase
+- On laravel-admin ^1.40 (with laravel-delayed-process ^2.1.2), the showcase
   uses what it fixed instead of working around it: the breadcrumb trail on
   "Where am I", a real progress bar for the background report
   (`ProcessProgressInterface::setProgress()`), the drawer's `footer()`,
