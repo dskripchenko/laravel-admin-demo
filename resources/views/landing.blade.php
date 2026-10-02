@@ -8,7 +8,9 @@
 <meta property="og:title" content="Laravel Admin">
 <meta property="og:description" content="{{ __('Laravel admin panel constructor — the docs are the demo') }}">
 <meta property="og:image" content="{{ url('/landing/dashboard.jpg') }}">
-<link rel="icon" href="/favicon.ico">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="alternate" hreflang="en" href="{{ url('/?lang=en') }}">
 <link rel="alternate" hreflang="ru" href="{{ url('/?lang=ru') }}">
 <style>
@@ -44,7 +46,10 @@ code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospac
 header.top { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
 header.top .wrap { display: flex; align-items: center; gap: 16px; height: 60px; }
 .brand { display: flex; align-items: center; gap: 10px; font-weight: 650; color: var(--text); text-decoration: none; }
-.mark { width: 28px; height: 28px; border-radius: 7px; background: var(--text); color: var(--bg); display: grid; place-items: center; font: 600 13px/1 ui-monospace, monospace; }
+.mark { width: 28px; height: 28px; display: block; flex: none; --mark-tile: #18181b; --mark-fg: #ffffff; }
+.mark .t { fill: var(--mark-tile); } .mark .c { stroke: var(--mark-fg); } .mark .b { fill: #2dd4bf; }
+:root[data-theme="dark"] .mark { --mark-tile: #09090b; --mark-fg: #f4f4f5; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .mark { --mark-tile: #09090b; --mark-fg: #f4f4f5; } }
 nav.links { margin-left: auto; display: flex; align-items: center; gap: 4px; }
 nav.links a, nav.links button { color: var(--muted); text-decoration: none; padding: 6px 10px; border-radius: 8px; font-size: 15px; background: none; border: 0; cursor: pointer; font-family: inherit; }
 nav.links a:hover, nav.links button:hover { color: var(--text); background: var(--bg-soft); }
@@ -135,7 +140,7 @@ footer a { color: var(--muted); }
 @endphp
 <header class="top">
     <div class="wrap">
-        <a class="brand" href="/?lang={{ $locale }}"><span class="mark">&gt;_</span> Laravel Admin</a>
+        <a class="brand" href="/?lang={{ $locale }}"><svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><rect class="t" width="24" height="24" rx="5.3"/><path class="c" d="M5.5 11V5.5H11M18.5 13v5.5H13" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><rect class="b" x="9.4" y="9.4" width="5.2" height="5.2" rx="1.6"/></svg> Laravel Admin</a>
         <nav class="links" aria-label="{{ __('Main') }}">
             <a class="hide-sm" href="{{ $adminPath }}/login">{{ __('Demo') }}</a>
             <a class="hide-sm" href="{{ $adminPath }}/screens/docs">{{ __('Docs') }}</a>
