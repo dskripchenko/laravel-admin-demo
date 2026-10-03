@@ -147,6 +147,14 @@ for (const role of ROLES) {
     await page.screenshot({ path: join(SHOTS, `${name}.png`) })
     const landingName = LANDING_SHOTS[role]?.[path]
     if (landingName && LANDING) {
+      // The demo-stand banner ("data resets every hour") belongs to this
+      // installation, not to the product the landing page shows: leave it out
+      // of the pictures, and give the shell back the height it reserved.
+      await page.evaluate(() => {
+        document.getElementById('admin-notice')?.remove()
+        document.documentElement.style.setProperty('--admin-banner-height', '0px')
+      })
+      await page.waitForTimeout(200)
       // Both themes: the landing page shows the one matching the visitor's.
       mkdirSync('public/landing', { recursive: true })
       await page.screenshot({ path: join('public/landing', `${landingName}.jpg`), type: 'jpeg', quality: 80 })
