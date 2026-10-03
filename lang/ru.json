@@ -558,7 +558,7 @@
     "Orders by ?status=": "Заказы по ?status=",
     "Orders by status": "Заказы по статусам",
     "Orders by weekday": "Заказы по дням недели",
-    "Orders by weekday and month": "Заказы по дням недели и месяцам",
+    "Orders per day by weekday and month": "Заказы в день по дням недели и месяцам",
     "Orders this week, **+3%**": "Заказов за неделю, **+3%**",
     "Orders, 24 h": "Заказы за 24 ч",
     "orders.csv — 1,700 rows.": "orders.csv — 1 700 строк.",
