@@ -41,6 +41,12 @@ final class PostResource extends Resource
         return 'Posts';
     }
 
+    /** One record's name, for titles, confirmations and toasts: "Create post". */
+    public static function singularLabel(): ?string
+    {
+        return 'post';
+    }
+
     public function fields(): array
     {
         return [

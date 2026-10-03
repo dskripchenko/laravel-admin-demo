@@ -32,6 +32,12 @@ final class ProductCategoryResource extends Resource
         return 'Categories';
     }
 
+    /** One record's name, for titles, confirmations and toasts: "Create category". */
+    public static function singularLabel(): ?string
+    {
+        return 'category';
+    }
+
     public function fields(): array
     {
         return [

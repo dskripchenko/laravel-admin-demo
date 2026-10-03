@@ -39,6 +39,12 @@ final class CustomerResource extends Resource
         return 'Customers';
     }
 
+    /** One record's name, for titles, confirmations and toasts: "Create customer". */
+    public static function singularLabel(): ?string
+    {
+        return 'customer';
+    }
+
     public function fields(): array
     {
         return [

@@ -27,12 +27,12 @@
     "require": {
         "php": "^8.4",
         "ext-gd": "*",
-        "dskripchenko/laravel-admin": "^1.44.1",
-        "dskripchenko/laravel-admin-health": "^1.5.0",
-        "dskripchenko/laravel-admin-jobs": "^1.5.0",
-        "dskripchenko/laravel-admin-media": "^1.5.2",
-        "dskripchenko/laravel-admin-pulse": "^1.6.0",
-        "dskripchenko/laravel-admin-starter": "^1.4.2",
+        "dskripchenko/laravel-admin": "^1.46",
+        "dskripchenko/laravel-admin-health": "^1.5.1",
+        "dskripchenko/laravel-admin-jobs": "^1.5.1",
+        "dskripchenko/laravel-admin-media": "^1.5.3",
+        "dskripchenko/laravel-admin-pulse": "^1.6.1",
+        "dskripchenko/laravel-admin-starter": "^1.4.3",
         "fakerphp/faker": "^1.23",
         "laravel/framework": "^13.17",
         "laravel/tinker": "^3.0"

@@ -8,6 +8,7 @@ use App\Admin\Showcase\Dashboards\Widgets\LiveOrdersWidget;
 use App\Admin\Showcase\Dashboards\Widgets\PaymentMethodsWidget;
 use App\Models\Shop\Order;
 use App\Models\Shop\Product;
+use Dskripchenko\LaravelAdmin\Table\TableColumn;
 use Dskripchenko\LaravelAdmin\Widget\ChartWidget;
 use Dskripchenko\LaravelAdmin\Widget\DashboardScreen;
 use Dskripchenko\LaravelAdmin\Widget\MarkdownWidget;
@@ -63,10 +64,13 @@ final class ShowcaseDashboard extends DashboardScreen
                 ->dataset('Orders', array_values($weekdays), '#6366f1'),
             ChartWidget::make()->withSlug('average-by-weekday')->title('Average order by weekday')->size(6)->rowSpan(2)
                 ->chartType('line')->labels(array_map('__', array_keys($averages)))
-                ->dataset('Average order, $', array_values($averages), '#10b981'),
+                ->dataset('Average order', array_values($averages), '#10b981')->money('USD', 2),
             RecentListWidget::make()->title('Recently updated products')->size(12)->rowSpan(3)
                 ->model(Product::class)->orderBy('updated_at', 'desc')->limit(6)
-                ->column('name', 'Product')->column('stock', 'Stock')
+                ->column('name', 'Product')
+                ->column(TableColumn::make('price')->label('Price')->asMoney('USD')->align('right'))
+                ->column(TableColumn::make('stock')->label('Stock')->align('right'))
+                ->column(TableColumn::make('updated_at')->label('Updated')->asDateTime('d.m.Y H:i'))
                 ->linkTo('products'),
             MarkdownWidget::make()->title('Try it')->size(12)->rowSpan(1)->content(fn () => __(
                 'Switch the period, press **Edit** to drag, resize or hide widgets and add your own — the layout is saved for your account only.'

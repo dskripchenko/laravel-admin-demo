@@ -33,6 +33,12 @@ final class GridEmbedAuthorsResource extends Resource
         return 'Authors and their posts';
     }
 
+    /** One record's name, for titles, confirmations and toasts: "Create author". */
+    public static function singularLabel(): ?string
+    {
+        return 'author';
+    }
+
     public static function permission(): string
     {
         return 'admin.authors';
