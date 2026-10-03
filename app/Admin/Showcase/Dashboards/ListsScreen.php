@@ -5,6 +5,7 @@ namespace App\Admin\Showcase\Dashboards;
 use App\Admin\Showcase\ShowcaseScreen;
 use App\Models\Shop\Customer;
 use App\Models\Shop\Order;
+use Carbon\CarbonInterface;
 use Dskripchenko\LaravelAdmin\Layout\Layout;
 use Dskripchenko\LaravelAdmin\Table\TableColumn;
 use Dskripchenko\LaravelAdmin\Widget\HeatmapWidget;
@@ -12,6 +13,7 @@ use Dskripchenko\LaravelAdmin\Widget\IframeWidget;
 use Dskripchenko\LaravelAdmin\Widget\MarkdownWidget;
 use Dskripchenko\LaravelAdmin\Widget\RecentListWidget;
 use Dskripchenko\LaravelAdmin\Widget\TableWidget;
+use Illuminate\Support\Str;
 
 /**
  * Dashboards › Tables, lists and text: the widgets that show records, a
@@ -69,8 +71,11 @@ final class ListsScreen extends ShowcaseScreen
                         TableColumn::make('orders_sum_total')->label('Spent')->asMoney('USD')->align('right'),
                     ]),
 
-                // A rows × columns matrix of values.
-                HeatmapWidget::make()->title('Orders by weekday and month')->size(8)->rowSpan(2)
+                // A rows × columns matrix of values, every column labelled. Each
+                // cell is the average orders per day, so the current month, only
+                // partly over, compares with the full ones; a weekday the month has
+                // not had yet is null, an empty "no data" cell.
+                HeatmapWidget::make()->title('Orders per day by weekday and month')->size(8)->rowSpan(2)
                     ->axes(...$this->heatmapAxes())
                     ->matrix($this->heatmapMatrix())
                     ->colorScale('viridis'),
@@ -97,22 +102,46 @@ final class ListsScreen extends ShowcaseScreen
     private function heatmapAxes(): array
     {
         $days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-        $months = collect(range(5, 0))->map(fn (int $i) => now()->startOfMonth()->subMonths($i)->translatedFormat('M'))->all();
+        // Month names in the panel's language: May, Jun… or Май, Июн…
+        $months = collect(range(5, 0))
+            ->map(fn (int $i) => Str::ucfirst(now()->locale(app()->getLocale())->startOfMonth()->subMonths($i)->translatedFormat('M')))
+            ->all();
 
         return [$days, $months];
     }
 
-    /** @return list<list<int>> */
+    /**
+     * The average orders per day for each weekday × month over the last six
+     * months, counting whole days only; null where the month has not had that
+     * weekday yet.
+     *
+     * @return list<list<float|null>>
+     */
     private function heatmapMatrix(): array
     {
-        $from = now()->startOfMonth()->subMonths(5);
-        $matrix = array_fill(0, 7, array_fill(0, 6, 0));
-        Order::query()->where('placed_at', '>=', $from)->get(['placed_at'])
-            ->each(function (Order $order) use (&$matrix, $from): void {
-                $month = (int) $from->diffInMonths($order->placed_at->copy()->startOfMonth());
-                $matrix[$order->placed_at->dayOfWeekIso - 1][min(5, $month)]++;
+        $today = now()->startOfDay();
+        $from = $today->copy()->startOfMonth()->subMonths(5);
+        $column = fn (CarbonInterface $date): int => min(5, (int) $from->diffInMonths($date->copy()->startOfMonth()));
+
+        $days = array_fill(0, 7, array_fill(0, 6, 0));
+        for ($day = $from->copy(); $day->lt($today); $day->addDay()) {
+            $days[$day->dayOfWeekIso - 1][$column($day)]++;
+        }
+
+        $orders = array_fill(0, 7, array_fill(0, 6, 0));
+        Order::query()->where('placed_at', '>=', $from)->where('placed_at', '<', $today)->get(['placed_at'])
+            ->each(function (Order $order) use (&$orders, $column): void {
+                $orders[$order->placed_at->dayOfWeekIso - 1][$column($order->placed_at)]++;
             });
 
-        return $matrix;
+        return array_map(
+            fn (array $counts, array $seen): array => array_map(
+                fn (int $count, int $n): ?float => $n === 0 ? null : round($count / $n, 1),
+                $counts,
+                $seen,
+            ),
+            $orders,
+            $days,
+        );
     }
 }
