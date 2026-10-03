@@ -235,6 +235,11 @@ class ShopSeeder extends Seeder
             $perDay = (int) round(2 + 4 * (1 - $day / 365) + $this->faker->numberBetween(-1, 2));
             for ($n = 0; $n < $perDay; $n++) {
                 $placed = $now->copy()->subDays($day)->setTime($this->faker->numberBetween(7, 23), $this->faker->numberBetween(0, 59));
+                if ($placed->greaterThan($now)) {
+                    // Today's orders were placed before now, never later in the day.
+                    $since = max(1, (int) $now->copy()->startOfDay()->diffInMinutes($now));
+                    $placed = $now->copy()->subMinutes($this->faker->numberBetween(1, $since));
+                }
                 $existing = $this->countCreatedBefore($customers, $placed);
                 if ($existing === 0) {
                     continue;

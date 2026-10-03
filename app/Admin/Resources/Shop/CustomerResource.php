@@ -58,7 +58,7 @@ final class CustomerResource extends Resource
             Textarea::make('notes')->rows(3),
             RelationTable::make('orders')->relation('orders')->onCreate(false)->onUpdate(false)->columns([
                 TableColumn::make('number'),
-                TableColumn::make('status')->asBadge(OrderStatus::colors()),
+                TableColumn::make('status')->asBadge(OrderStatus::colors(), OrderStatus::options()),
                 TableColumn::make('total')->asMoney('USD'),
                 TableColumn::make('placed_at')->asDateTime(),
             ]),
@@ -72,7 +72,7 @@ final class CustomerResource extends Resource
             TableColumn::make('email')->search()->copyable(),
             TableColumn::make('city')->sort(),
             TableColumn::make('country')->sort(),
-            TableColumn::make('segment')->asBadge(CustomerSegment::colors()),
+            TableColumn::make('segment')->asBadge(CustomerSegment::colors(), CustomerSegment::options()),
             TableColumn::make('orders_count')->label('Orders')->align('right')->sort(),
             TableColumn::make('accepts_marketing')->label('Marketing')->asBoolean()->defaultHidden(),
             TableColumn::make('created_at')->label('Since')->asDate()->sort(),

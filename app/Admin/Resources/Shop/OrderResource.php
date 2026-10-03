@@ -79,7 +79,7 @@ final class OrderResource extends Resource
         return [
             TableColumn::make('number')->sort()->search()->copyable(),
             TableColumn::make('customer_name')->label('Customer'),
-            TableColumn::make('status')->asBadge(OrderStatus::colors()),
+            TableColumn::make('status')->asBadge(OrderStatus::colors(), OrderStatus::options()),
             TableColumn::make('items_count')->label('Items')->align('right'),
             TableColumn::make('total')->asMoney('USD')->align('right')->sort()->summary(['sum', 'avg']),
             TableColumn::make('payment_method')->label('Payment')->defaultHidden(),
