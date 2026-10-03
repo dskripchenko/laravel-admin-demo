@@ -154,6 +154,8 @@ for (const role of ROLES) {
         document.getElementById('admin-notice')?.remove()
         document.documentElement.style.setProperty('--admin-banner-height', '0px')
       })
+      // No hover state left over from the crawl on the picture.
+      await page.mouse.move(0, 0)
       await page.waitForTimeout(200)
       // Both themes: the landing page shows the one matching the visitor's.
       mkdirSync('public/landing', { recursive: true })

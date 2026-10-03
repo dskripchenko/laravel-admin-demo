@@ -69,7 +69,7 @@ final class PostResource extends Resource
             TableColumn::make('title')->sort()->search(),
             TableColumn::make('author_name')->label('Author'),
             TableColumn::make('category_name')->label('Category'),
-            TableColumn::make('status')->asBadge(PostStatus::colors()),
+            TableColumn::make('status')->asBadge(PostStatus::colors(), PostStatus::options()),
             TableColumn::make('views')->align('right')->sort(),
             TableColumn::make('reading_minutes')->label('Read, min')->align('right')->defaultHidden(),
             TableColumn::make('is_featured')->label('Featured')->asBoolean()->defaultHidden(),

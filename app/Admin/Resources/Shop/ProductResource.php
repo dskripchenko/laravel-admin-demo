@@ -74,7 +74,7 @@ final class ProductResource extends Resource
             TableColumn::make('category_name')->label('Category'),
             TableColumn::make('price')->asMoney('USD')->align('right')->sort(),
             TableColumn::make('stock')->align('right')->sort()->editable(['integer', 'min:0'], 'number'),
-            TableColumn::make('status')->asBadge(ProductStatus::colors()),
+            TableColumn::make('status')->asBadge(ProductStatus::colors(), ProductStatus::options()),
             TableColumn::make('is_featured')->label('Featured')->asBoolean()->defaultHidden(),
             TableColumn::make('rating')->align('right')->sort()->defaultHidden(),
             TableColumn::make('updated_at')->label('Updated')->asDateTime()->sort()->defaultHidden(),
