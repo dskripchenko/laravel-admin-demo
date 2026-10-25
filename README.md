@@ -162,6 +162,14 @@ Keep `TRUSTED_PROXIES=*` only while the container's port is reachable from the
 proxy alone. The application key is generated on the first start and kept in
 the volume; nothing else needs a secret.
 
+### The public stand
+
+`deploy/` holds the stand's compose file (the demo plus Caddy with automatic
+HTTPS) and `.github/workflows/deploy.yml` ships it: after a green CI on
+`main` the image is built in GitHub Actions, pushed to GHCR and pulled on the
+server, then `/up` is awaited. It needs the `DEMO_SSH_KEY` secret and the
+`DEMO_HOST` / `DEMO_DOMAIN` variables; the server keeps `/opt/demo/.env.docker`.
+
 ## License
 
 MIT

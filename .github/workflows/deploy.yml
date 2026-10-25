@@ -1,0 +1,82 @@
+name: deploy
+
+# The public stand, after a green CI on main (or by hand). The image is built
+# here — the server has 1 GB of memory — pushed to GHCR, and pulled there.
+on:
+  workflow_run:
+    workflows: [ci]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  IMAGE: ghcr.io/${{ github.repository_owner }}/laravel-admin-demo
+
+jobs:
+  deploy:
+    if: github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push')
+    runs-on: ubuntu-latest
+    environment:
+      name: demo
+      url: https://${{ vars.DEMO_DOMAIN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+      - name: Image tag
+        id: tag
+        run: echo "tag=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64
+          push: true
+          tags: |
+            ${{ env.IMAGE }}:${{ steps.tag.outputs.tag }}
+            ${{ env.IMAGE }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Deploy
+        env:
+          SSH_KEY: ${{ secrets.DEMO_SSH_KEY }}
+          HOST: ${{ vars.DEMO_HOST }}
+          DOMAIN: ${{ vars.DEMO_DOMAIN }}
+          TAG: ${{ steps.tag.outputs.tag }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_deploy && chmod 600 ~/.ssh/id_deploy
+          ssh-keyscan -H "${HOST#*@}" >> ~/.ssh/known_hosts 2>/dev/null
+          SSH="ssh -i ~/.ssh/id_deploy $HOST"
+          scp -i ~/.ssh/id_deploy deploy/compose.yaml deploy/Caddyfile "$HOST":/opt/demo/
+          # The registry token goes over stdin, never into a command line.
+          printf '%s' "$GHCR_TOKEN" | $SSH "docker login ghcr.io -u ${{ github.actor }} --password-stdin"
+          $SSH "cd /opt/demo && printf 'DEMO_DOMAIN=%s\nDEMO_IMAGE=%s\n' '$DOMAIN' '${{ env.IMAGE }}:$TAG' > .env \
+            && docker compose pull --quiet && docker compose up -d --remove-orphans \
+            && docker image prune -af --filter 'until=72h' >/dev/null; docker logout ghcr.io >/dev/null"
+          # Every start is a reset (seeding takes a while): wait for the health check.
+          for i in $(seq 1 40); do
+            if curl -fsS "https://$DOMAIN/up" >/dev/null; then echo "up"; exit 0; fi
+            sleep 6
+          done
+          $SSH "cd /opt/demo && docker compose ps && docker compose logs --tail 80 demo"
+          exit 1
