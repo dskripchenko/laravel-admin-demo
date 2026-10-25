@@ -1,0 +1,43 @@
+# The public stand: Caddy (TLS) in front of the demo container.
+# Server layout: /opt/demo/{compose.yaml, Caddyfile, .env, .env.docker}.
+#   .env         DEMO_DOMAIN=admin.example.com, DEMO_IMAGE=ghcr.io/…:<tag>
+#   .env.docker  the app's settings — see .env.docker.example
+# Deploy: .github/workflows/deploy.yml (after a green CI on main).
+services:
+  demo:
+    image: ${DEMO_IMAGE:?set DEMO_IMAGE in .env}
+    restart: unless-stopped
+    env_file:
+      - path: .env.docker
+        required: true
+    environment:
+      APP_URL: https://${DEMO_DOMAIN:?set DEMO_DOMAIN in .env}
+    # Only Caddy reaches it: TRUSTED_PROXIES=* is safe while this stays internal.
+    expose:
+      - "8080"
+    volumes:
+      - demo-data:/data
+    # A 1 GB machine: keep the container from starving the proxy.
+    mem_limit: 700m
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      - demo
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      DEMO_DOMAIN: ${DEMO_DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    mem_limit: 128m
+
+volumes:
+  demo-data:
+  caddy-data:
+  caddy-config:
