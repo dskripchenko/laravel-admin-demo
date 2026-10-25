@@ -232,17 +232,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | OpenAPI / Scalar
+    | OpenAPI reference
     |--------------------------------------------------------------------------
-    | `scalar_script` is the URL of the Scalar bundle. An external CDN
-    | (jsdelivr) by default; a host project may set a local self-hosted path for
-    | environments with no access to a CDN
-    | (`/vendor/scalar/api-reference.js`).
+    | The panel's API reference on {api}/admin/doc — @dskripchenko/openapi's
+    | page, the one laravel-api serves on /api/doc. `ui`: 'reference' serves it,
+    | null/'none' leaves the route out. `script` overrides laravel-api's
+    | `documentation.script` (a self-hosted copy from
+    | `php artisan api:doc-assets`).
     */
     'openapi' => [
-        'ui' => env('ADMIN_OPENAPI_UI', 'scalar'),
-        'scalar_theme' => 'default',
-        'scalar_script' => env('ADMIN_SCALAR_SCRIPT', 'https://cdn.jsdelivr.net/npm/@scalar/api-reference'),
+        'ui' => env('ADMIN_OPENAPI_UI', 'reference'),
+        'script' => env('ADMIN_OPENAPI_SCRIPT'),
+        'locale' => null,
+        'theme' => null,
     ],
 
     /*

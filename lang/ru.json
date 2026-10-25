@@ -1021,5 +1021,18 @@
     "Release plan": "План релиза",
     "A block that cannot be read": "Блок, который не удалось прочитать",
     "The block below has a broken edge: it is shown as code with the reason and the line.": "В блоке ниже сломано ребро: он показан как код с причиной и номером строки.",
-    "Diagrams on this card": "Диаграммы на этой карточке"
+    "Diagrams on this card": "Диаграммы на этой карточке",
+    "API blocks": "API-блоки",
+    "Requests described in YAML or JSON inside markdown and the WYSIWYG editor become live API widgets.": "Запросы, описанные на YAML или JSON в markdown и WYSIWYG-редакторе, становятся живыми API-виджетами.",
+    "Creating an order": "Создание заказа",
+    "The block below is an API request: open the Constructor or Source tab to change it, or type /api on an empty line to add another one.": "Блок ниже — API-запрос: откройте вкладку «Конструктор» или «Исходник», чтобы изменить его, или наберите /api на пустой строке, чтобы добавить ещё один.",
+    "The text around the block stays ordinary rich text.": "Текст вокруг блока остаётся обычным форматированным текстом.",
+    "Rendered content": "Отрисованный контент",
+    "A live request to this panel": "Живой запрос к этой панели",
+    "The block is a GET request to this demo's own API: press Send in Try it — the request goes from your browser and the response shows below it.": "Блок — GET-запрос к API этого демо: нажмите «Отправить» во вкладке Try it — запрос уйдёт из вашего браузера, а ответ появится под ним.",
+    "Several requests in one block": "Несколько запросов в одном блоке",
+    "A list of requests with shared authentication: each one gets its card, with code samples in thirteen languages, TypeScript types and a PDF of the operation.": "Список запросов с общей аутентификацией: у каждого своя карточка с примерами кода на тринадцати языках, типами TypeScript и PDF операции.",
+    "In the editor": "В редакторе",
+    "Article": "Статья",
+    "Type /api on an empty line to insert an API block.": "Наберите /api на пустой строке, чтобы вставить API-блок."
 }
