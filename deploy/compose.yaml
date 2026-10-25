@@ -31,6 +31,8 @@ services:
       - "443:443/udp"
     environment:
       DEMO_DOMAIN: ${DEMO_DOMAIN}
+      # The domain whose other names redirect to GitHub (see Caddyfile).
+      REDIRECT_DOMAIN: ${REDIRECT_DOMAIN:-dskripchenko.space}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy-data:/data
