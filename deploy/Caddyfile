@@ -1,3 +1,12 @@
+{
+	# Certificates for names that are not listed below are issued on demand,
+	# for the server's own domain only (see :5555) — anything else pointed at
+	# this IP gets no certificate and cannot drain the ACME rate limits.
+	on_demand_tls {
+		ask http://127.0.0.1:5555/allowed
+	}
+}
+
 {$DEMO_DOMAIN} {
 	encode zstd gzip
 
@@ -9,4 +18,28 @@
 	header @immutable Cache-Control "public, max-age=31536000, immutable"
 
 	reverse_proxy demo:8080
+}
+
+# Everything else that reaches the server — the bare domain, www, any other
+# subdomain, the IP — goes to the author's GitHub.
+{$REDIRECT_DOMAIN}, www.{$REDIRECT_DOMAIN} {
+	redir https://github.com/dskripchenko/ 302
+}
+
+https:// {
+	tls {
+		on_demand
+	}
+	redir https://github.com/dskripchenko/ 302
+}
+
+http:// {
+	redir https://github.com/dskripchenko/ 302
+}
+
+# The on-demand TLS gate: only the redirect domain and its subdomains.
+http://127.0.0.1:5555 {
+	@allowed expression `{query.domain} == "{$REDIRECT_DOMAIN}" || {query.domain}.endsWith(".{$REDIRECT_DOMAIN}")`
+	respond @allowed 200
+	respond 403
 }
