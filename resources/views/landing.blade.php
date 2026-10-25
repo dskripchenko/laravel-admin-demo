@@ -1,3 +1,23 @@
+@php
+    // A screenshot as <picture>: AVIF, then WebP, at 960 and 1440 px (built by
+    // scripts/landing-images.py), the JPEG as the fallback. The query string is
+    // the source's hash, so the files can be cached for good.
+    $shot = function (string $name, string $class, string $alt, string $sizes, bool $lazy = true): string {
+        static $versions = [];
+        $versions[$name] ??= substr((string) @md5_file(public_path("landing/{$name}.jpg")), 0, 10);
+        $v = $versions[$name];
+        $set = fn (string $ext): string => "/landing/{$name}-960.{$ext}?v={$v} 960w, /landing/{$name}-1440.{$ext}?v={$v} 1440w";
+
+        return '<picture>'
+            .'<source type="image/avif" srcset="'.e($set('avif')).'" sizes="'.e($sizes).'">'
+            .'<source type="image/webp" srcset="'.e($set('webp')).'" sizes="'.e($sizes).'">'
+            .'<img class="'.e($class).'" src="/landing/'.e($name).'.jpg?v='.$v.'" width="1440" height="900"'
+            .($lazy ? ' loading="lazy"' : ' fetchpriority="high"').' decoding="async" alt="'.e($alt).'">'
+            .'</picture>';
+    };
+    $heroSizes = '(max-width: 1160px) 100vw, 1128px';
+    $gallerySizes = '(max-width: 640px) 100vw, 556px';
+@endphp
 <!doctype html>
 <html lang="{{ $locale }}">
 <head>
@@ -163,8 +183,8 @@ footer a { color: var(--muted); }
         </div>
         <p class="note">{{ __('No sign-up: pick Administrator, Editor or Viewer on the login page. The data resets every hour.') }}</p>
         <div class="shot">
-            <img class="on-light" src="/landing/dashboard.jpg" width="1440" height="900" alt="{{ __('The shop dashboard of the demo') }}">
-            <img class="on-dark" src="/landing/dashboard-dark.jpg" width="1440" height="900" loading="lazy" alt="{{ __('The shop dashboard of the demo') }}">
+            {!! $shot('dashboard', 'on-light', __('The shop dashboard of the demo'), $heroSizes, false) !!}
+            {!! $shot('dashboard-dark', 'on-dark', __('The shop dashboard of the demo'), $heroSizes) !!}
         </div>
     </div>
 
@@ -191,8 +211,8 @@ footer a { color: var(--muted); }
             <div class="gallery">
                 @foreach ($gallery as [$image, $caption])
                     <figure>
-                        <img class="on-light" src="/landing/{{ $image }}.jpg" width="1440" height="900" loading="lazy" alt="{{ __($caption) }}">
-                        <img class="on-dark" src="/landing/{{ $image }}-dark.jpg" width="1440" height="900" loading="lazy" alt="{{ __($caption) }}">
+                        {!! $shot($image, 'on-light', __($caption), $gallerySizes) !!}
+                        {!! $shot($image.'-dark', 'on-dark', __($caption), $gallerySizes) !!}
                         <figcaption>{{ __($caption) }}</figcaption>
                     </figure>
                 @endforeach
