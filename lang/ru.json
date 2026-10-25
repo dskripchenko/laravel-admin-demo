@@ -1004,5 +1004,22 @@
     "tag": "тег",
     "author": "автор",
     "post": "публикация",
-    "blog category": "рубрика"
+    "blog category": "рубрика",
+    "flowchart LR\n    cart([Cart]) --> checkout[Checkout]\n    checkout --> pay{Payment OK?}\n    pay -->|yes| fulfil\n    pay -->|no| retry[Ask for another card]\n    retry --> checkout\n    subgraph fulfil [Fulfilment]\n        direction TB\n        pick[Pick items] --> pack[Pack] --> ship[(Ship)]\n    end\n    fulfil --> done([Delivered])": "flowchart LR\n    cart([Корзина]) --> checkout[Оформление]\n    checkout --> pay{Оплата прошла?}\n    pay -->|да| fulfil\n    pay -->|нет| retry[Попросить другую карту]\n    retry --> checkout\n    subgraph fulfil [Выполнение]\n        direction TB\n        pick[Собрать товары] --> pack[Упаковать] --> ship[(Отгрузить)]\n    end\n    fulfil --> done([Доставлен])",
+    "sequenceDiagram\n    autonumber\n    actor A as Author\n    participant P as Panel\n    participant Q as Queue\n    A->>+P: Save draft\n    P-->>-A: Saved\n    A->>+P: Publish\n    P->>Q: Render preview\n    loop Every 5 s\n        P->>Q: Status?\n    end\n    alt Rendered\n        Q-->>P: Done\n        P-->>A: Published\n    else Failed\n        Q-->>P: Error\n        P-->>-A: Try again later\n    end": "sequenceDiagram\n    autonumber\n    actor A as Автор\n    participant P as Панель\n    participant Q as Очередь\n    A->>+P: Сохранить черновик\n    P-->>-A: Сохранено\n    A->>+P: Опубликовать\n    P->>Q: Собрать превью\n    loop Каждые 5 с\n        P->>Q: Статус?\n    end\n    alt Готово\n        Q-->>P: Собрано\n        P-->>A: Опубликовано\n    else Ошибка\n        Q-->>P: Ошибка\n        P-->>-A: Попробуйте позже\n    end",
+    "stateDiagram-v2\n    [*] --> New\n    New --> Paid : payment\n    New --> Cancelled : timeout\n    state Paid {\n        [*] --> Packing\n        Packing --> Shipped\n        Shipped --> [*]\n    }\n    Paid --> Delivered\n    Delivered --> [*]\n    Cancelled --> [*]\n    note right of New : Unpaid orders expire in 24 h": "stateDiagram-v2\n    [*] --> Новый\n    Новый --> Оплачен : оплата\n    Новый --> Отменён : таймаут\n    state Оплачен {\n        [*] --> Сборка\n        Сборка --> Отгружен\n        Отгружен --> [*]\n    }\n    Оплачен --> Доставлен\n    Доставлен --> [*]\n    Отменён --> [*]\n    note right of Новый : Неоплаченный заказ живёт 24 ч",
+    "pie showData\n    \"Books\" : 412\n    \"Electronics\" : 268\n    \"Home\" : 154\n    \"Toys\" : 73": "pie showData\n    \"Книги\" : 412\n    \"Электроника\" : 268\n    \"Дом\" : 154\n    \"Игрушки\" : 73",
+    "gantt\n    dateFormat YYYY-MM-DD\n    axisFormat %d %b\n    excludes weekends\n    section Design\n    Research      :done, r, 2026-11-02, 4d\n    Mock-ups      :done, m, after r, 3d\n    section Build\n    Backend       :crit, b, after m, 8d\n    Frontend      :active, f, after m, 10d\n    section Launch\n    Release       :milestone, after b f, 0d": "gantt\n    dateFormat YYYY-MM-DD\n    axisFormat %d.%m\n    excludes weekends\n    section Дизайн\n    Исследование  :done, r, 2026-11-02, 4d\n    Макеты        :done, m, after r, 3d\n    section Разработка\n    Бэкенд        :crit, b, after m, 8d\n    Фронтенд      :active, f, after m, 10d\n    section Запуск\n    Релиз         :milestone, after b f, 0d",
+    "Diagrams": "Диаграммы",
+    "Mermaid flowcharts, sequence, state, pie and gantt diagrams inside Layout::markdown().": "Блок-схемы, диаграммы последовательности и состояний, круговые и Ганта из блоков mermaid внутри Layout::markdown().",
+    "Order flow": "Путь заказа",
+    "A flowchart with a subgraph, a decision and a loop back.": "Блок-схема с подграфом, развилкой и возвратом назад.",
+    "Publishing a post": "Публикация поста",
+    "A sequence diagram with activations, a loop and alternatives.": "Диаграмма последовательности с активациями, циклом и альтернативами.",
+    "Order states": "Состояния заказа",
+    "Sales by category": "Продажи по категориям",
+    "Release plan": "План релиза",
+    "A block that cannot be read": "Блок, который не удалось прочитать",
+    "The block below has a broken edge: it is shown as code with the reason and the line.": "В блоке ниже сломано ребро: он показан как код с причиной и номером строки.",
+    "Diagrams on this card": "Диаграммы на этой карточке"
 }
