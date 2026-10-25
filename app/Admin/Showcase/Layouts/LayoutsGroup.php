@@ -37,6 +37,7 @@ final class LayoutsGroup extends ShowcaseGroup
             ModalsScreen::class,
             WizardScreen::class,
             MarkdownScreen::class,
+            DiagramsScreen::class,
         ];
     }
 }
