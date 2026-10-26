@@ -41,6 +41,7 @@ final class LayoutsGroup extends ShowcaseGroup
             DiagramsInEditorScreen::class,
             ApiBlocksScreen::class,
             ProcessFlowScreen::class,
+            MediaPlayersScreen::class,
         ];
     }
 }
