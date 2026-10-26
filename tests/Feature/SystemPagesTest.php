@@ -67,10 +67,11 @@ class SystemPagesTest extends DemoTestCase
         foreach (['request', 'query', 'job', 'exception'] as $kind) {
             $this->assertTrue(PulseSample::query()->where('kind', $kind)->exists(), "no {$kind} samples");
         }
-        // Rotated: nothing older than the retention. Measured from the newest
-        // sample, not the wall clock: the suite seeds once and runs on.
-        $newest = Carbon::parse(PulseSample::query()->max('sampled_at'));
-        $this->assertFalse(PulseSample::query()->where('sampled_at', '<', $newest->copy()->subDay())->exists());
+        // Rotated: the job samples SystemSeeder wrote for the earlier days of the
+        // week (the youngest is ~1 day 23 h old) are gone. Two hours of slack past
+        // the day: the suite seeds once and runs on, and its own requests record
+        // fresh samples, so neither the clock nor the newest sample is a fixed point.
+        $this->assertFalse(PulseSample::query()->where('sampled_at', '<', Carbon::now()->subDay()->subHours(2))->exists());
     }
 
     public function test_the_batches_are_finished_failed_and_in_progress(): void
