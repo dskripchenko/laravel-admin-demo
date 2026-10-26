@@ -4,7 +4,9 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -65,7 +67,8 @@ final class DemoResetCommand extends Command
         $attempts = 0;
         while (true) {
             try {
-                $this->call('migrate:fresh', ['--seed' => true, '--force' => true]);
+                $this->wipeDatabase();
+                $this->call('migrate', ['--seed' => true, '--force' => true]);
                 break;
             } catch (\Throwable $e) {
                 if (++$attempts >= 3 || ! str_contains($e->getMessage(), 'database is locked')) {
@@ -88,5 +91,41 @@ final class DemoResetCommand extends Command
         $this->components->info(sprintf('Demo reset in %.1fs.', microtime(true) - $started));
 
         return self::SUCCESS;
+    }
+
+    /**
+     * Drops every table and view inside the database file.
+     *
+     * migrate:fresh empties a SQLite file by truncating it to zero bytes. The
+     * queue worker and the scheduler keep their connections open with the
+     * WAL index mapped, and after the truncation that index describes a file
+     * that no longer exists: every connection reads "database is locked" until
+     * the processes restart (2026-10-26, twice). Dropping the tables through
+     * SQL keeps the file, the WAL and the open connections consistent.
+     */
+    private function wipeDatabase(): void
+    {
+        $connection = DB::connection();
+        if ($connection->getDriverName() !== 'sqlite') {
+            Schema::dropAllViews();
+            Schema::dropAllTables();
+
+            return;
+        }
+
+        Schema::disableForeignKeyConstraints();
+        try {
+            $objects = $connection->select(
+                "select type, name from sqlite_master where type in ('view', 'table') and name not like 'sqlite_%' order by type = 'table'"
+            );
+            $connection->transaction(function () use ($connection, $objects): void {
+                foreach ($objects as $object) {
+                    $kind = $object->type === 'view' ? 'view' : 'table';
+                    $connection->statement(sprintf('drop %s if exists "%s"', $kind, str_replace('"', '""', $object->name)));
+                }
+            });
+        } finally {
+            Schema::enableForeignKeyConstraints();
+        }
     }
 }

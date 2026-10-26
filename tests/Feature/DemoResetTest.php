@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 /**
- * demo:reset rebuilds the database itself (migrate:fresh), so this test runs
+ * demo:reset rebuilds the database itself (drops and migrates), so this test runs
  * outside the transaction RefreshDatabase would wrap it in.
  */
 class DemoResetTest extends TestCase
