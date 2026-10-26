@@ -1,0 +1,13 @@
+WEBVTT
+
+00:00:00.500 --> 00:00:03.000
+The customer fills a cart
+
+00:00:04.500 --> 00:00:07.000
+POST /orders creates the order
+
+00:00:08.500 --> 00:00:11.000
+POST /orders/{id}/pay charges the card
+
+00:00:12.500 --> 00:00:15.000
+The warehouse ships the parcel

@@ -164,6 +164,7 @@ footer a { color: var(--muted); }
         <nav class="links" aria-label="{{ __('Main') }}">
             <a class="hide-sm" href="{{ $adminPath }}/login">{{ __('Demo') }}</a>
             <a class="hide-sm" href="{{ $adminPath }}/screens/docs">{{ __('Docs') }}</a>
+            <a class="hide-sm" href="/embed">{{ __('Embed') }}</a>
             <a class="hide-sm" href="https://github.com/dskripchenko/laravel-admin" rel="noopener">GitHub</a>
             <a href="/?lang=en" @if($locale === 'en') aria-current="true" @endif>EN</a>
             <a href="/?lang=ru" @if($locale === 'ru') aria-current="true" @endif>RU</a>
@@ -180,6 +181,7 @@ footer a { color: var(--muted); }
         <div class="cta">
             <a class="btn primary" href="{{ $adminPath }}/login">{{ __('Open live demo') }} →</a>
             <a class="btn" href="{{ $adminPath }}/screens/docs">{{ __('Docs') }}</a>
+            <a class="btn" href="/embed">{{ __('Components for any page') }}</a>
         </div>
         <p class="note">{{ __('No sign-up: pick Administrator, Editor or Viewer on the login page. The data resets every hour.') }}</p>
         <div class="shot">
