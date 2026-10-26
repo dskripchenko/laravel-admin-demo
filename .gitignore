@@ -29,3 +29,5 @@ Thumbs.db
 /composer.lock
 /tests/e2e/screenshots
 /storage/*.sqlite
+
+/public/embed/npm/

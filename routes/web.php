@@ -8,3 +8,5 @@ Route::get('/', LandingController::class)->name('landing');
 
 // The file of the showcase's download examples, behind a temporary signed URL.
 Route::get('/showcase/sample.csv', SampleCsv::class)->middleware('signed')->name('showcase.sample-csv');
+
+require __DIR__.'/embed.php';
