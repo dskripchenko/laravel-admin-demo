@@ -40,6 +40,7 @@ final class LayoutsGroup extends ShowcaseGroup
             DiagramsScreen::class,
             DiagramsInEditorScreen::class,
             ApiBlocksScreen::class,
+            ProcessFlowScreen::class,
         ];
     }
 }
