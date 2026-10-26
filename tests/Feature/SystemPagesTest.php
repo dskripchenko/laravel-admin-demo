@@ -67,8 +67,10 @@ class SystemPagesTest extends DemoTestCase
         foreach (['request', 'query', 'job', 'exception'] as $kind) {
             $this->assertTrue(PulseSample::query()->where('kind', $kind)->exists(), "no {$kind} samples");
         }
-        // Rotated: nothing older than the retention.
-        $this->assertFalse(PulseSample::query()->where('sampled_at', '<', Carbon::now()->subDay())->exists());
+        // Rotated: nothing older than the retention. Measured from the newest
+        // sample, not the wall clock: the suite seeds once and runs on.
+        $newest = Carbon::parse(PulseSample::query()->max('sampled_at'));
+        $this->assertFalse(PulseSample::query()->where('sampled_at', '<', $newest->copy()->subDay())->exists());
     }
 
     public function test_the_batches_are_finished_failed_and_in_progress(): void
