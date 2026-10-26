@@ -27,6 +27,10 @@ const ADMIN = `${BASE}/admin`
 const ROLES = (process.env.ROLES ?? 'admin,editor,viewer').split(',').map((r) => r.trim()).filter(Boolean)
 const SHOTS = process.env.SCREENSHOTS ?? 'tests/e2e/screenshots'
 const LANDING = process.env.LANDING_SHOTS === '1'
+// SHARD=2/4: this run takes every fourth menu entry of each role, starting at
+// the second; the login and landing pages go to the first shard.
+const [SHARD, SHARDS] = (process.env.SHARD ?? '1/1').split('/').map(Number)
+const FIRST = SHARD === 1
 const ACCOUNTS = { admin: 'admin@demo.test', editor: 'editor@demo.test', viewer: 'viewer@demo.test' }
 
 /** Pages captured for the landing page, by role and admin path. */
@@ -93,7 +97,7 @@ async function settle(page) {
 }
 
 // The login page with the demo buttons.
-{
+if (FIRST) {
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 } })
   const page = await context.newPage()
   let current = `${ADMIN}/login`
@@ -129,7 +133,7 @@ for (const role of ROLES) {
   if (role === 'admin') urls.push('/r/products/1/edit', '/r/orders/1', '/r/posts/1/edit', '/r/customers/1', '/profile')
   if (urls.length < 5) problems.push({ role, url: '/api/admin/system/menu', kind: 'menu', detail: `only ${urls.length} entries` })
 
-  for (const path of urls) {
+  for (const path of urls.filter((_, i) => i % SHARDS === SHARD - 1)) {
     current = `${ADMIN}${path}`
     const res = await page.goto(current)
     if (!res || res.status() >= 400) {
@@ -172,7 +176,7 @@ for (const role of ROLES) {
 
 // The public landing page, light and dark, in both languages — last, so the
 // screenshots it shows already exist.
-{
+if (FIRST) {
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 } })
   const page = await context.newPage()
   let current = `${BASE}/`
@@ -192,7 +196,7 @@ for (const role of ROLES) {
 await browser.close()
 
 writeFileSync(join(SHOTS, 'report.json'), JSON.stringify({ visited, problems }, null, 2))
-console.log(`Visited ${visited.length} pages (${ROLES.join(', ')} + guest).`)
+console.log(`Visited ${visited.length} pages (${ROLES.join(', ')}${FIRST ? ' + guest' : ''}, shard ${SHARD}/${SHARDS}).`)
 if (problems.length > 0) {
   console.error(`${problems.length} problem(s):`)
   for (const p of problems) console.error(`  [${p.role}] ${p.kind} ${p.url} — ${p.detail}`)

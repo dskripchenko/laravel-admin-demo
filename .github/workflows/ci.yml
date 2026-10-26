@@ -34,9 +34,17 @@ jobs:
       - name: Test
         run: php artisan test
 
+  # Pull requests and the weekly run only: main gets here through a pull
+  # request that already passed it, so the deploy waits for the PHP tests alone.
   crawl:
+    if: github.event_name != 'push'
     runs-on: ubuntu-latest
-    name: Browser crawl
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
+    name: Browser crawl ${{ matrix.shard }}/4
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
@@ -62,11 +70,20 @@ jobs:
         run: |
           PHP_CLI_SERVER_WORKERS=4 php artisan serve --port=8000 > /tmp/serve.log 2>&1 &
           sleep 3
-          BASE_URL=http://127.0.0.1:8000 node tests/e2e/crawl.mjs
+          SHARD=${{ matrix.shard }}/4 BASE_URL=http://127.0.0.1:8000 node tests/e2e/crawl.mjs
       - name: Screenshots
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: screenshots
+          name: screenshots-${{ matrix.shard }}
           path: tests/e2e/screenshots
           retention-days: 7
+
+  # One stable name for the branch protection rule, whatever the shard count.
+  crawl-result:
+    if: always() && github.event_name != 'push'
+    needs: crawl
+    runs-on: ubuntu-latest
+    name: Browser crawl
+    steps:
+      - run: test "${{ needs.crawl.result }}" = success
