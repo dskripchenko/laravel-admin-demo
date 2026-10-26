@@ -1,0 +1,10 @@
+WEBVTT
+
+00:00:00.500 --> 00:00:03.500
+This clip is a test pattern made by ffmpeg.
+
+00:00:04.000 --> 00:00:07.500
+The counter in the middle shows the seconds.
+
+00:00:08.000 --> 00:00:11.500
+Press C to hide the subtitles.
