@@ -19,6 +19,9 @@ class DemoResetTest extends TestCase
         $this->artisan('demo:reset', ['--force' => true])->assertSuccessful();
         Product::query()->limit(5)->delete();
         $this->artisan('demo:reset', ['--force' => true])->assertSuccessful();
+        // The reset runs in maintenance mode and always brings the stand back up.
+        $this->assertFalse(app()->isDownForMaintenance());
+        $this->assertStringContainsString('resetting', view('demo.resetting')->render());
 
         $this->assertGreaterThan(200, Product::query()->count());
         $this->assertTrue(config('admin.auth.model')::query()->where('email', 'admin@demo.test')->exists());

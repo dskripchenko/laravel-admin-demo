@@ -28,6 +28,31 @@ final class DemoResetCommand extends Command
 
         $started = microtime(true);
 
+        // The stand serves a public site on SQLite: sessions, the queue and the
+        // health checks all write to it. A migrate:fresh racing those writers
+        // timed out on "database is locked" halfway through and left a broken
+        // schema behind (2026-10-26). Maintenance mode stops all of them —
+        // requests get a short "resetting" page, the queue worker pauses and
+        // scheduled commands skip — and the reset has the file to itself.
+        $wasDown = app()->isDownForMaintenance();
+        if (! $wasDown) {
+            $this->callSilently('down', ['--render' => 'demo.resetting', '--retry' => 20, '--refresh' => 8]);
+            // Requests already inside the app finish their writes.
+            sleep(2);
+        }
+
+        try {
+            return $this->reset($started);
+        } finally {
+            if (! $wasDown) {
+                $this->callSilently('up');
+            }
+        }
+    }
+
+    private function reset(float $started): int
+    {
+
         // Uploaded and generated media live on the public disk; the seeder
         // draws the demo images again.
         Storage::disk((string) config('admin-media.disk', 'public'))
@@ -35,7 +60,21 @@ final class DemoResetCommand extends Command
         Storage::disk((string) config('admin.uploads.disk', 'local'))
             ->deleteDirectory((string) config('admin.uploads.directory', 'uploads'));
 
-        $this->call('migrate:fresh', ['--seed' => true, '--force' => true]);
+        // A writer that slipped in before the switch can still hold the lock
+        // for a moment: try again rather than leave a half-built schema.
+        $attempts = 0;
+        while (true) {
+            try {
+                $this->call('migrate:fresh', ['--seed' => true, '--force' => true]);
+                break;
+            } catch (\Throwable $e) {
+                if (++$attempts >= 3 || ! str_contains($e->getMessage(), 'database is locked')) {
+                    throw $e;
+                }
+                $this->components->warn('The database is busy, retrying the reset…');
+                sleep(5);
+            }
+        }
         $this->call('admin:publish');
 
         if (! File::exists(public_path('storage'))) {
