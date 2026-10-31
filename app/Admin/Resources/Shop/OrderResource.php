@@ -18,13 +18,16 @@ use Dskripchenko\LaravelAdmin\Filter\InputFilter;
 use Dskripchenko\LaravelAdmin\Filter\OptionsFilter;
 use Dskripchenko\LaravelAdmin\Resource\ActionFailedException;
 use Dskripchenko\LaravelAdmin\Resource\Resource;
+use Dskripchenko\LaravelAdmin\Resource\Views\CalendarView;
+use Dskripchenko\LaravelAdmin\Resource\Views\KanbanView;
 use Dskripchenko\LaravelAdmin\Table\TableColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * Orders: a status flow (pending → paid → shipped → delivered, with
- * cancellation and refunds), line items and totals.
+ * cancellation and refunds), line items and totals. Next to the list, a
+ * kanban board by status and a calendar by the day the order was placed.
  */
 final class OrderResource extends Resource
 {
@@ -86,6 +89,51 @@ final class OrderResource extends Resource
             TableColumn::make('shipping_city')->label('City')->defaultHidden(),
             TableColumn::make('placed_at')->label('Placed')->asDateTime()->sort(),
         ];
+    }
+
+    /**
+     * The orders as cards in a column per status. A card dragged to another
+     * column changes the status the way Advance does: Order checks that the
+     * step is one of OrderStatus::next() (a refusal puts the card back with
+     * the reason) and stamps paid_at, shipped_at or delivered_at.
+     */
+    public function kanban(): ?KanbanView
+    {
+        return KanbanView::make('status')
+            ->columns(OrderStatus::options())
+            ->title('number')
+            ->description('shipping_city')
+            ->assignee('customer.name')
+            // Paid orders wait for the warehouse: more than 15 is a backlog.
+            ->wip([OrderStatus::Paid->value => 15])
+            ->limit(20);
+    }
+
+    /** The orders on the day they were placed, coloured by status. */
+    public function calendar(): ?CalendarView
+    {
+        return CalendarView::make('placed_at')
+            ->title('number')
+            ->color('status', OrderStatus::colors())
+            ->views(['month', 'week', 'day', 'agenda'])
+            ->initialView('month');
+    }
+
+    /**
+     * A closed order (cancelled or refunded) has no next status, so its card
+     * stays where it is; only a pending order may be moved to another day —
+     * once paid, its dates are history.
+     */
+    public function editableForRow(Model $row, string $column): bool
+    {
+        /** @var OrderStatus $status */
+        $status = $row->getAttribute('status');
+
+        return match ($column) {
+            'status' => $status->next() !== [],
+            'placed_at' => $status === OrderStatus::Pending,
+            default => true,
+        };
     }
 
     public function filters(): array

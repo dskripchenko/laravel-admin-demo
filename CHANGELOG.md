@@ -63,6 +63,22 @@ of laravel-admin.
   showcase's product list shows prices and update times, and the revenue and
   average-order charts show money in their tooltips and axes
   (`TableColumn` columns in `RecentListWidget`, `ChartWidget::money()`).
+- The widgets of laravel-admin ^1.69 in the showcase: «Documents»
+  (`Layout::diagram()` in seven notations, `bpmn()`, `dmn()`, `drawio()`,
+  `asyncapi()`), «Kanban and calendar» (markup saved per session through
+  screen methods, with a lock), «Models and boards in text» (the new block
+  languages in markdown and the WYSIWYG editor; the diagram and API pages got
+  the other notations and an AsyncAPI block), «Editor fields» (`Bpmn`, `Dmn`,
+  `Kanban`, `Calendar`, `MarkdownEditor` with their infolist entries),
+  «Kanban and calendar views» of a grid, «Boards, calendars and diagrams» on a
+  dashboard, and «Collaborative board».
+- Orders have a kanban view by status and a calendar by the day placed. A
+  status change of any kind (the form, a row action, a dragged card) follows
+  the order flow and stamps its date; a closed order's card stays put, and
+  only a pending order moves to another day.
+- Boards (dskripchenko/laravel-admin-board): the Boards section, a seeded
+  board, `admin.boards.*` for editors and support, limits for a public stand
+  in `config/admin-board.php`.
 
 ### Changed
 - On laravel-admin ^1.40 (with laravel-delayed-process ^2.1.2), the showcase

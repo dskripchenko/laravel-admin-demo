@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             MediaSeeder::class,
             ShopSeeder::class,
             BlogSeeder::class,
+            BoardSeeder::class,
             ActivitySeeder::class,
             NotificationSeeder::class,
             SystemSeeder::class,

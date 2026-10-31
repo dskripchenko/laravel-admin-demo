@@ -20,7 +20,7 @@ class AccessSeeder extends Seeder
     public const ROLES = [
         'editor' => [
             'name' => 'Editor',
-            'description' => 'Manages the catalog and the blog. No orders, customers or system sections.',
+            'description' => 'Manages the catalog, the blog and the boards. No orders, customers or system sections.',
             'permissions' => [
                 'admin.products.*',
                 'admin.product-categories.*',
@@ -29,6 +29,7 @@ class AccessSeeder extends Seeder
                 'admin.tags.*',
                 'admin.authors.*',
                 'admin.media.*',
+                'admin.boards.*',
             ],
         ],
         'viewer' => [
@@ -38,8 +39,8 @@ class AccessSeeder extends Seeder
         ],
         'support' => [
             'name' => 'Support',
-            'description' => 'Works with orders and customers.',
-            'permissions' => ['admin.orders.*', 'admin.customers.*', 'admin.products.view'],
+            'description' => 'Works with orders and customers, and draws on the boards.',
+            'permissions' => ['admin.orders.*', 'admin.customers.*', 'admin.products.view', 'admin.boards.*'],
         ],
     ];
 

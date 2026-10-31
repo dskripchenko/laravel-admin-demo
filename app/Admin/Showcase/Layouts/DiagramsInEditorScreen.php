@@ -8,7 +8,8 @@ use Dskripchenko\LaravelAdmin\Layout\Layout;
 
 /**
  * Layouts › Diagrams in the editor: every diagram type the panel draws, as
- * ```mermaid code blocks inside the WYSIWYG editor. A click on a diagram opens
+ * ```mermaid code blocks inside the WYSIWYG editor, then the other notations
+ * (```plantuml, ```dot, ```d2, ```dbml, ```structurizr, ```wardley). A click on a diagram opens
  * its code with a live preview, `/diagram` inserts one, and the fullscreen
  * button gives the editor the whole window.
  */
@@ -41,7 +42,7 @@ final class DiagramsInEditorScreen extends ShowcaseScreen
 
     public function description(): ?string
     {
-        return __('Every diagram type inside the WYSIWYG editor: click a diagram to edit its code, use the fullscreen button for room.');
+        return __('Every diagram type and notation inside the WYSIWYG editor: click a diagram to edit its code, use the fullscreen button for room.');
     }
 
     public function query(mixed ...$params): array
@@ -55,6 +56,13 @@ final class DiagramsInEditorScreen extends ShowcaseScreen
                 $html .= '<p>'.e($sample['description']).'</p>';
             }
             $html .= '<pre><code class="language-mermaid">'.e(trim($sample['source'])).'</code></pre>';
+        }
+
+        // The other notations: the same kind of block, another language.
+        $html .= '<h2>'.e(__('Other notations')).'</h2>';
+        foreach (DocumentSamples::diagrams() as $sample) {
+            $html .= '<h3>'.e($sample['title']).'</h3><p>'.e($sample['description']).'</p>'
+                .'<pre><code class="language-'.$sample['syntax'].'">'.e(trim($sample['source'])).'</code></pre>';
         }
 
         return ['document' => $html];

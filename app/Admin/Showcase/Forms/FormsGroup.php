@@ -35,6 +35,7 @@ final class FormsGroup extends ShowcaseGroup
             DatesScreen::class,
             NumbersScreen::class,
             RichTextScreen::class,
+            EditorFieldsScreen::class,
             FilesScreen::class,
             RelationsScreen::class,
             CompositeScreen::class,

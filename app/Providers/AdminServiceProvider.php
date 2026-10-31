@@ -21,9 +21,9 @@ use Dskripchenko\LaravelAdmin\Menu\MenuNode;
 use Illuminate\Support\ServiceProvider;
 
 /**
- * Everything the panel shows: the demo shop and blog, the showcase, the
- * documentation and the system sections of the sister packages — and the
- * menu that ties them together.
+ * Everything the panel shows: the demo shop and blog, the boards, the
+ * showcase, the documentation and the system sections of the sister
+ * packages — and the menu that ties them together.
  */
 class AdminServiceProvider extends ServiceProvider
 {
@@ -80,6 +80,8 @@ class AdminServiceProvider extends ServiceProvider
                 MenuNode::resource('authors'),
                 MenuNode::resource('media-library')->label('Media library'),
             ]))
+            // The collaborative boards of dskripchenko/laravel-admin-board.
+            ->add(MenuNode::resource('boards')->label('Boards')->icon('palette'))
             ->add($this->docsMenu())
             ->add(MenuNode::make('system', 'System')->icon('settings')->children([
                 MenuNode::resource('system-users'),
