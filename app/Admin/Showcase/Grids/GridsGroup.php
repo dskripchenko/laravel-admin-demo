@@ -18,7 +18,7 @@ final class GridsGroup extends ShowcaseGroup
 
     public static function about(): string
     {
-        return 'Columns, filters, row and bulk actions, inline editing, trees.';
+        return 'Columns, filters, row and bulk actions, inline editing, trees, kanban and calendar views.';
     }
 
     public static function icon(): string
@@ -34,6 +34,7 @@ final class GridsGroup extends ShowcaseGroup
             GridActionsScreen::class,
             GridInlineScreen::class,
             GridTreeScreen::class,
+            GridViewsScreen::class,
             GridEmbeddedScreen::class,
             GridLifecycleScreen::class,
         ];
@@ -47,6 +48,7 @@ final class GridsGroup extends ShowcaseGroup
             GridActionsResource::class,
             GridInlineResource::class,
             GridTreeResource::class,
+            GridViewsResource::class,
             GridEmbedAuthorsResource::class,
             GridEmbedPostsResource::class,
             GridReorderResource::class,

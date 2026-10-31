@@ -7,6 +7,7 @@ use Dskripchenko\LaravelAdmin\Audit\Concerns\Loggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Validation\ValidationException;
 
 class Order extends Model
 {
@@ -29,6 +30,34 @@ class Order extends Model
             'shipped_at' => 'datetime',
             'delivered_at' => 'datetime',
         ];
+    }
+
+    /**
+     * An order moves only along its flow (OrderStatus::next()), whichever way
+     * the status is changed — the form, a row action or a card dragged on the
+     * kanban board — and each step stamps its date once.
+     */
+    protected static function booted(): void
+    {
+        static::updating(function (Order $order): void {
+            if (! $order->isDirty('status')) {
+                return;
+            }
+            $from = $order->getOriginal('status');
+            $to = $order->status;
+            if ($from instanceof OrderStatus && ! in_array($to, $from->next(), true)) {
+                throw ValidationException::withMessages(['status' => __('An order cannot go from :from to :to.', [
+                    'from' => __($from->label()),
+                    'to' => __($to->label()),
+                ])]);
+            }
+            match ($to) {
+                OrderStatus::Paid => $order->paid_at ??= now(),
+                OrderStatus::Shipped => $order->shipped_at ??= now(),
+                OrderStatus::Delivered => $order->delivered_at ??= now(),
+                default => null,
+            };
+        });
     }
 
     public function customer(): BelongsTo
@@ -59,16 +88,13 @@ class Order extends Model
         $this->save();
     }
 
-    /** Moves the order along its status flow, stamping the matching date. */
+    /**
+     * Moves the order along its status flow; the update hook checks the step
+     * and stamps the matching date.
+     */
     public function transitionTo(OrderStatus $status): void
     {
         $this->status = $status;
-        match ($status) {
-            OrderStatus::Paid => $this->paid_at ??= now(),
-            OrderStatus::Shipped => $this->shipped_at ??= now(),
-            OrderStatus::Delivered => $this->delivered_at ??= now(),
-            default => null,
-        };
         $this->save();
     }
 }

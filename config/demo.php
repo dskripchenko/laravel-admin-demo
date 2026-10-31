@@ -28,7 +28,7 @@ return [
             'email' => 'editor@demo.test',
             'password' => $password,
             'label' => 'Editor',
-            'description' => 'Catalog and blog only',
+            'description' => 'Catalog, blog and boards',
         ],
         [
             'role' => 'viewer',

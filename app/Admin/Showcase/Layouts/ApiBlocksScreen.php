@@ -11,7 +11,8 @@ use Dskripchenko\LaravelAdmin\Layout\Layout;
  * YAML or JSON — become live API widgets: the operation with try-it, code
  * samples, TypeScript types and PDF. In the WYSIWYG editor the same block is
  * edited in place: a preview, the YAML/JSON source and a request constructor;
- * `/api` inserts one.
+ * `/api` inserts one. A ```asyncapi block draws the reference of an AsyncAPI
+ * document; `/asyncapi` inserts one.
  */
 final class ApiBlocksScreen extends ShowcaseScreen
 {
@@ -42,7 +43,7 @@ final class ApiBlocksScreen extends ShowcaseScreen
 
     public function description(): ?string
     {
-        return __('Requests described in YAML or JSON inside markdown and the WYSIWYG editor become live API widgets.');
+        return __('Requests described in YAML or JSON, and AsyncAPI documents, inside markdown and the WYSIWYG editor become live API widgets.');
     }
 
     public function query(mixed ...$params): array
@@ -53,7 +54,10 @@ final class ApiBlocksScreen extends ShowcaseScreen
             'article' => '<h2>'.e(__('Creating an order')).'</h2>'
                 .'<p>'.e(__('The block below is an API request: open the Constructor or Source tab to change it, or type /api on an empty line to add another one.')).'</p>'
                 .$fence.e(self::ORDER_BLOCK).'</code></pre>'
-                .'<p>'.e(__('The text around the block stays ordinary rich text.')).'</p>',
+                .'<p>'.e(__('The text around the block stays ordinary rich text.')).'</p>'
+                .'<h2>'.e(__('Order events')).'</h2>'
+                .'<p>'.e(__('An AsyncAPI block: type /asyncapi on an empty line to add one.')).'</p>'
+                .'<pre><code class="language-asyncapi">'.e(trim(DocumentSamples::file('order-events.yaml'))).'</code></pre>',
         ];
     }
 
@@ -71,6 +75,9 @@ final class ApiBlocksScreen extends ShowcaseScreen
                         '## '.__('Several requests in one block'),
                         __('A list of requests with shared authentication: each one gets its card, with code samples in thirteen languages, TypeScript types and a PDF of the operation.'),
                         "{$fence}openapi\n".self::CATALOG_BLOCK."\n{$fence}",
+                        '## '.__('Events: an AsyncAPI block'),
+                        __('An `asyncapi` block holds an AsyncAPI 2.x or 3.0 document, YAML or JSON: servers, channels, operations and messages with their payloads.'),
+                        "{$fence}asyncapi\n".trim(DocumentSamples::file('order-events.yaml'))."\n{$fence}",
                     ]))->card(),
                 ],
                 __('In the editor') => [
@@ -78,7 +85,7 @@ final class ApiBlocksScreen extends ShowcaseScreen
                         ->title(__('Article'))
                         ->preset('full')
                         ->height(640)
-                        ->help(__('Type /api on an empty line to insert an API block.')),
+                        ->help(__('Type /api or /asyncapi on an empty line to insert an API block.')),
                 ],
             ]),
         ];

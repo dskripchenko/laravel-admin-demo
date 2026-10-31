@@ -34,6 +34,7 @@ final class DashboardsGroup extends ShowcaseGroup
             KpiScreen::class,
             ChartsScreen::class,
             ListsScreen::class,
+            DocumentWidgetsScreen::class,
             CustomWidgetScreen::class,
             DashboardScreenScreen::class,
         ];

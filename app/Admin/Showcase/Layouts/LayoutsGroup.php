@@ -18,7 +18,7 @@ final class LayoutsGroup extends ShowcaseGroup
 
     public static function about(): string
     {
-        return 'Rows, columns, tabs, accordions, modals, wizards, markdown.';
+        return 'Rows, columns, tabs, accordions, modals, wizards, markdown, documents, boards.';
     }
 
     public static function icon(): string
@@ -40,6 +40,10 @@ final class LayoutsGroup extends ShowcaseGroup
             DiagramsScreen::class,
             DiagramsInEditorScreen::class,
             ApiBlocksScreen::class,
+            DocumentsScreen::class,
+            DocumentBlocksScreen::class,
+            KanbanCalendarScreen::class,
+            CollaborativeBoardScreen::class,
             ProcessFlowScreen::class,
             MediaPlayersScreen::class,
         ];
