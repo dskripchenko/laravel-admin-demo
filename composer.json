@@ -102,11 +102,5 @@
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true,
-    "repositories": {
-        "laravel-admin-board": {
-            "type": "vcs",
-            "url": "https://github.com/dskripchenko/laravel-admin-board"
-        }
-    }
+    "prefer-stable": true
 }
